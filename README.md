@@ -24,10 +24,6 @@ A bash script that automates Nginx, PHP5x/7x, PHP-FPM Setup, MySQL, Bind9 DNS, v
 
 Uses a standard default $HOME/$USER/public_html directory structure but can be edited for any type directory structure of choice
 
-## Dime a dozen! So why this one?
-
-Yes there are many of these scripts out there so why is this one different? Well anyone can bash code "apt install nginx" but the majority do not actually install the application to a working, secure, and efficient state. Installing binaries is not installing a program, the configuring and securing of the application is what makes it function in an installed state. So most of these scripts are worthless to those who need to get things up and running asap. Calling on my 15 years of experience as a server admininstrator my script includes all the necessary directory structure creation, all the optimized configuration files needed to run the program efficiently, all the security aspects needed to run the application safely, all the correct permissions and paths are set, as well as anything else that needs attention in order to complete the software for instant access to you web upon completion of the scripts run. This is a complete solution for thse whos time is better spent developing or getting their site online as oppposed to running dozens of additional commands in the console.
-
 ### New Major Version v2.10
 
 #### New Menu Options
@@ -125,15 +121,15 @@ See [/src/variables.conf](#) for editable fields
 
 1. cd /opt  (Any directory you choose is fine)
 
-2. wget https://github.com/GaryCornell/nginxubuntu-php7/archive/2.10.tar.gz
+2. wget # (Early BETA - Not available yet)
 
-3. tar xvpfz 2.10.tar.gz
+3. tar xvpfz 
 
-4. cd nginxubuntu-php7-2.10/src/
+4. cd 
 
-5. chmod u+x auto_server.sh
+5. chmod u+x 
 
-6. ./auto_server.sh
+6. ./
 
 7. Just follow the prompts
 
