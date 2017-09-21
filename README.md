@@ -119,7 +119,7 @@ The script by default uses the following structure but can be edited to accomada
         
 ## Editable
 
-See [/src/variables.conf](https://github.com/GaryCornell/Nginx-Ubuntu-for-PHP7/blob/dev-210/src/variables.conf) for editable fields
+See [/src/variables.conf](#) for editable fields
 
 ## Simple Usage as root
 
