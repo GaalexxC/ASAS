@@ -1,0 +1,141 @@
+server {
+        listen @@IPADD@@:80;
+  
+        server_name @@HOSTNAME@@ www.@@HOSTNAME@@;
+        root "@@PATH@@";
+
+        index index.php index.html index.htm index.cgi index.pl index.xhtml;
+        client_max_body_size 20m;
+
+	    access_log @@LOG_PATH@@/access.log;
+	    error_log @@LOG_PATH@@/error.log;
+
+        # serve static files directly
+        location ~* ^.+.(jpg|jpeg|gif|rar|iso|css|png|js|ico|html|xml|txt|pdf|zip)$ {
+               access_log        off;
+        }
+
+
+                location ~ \.php$ {
+                        fastcgi_split_path_info ^(.+\.php)(/.+)$;                       
+                        include /etc/nginx/fastcgi_params; 
+                        fastcgi_pass   unix:@@SOCKET@@;
+                        fastcgi_index index.php;
+                        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                        fastcgi_param HTTPS on;
+                        fastcgi_buffer_size 128k;
+                        fastcgi_buffers 256 4k;
+                        fastcgi_read_timeout 600;
+                        fastcgi_send_timeout 600;
+                        fastcgi_busy_buffers_size 256k;
+                        fastcgi_temp_file_write_size 256k;
+                }
+
+        ## Disable .htaccess and other hidden files
+        location ~ /\. {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+
+        location = /favicon.ico {
+            log_not_found off;
+            access_log off;
+        }
+
+        location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+        }
+}
+
+#################### SSL Only Please: Uncomment to force SSL/HTTPS conenctions 
+#
+#server {
+#        listen @@IPADD@@:80;
+#
+#        server_name @@HOSTNAME@@ www.@@HOSTNAME@@;
+#
+#        return 301  https://$server_name$request_uri;
+#
+#
+#       }
+
+server {
+        listen 443 http2;
+
+# Uncomment one of the server_name & root lines below. The first if the domain is using SSL. The second if a subdomain is using SSL.
+# Make sure to update the subdomain from secure to what ever your sub is like clients.domain.com
+
+#        server_name @@HOSTNAME@@;
+#        root "@@PATH@@";
+
+#        server_name  secure.@@HOSTNAME@@;
+#        root   @@PATH@@/secure;
+
+         error_log @@LOG_PATH@@/ssl_error.log;
+         access_log @@LOG_PATH@@/ssl_access.log combined;
+
+         client_max_body_size 20M;
+
+########## SSL Directives: Uncomment and upload your crt and key file to the proper directory
+#        ssl  on;
+#        ssl_certificate  @@SSL_PATH@@/@@HOSTNAME@@.crt;
+#        ssl_certificate_key  @@SSL_PATH@@/@@HOSTNAME@@.key;
+#        ssl_trusted_certificate @@SSL_PATH@@/trusted_chain.pem;
+#        ssl_stapling on;
+#        ssl_stapling_verify on;
+#        resolver 8.8.8.8 valid=300s;
+#        resolver_timeout 5s;
+#        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+#        ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:ECDHE-RSA-AES128-GCM-SHA256:AES256+EECDH:DHE-RSA-AES128-GCM-SHA256:AES256+EDH:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+#        ssl_dhparam /etc/ssl/certs/dhparam.pem;
+#        ssl_prefer_server_ciphers On;
+#        add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+#        ssl_session_cache shared:SSL:50m;
+#        ssl_session_timeout 5m;
+
+
+         index index.php index.html index.htm index.cgi index.pl index.xhtml;
+
+         ## Disable .htaccess and other hidden files
+         location ~ /\. {
+            deny all;
+            access_log off;
+            log_not_found off;
+         }
+
+         location = /favicon.ico {
+            log_not_found off;
+            access_log off;
+         }
+
+         location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+         }
+
+                location ~ \.php$ {
+                        fastcgi_split_path_info ^(.+\.php)(/.+)$;                       
+                        include /etc/nginx/fastcgi_params; 
+                        fastcgi_pass   unix:@@SOCKET@@;
+                        fastcgi_index index.php;
+                        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                        fastcgi_param HTTPS on;
+                        fastcgi_buffer_size 128k;
+                        fastcgi_buffers 256 4k;
+                        fastcgi_read_timeout 600;
+                        fastcgi_send_timeout 600;
+                        fastcgi_busy_buffers_size 256k;
+                        fastcgi_temp_file_write_size 256k;
+                        fastcgi_intercept_errors on;
+                }
+
+         # serve static files directly
+         location ~* ^.+.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt|pdf)$ {
+               access_log        off;
+         }
+
+}
