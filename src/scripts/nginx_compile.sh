@@ -1,14 +1,13 @@
 #!/bin/bash
-# Auto Server Installer v2.10
-# @author: G Cornell for devCU Software
+# ASAS 2.10
+# @author: GCornell for devCU Software
 # @contact: support@devcu.com
-# @Facebook: facebook.com/garyacornell
-# Compatible: Ubuntu 12-14-16.x Servers running PHP 5/7 - README for custom configurations
-# MAIN: http://www.devcu.com  http://www.devcu.net
-# https://github.com/GaryCornell/Auto-Server-Installer
+# Compatibility: Debian Core Systems (Tested on Ubuntu 12-14-16-17 & Debian 8/9)
+# MAIN: https://www.devcu.com  https://www.devcu.net https://www.exceptionalservers.com
+# REPO: https://github.com/GaryCornell/Auto-Server-Installer
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/16/2017
+# Updated:   09/22/2017
 
         echo -e "\nCheck for system updates and install dependencies\n"
         apt -qq update && \
