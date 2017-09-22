@@ -12,6 +12,9 @@
 ###########
 # Globals #
 ###########
+declare -a osdist=( Ubuntu Debian )
+declare -a osrev=( 8 9 12.04 14.04 16.04 16.10 17.04 )
+
 lowercase(){
         echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
 }

@@ -57,7 +57,9 @@ asd
     echo "System Detect..."
     sleep 1
     sysProfile
-  if [[ "$DIST" == "$OSDIST"  && "$REV" == "$OSREV" ]] ; then
+    #declare -a osdist=( Ubuntu Debian )
+    #declare -a osrev=( 8 9 12.04 14.04 16.04 17.04 )
+  if [[ "${osdist[*]}" =~ "$DIST"  && "${osrev[*]}" =~ "$REV" ]] ; then
     echo "OS: $OS"
     echo "DIST: $DIST"
     echo "PSUEDONAME: $PSUEDONAME"
