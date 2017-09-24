@@ -7,7 +7,7 @@
 # REPO: https://github.com/GaryCornell/Auto-Server-Installer
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/22/2017
+# Updated:   09/24/2017
 
 clear
 
@@ -16,7 +16,7 @@ clear
 while [ 2 ]
 do
 
-SELECTSQL=$(
+SELECTMYSQL=$(
 NEWT_COLORS='
   root=,blue
   window=,lightgray
@@ -26,7 +26,7 @@ NEWT_COLORS='
   shadow=,gray
   button=lightgray,gray
 ' \
-whiptail --title "MySQL Server Install Menu" --radiolist "Use up/down arrows and tab to select a MySQL Server for install and configuration." 15 60 4 \
+whiptail --title "MySQL Server Installer" --radiolist "\nUse up/down arrows and tab to select a MySQL Server" 15 60 4 \
         "1)" "Percona MySQL Server 5.7 (Recommended)" ON \
         "2)" "MariaDB MySQL Server 10.2" OFF \
         "3)" "Oracle MySQL Server 5.7" OFF \
@@ -34,7 +34,7 @@ whiptail --title "MySQL Server Install Menu" --radiolist "Use up/down arrows and
 )
 
 
-case $SELECTSQL in
+case $SELECTMYSQL in
         "1)")
 
       echo "Option 1 Selected: Percona MySQL Server 5.7"
