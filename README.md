@@ -42,7 +42,7 @@ If applicable, dependencies will be installed by script automagically.
   10. Exit
  
 #### OS Compatibility
-- Ubuntu Server 12.04 / 14.04 / 16.04 / 16.10 / 17.04
+- Ubuntu Server 14.04 / 16.04 / 16.10 / 17.04 / 17.10
 - Debian 8, 9
  
 #### Added Custom Compile Nginx
