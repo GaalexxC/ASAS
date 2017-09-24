@@ -50,7 +50,7 @@ If applicable, dependencies will be installed by script automagically.
 - Ubuntu Server 14.04 / 16.04 / 16.10 / 17.04 / 17.10
 - Debian 8, 9
 
-####Removed due to End of Life support
+#### Removed due to End of Life support
 - Removed Ubuntu Server 12.04
 - Removed PHP 5.4 and 5.5
  
