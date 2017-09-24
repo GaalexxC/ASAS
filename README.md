@@ -47,7 +47,7 @@ ASAS requires several small applications to function properly such as:
 If applicable, dependencies will be installed by script automagically.
   
 #### OS Compatibility
-- Ubuntu Server 14.04 / 16.04 / 16.10 / 17.04 / 17.10
+- Ubuntu Server 14.04 / 15.10 / 16.04 / 16.10 / 17.04 / 17.10
 - Debian 8, 9
 
 #### Removed due to End of Life support
