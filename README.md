@@ -114,7 +114,7 @@ The script by default uses the following structure but can be edited to accomada
         
 ## Editable
 
-See [/src/variables.conf](#) for editable fields
+See [/src/variables.conf](https://raw.githubusercontent.com/GaryCornell/ASAS/master/src/variables.conf) for editable fields
 
 ## Simple Usage as root
 
