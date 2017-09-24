@@ -313,13 +313,34 @@ NEWT_COLORS='
 '
    if ! type nginx > /dev/null 2>&1; then
      if (whiptail --title "Nginx Check" --yesno "Nginx not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-        source scripts/nginx_mainline.sh
+        source scripts/nginx_install.sh
     else
          return
      fi
    else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 11 78
+        return
+   fi
+}
+
+phpCheckInstall() {
+NEWT_COLORS='
+  root=,blue
+  window=,lightgray
+  border=,white
+  shadow=,gray
+  button=lightgray,gray
+'
+   if ! type php > /dev/null 2>&1; then
+     if (whiptail --title "PHP Check" --yesno "PHP not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        source scripts/php_install.sh
+    else
+         return
+     fi
+   else
+        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+        whiptail --title "PHP Check" --msgbox "$phpver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 11 78
         return
    fi
 }
