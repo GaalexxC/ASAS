@@ -48,58 +48,15 @@ asd
     echo "* patent use. This program comes with ABSOLUTELY NO WARRANTY      *"
     echo "* and we assume NO LIABILITY. Use at your own risk.               *"
     echo "*******************************************************************"
-    echo ""
+    echo
 
     read -p "Press [Enter] to begin system check..."
 
     whiptailCheckInstall
     validateRoot
-
-    echo "System Detect..."
-    sleep 1
-    sysProfile
-  if [[ "${osdist[*]}" =~ "$DIST"  && "${osrev[*]}" =~ "$REV" ]] ; then
-    echo "OS: $OS"
-    echo "DIST: $DIST"
-    echo "PSUEDONAME: $PSUEDONAME"
-    echo "REV: $REV"
-    echo "DistroBasedOn: $DistroBasedOn"
-    echo "KERNEL: $KERNEL"
-    echo "MACH: $MACH"
-    echo ""
-    echo -e "${GREEN}Great, $DIST - $REV is supported${NOCOL}"
-    sleep 1.5
-  else
-   echo -e "${RED}Sorry $DIST - $REV is not supported${NOCOL}"
-   echo "Bye Bye"
-   exit 1
-  fi
-
-    updateSources
-    UPGRADECHECK=$(/usr/lib/update-notifier/apt-check 2>&1)
-  if [ "$UPGRADECHECK" = "0;0" ]; then
-    echo
-    echo
-    read -p "System is up to date, Press [Enter] for main menu..."
-  else
-    security=$(echo "${UPGRADECHECK}" | cut -d ";" -f 2)
-    nonsecurity=$(echo "${UPGRADECHECK}" | cut -d ";" -f 1)
-    totalnum=$((security + nonsecurity))
-    echo ""
-    echo -e "\n${totalnum} Updates are available, ${RED}${security} are security updates${NOCOL}"
-    echo -e "\nWould you like to update now ${GREEN}(Recommended)${NOCOL} (y/n)"
-    read DOUPDATE
-  if [ $DOUPDATE == "y" ]; then
+    systemDetect
+    #updateSources
     systemUpdate
-  if [ -f /var/run/reboot-required ]; then
-    rebootRequired
-  else
-    completeOperation
-  fi
-    else
-    read -p "Skipping update, Press [Enter] for main menu..."
-  fi
- fi
 
 clear
 

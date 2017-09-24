@@ -13,8 +13,6 @@
 ###########
 # Globals #
 ###########
-declare -a osdist=( Debian Ubuntu )
-declare -a osrev=( 8 9 14.04 16.04 16.10 17.04 17.10 )
 
 lowercase(){
         echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
@@ -71,10 +69,12 @@ NEWT_COLORS='
 #############
 # Detection #
 #############
-sysProfile(){
+systemDetect() {
 	OS=`lowercase \`uname\``
 	KERNEL=`uname -r`
 	MACH=`uname -m`
+        declare -a osdist=( Debian Ubuntu )
+        declare -a osrev=( 8 9 14.04 15.10 16.04 16.10 17.04 17.10 )
 
 	if [ "${OS}" == "windowsnt" ]; then
 		OS=windows
@@ -125,12 +125,18 @@ sysProfile(){
 		fi
 
 	fi
+        if [[ "${osdist[*]}" =~ "$DIST"  && "${osrev[*]}" =~ "$REV" ]] ; then
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDIST: $DIST\nPSUEDONAME: $PSUEDONAME\nREV: $REV\nDistroBasedOn: $DistroBasedOn\nKERNEL: $KERNEL\nMACH: $MACH\n\nGreat, $DIST - $REV is supported" --ok-button "Continue" 16 70 6
+        else
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDIST: $DIST\nPSUEDONAME: $PSUEDONAME\nREV: $REV\nDistroBasedOn: $DistroBasedOn\nKERNEL: $KERNEL\nMACH: $MACH\n\nSorry $DIST - $REV is not supported" --ok-button "Exit" 16 70 6
+        exit 1
+        fi
 }
 
 ##########
 # System #
 ##########
-systemUpdate() {
+systemUpdater() {
 pkg=0
 dmesg -D
 setterm -term linux -msg off
@@ -173,6 +179,64 @@ NEWT_COLORS='
 dmesg -E
 setterm -term linux -msg on
 #invoke-rc.d kbd restart # Restore screen blanking to default setting
+}
+
+systemUpdate() {
+    UPGRADECHECK=$(/usr/lib/update-notifier/apt-check 2>&1)
+    security=$(echo "${UPGRADECHECK}" | cut -d ";" -f 2)
+    nonsecurity=$(echo "${UPGRADECHECK}" | cut -d ";" -f 1)
+    totalupgrade=$((security + nonsecurity))
+  if [ "$UPGRADECHECK" != "0;0" ]; then
+     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
+pkg=0
+dmesg -D
+setterm -term linux -msg off
+setterm -term linux -blank 0
+apt upgrade -y  2> /dev/null | \
+    tr '[:upper:]' '[:lower:]' | \
+while read x; do
+    case $x in
+        *upgraded*newly*)
+            u=${x%% *}
+            n=${x%% newly installed*}
+            n=${n##*upgraded, }
+            r=${x%% to remove*}
+            r=${r##*installed, }
+            pkgs=$((u*2+n*2+r))
+            pkg=0
+        ;;
+        unpacking*|setting\ up*|found*|removing*\ ...)
+            if [ $pkgs -gt 0 ]; then
+                pkg=$((pkg+1))
+                x=${x%% (*}
+                x=${x%% ...}
+                x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
+                sleep .5
+                echo ""
+                printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
+            fi
+        ;;
+    esac
+done |
+NEWT_COLORS='
+  root=,blue
+  window=,lightgray
+  border=,white
+  shadow=,gray
+  button=lightgray,gray
+' \
+         whiptail --title "System Updater" \
+        --gauge "Downloading Updates..." 9 78 0
+dmesg -E
+setterm -term linux -msg on
+#invoke-rc.d kbd restart # Restore screen blanking to default setting
+     else
+         return
+     fi
+     else
+     whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "Main Menu" 10 70
+         return
+  fi
 }
 
 ##########
@@ -468,6 +532,14 @@ echo -e "\nChecking System Status...\n"
   done
     printf "] complete"
 }
+
+#updateSources() {
+#	{
+#        apt update & PID=$!
+#
+#
+#	} | whiptail --gauge "\nChecking System Status..." 6 60 0
+#}
 
 ############
 # File End #
