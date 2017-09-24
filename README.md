@@ -27,9 +27,6 @@ Uses a standard default $HOME/$USER/public_html directory structure but can be e
 
 #### New Menu Options
 
-ASAS requires several small applications to function properly such as whiptail, Python Software Properties and software-properties-common.
-If applicable, dependencies will be installed by script automagically.
-
   1. Nginx Installer (Stable/Mainline/Compiled)
   2. PHP Installer (5.6 - 7.0 - 7.1)
   3. MySQL Installer (Percona-MariaDB-Oracle)
@@ -40,14 +37,18 @@ If applicable, dependencies will be installed by script automagically.
   8. Security Tools
   9. System Tools
   10. Exit
- 
+
+#### Dependencies
+-ASAS requires several small applications to function properly such as whiptail, language-pack-en-base (fixes a Ubuntu UTF-8 bug) and software-properties-common.
+If applicable, dependencies will be installed by script automagically.
+  
 #### OS Compatibility
 - Ubuntu Server 14.04 / 16.04 / 16.10 / 17.04 / 17.10
 - Debian 8, 9
 
-####Removed due to end of Life
-- Removed Ubuntu Server 12.04 future support
-- Removed PHP 5.4 and 5.5 support end of life security updates
+####Removed due to End of Life support
+- Removed Ubuntu Server 12.04
+- Removed PHP 5.4 and 5.5
  
 #### Added Custom Compile Nginx
 - Custom compile latest Nginx mainline with latest OpenSSL. Get the latest security enhancements and features as well as add your own custom modules when building Nginx.
