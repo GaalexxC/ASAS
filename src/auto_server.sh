@@ -7,7 +7,7 @@
 # REPO: https://github.com/GaryCornell/Auto-Server-Installer
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/22/2017
+# Updated:   09/24/2017
 # --------------START SOURCES
 set -o allexport
 source variables.conf
