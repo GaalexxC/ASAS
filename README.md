@@ -58,7 +58,7 @@ If applicable, dependencies will be installed by script automagically.
 - Custom compile latest Nginx mainline with latest OpenSSL. Get the latest security enhancements and features as well as add your own custom modules when building Nginx.
 Install will create all necessary directories, service scripts, and update all configuration files.
 NOTE: Best when installed on a new system, do not install with nginx installed via apt.
-Also when using this method you must run the compiler option (2) each time you update your Nginx version.
+Also when using this method simply run the compiler option (3) each time to update to the latest Nginx version when available.
 
 #### Added Local Server support
 - Changed the way port and server is added to the nginx vhost file. 
@@ -70,7 +70,7 @@ You can now use any type of home directory and DocumentRoot setup imaginable wit
 IE /home /home2 /var /usr/local | public_html, www, htdocs, sites, wwwroot, httpdocs ...etc
   
 #### Added Quick System Cleanup
-Cleans up the repo sources, temp files, old logs and safely remove older kernels not in use to free up critical space on your box.  
+Cleans up the repo sources, temp files, old archived logs and safely remove older kernels not in use to free up critical space on your box.  
 
 #### Added Logging
 Debug, Error, Info logging
@@ -80,12 +80,12 @@ Database, Home DIR, Custom files and directories
 
 #### New Software Install Options
 
-- Added vsFTPd install and configure
-- Added Oracle MySQL Server install and configure
-- Added MariaDB Server install and configure
-- Added Bind9 DNS Server install and configure
-- Added Nginx Stable Web Server install and configure
-- Added PHP 5.6 and PHP 7.1 installers. 
+- Added vsFTPd installer
+- Added Oracle MySQL Server installer
+- Added MariaDB Server installer
+- Added Bind9 DNS Server installer
+- Added Nginx Stable Web Server installer
+- Added PHP 5.6 and PHP 7.1 installers
 
 ## Functions
 
