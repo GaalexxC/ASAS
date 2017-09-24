@@ -19,7 +19,7 @@
                 '--------------------------'
 </pre>
 
-A bash script that automates Nginx, PHP, PHP-FPM Setup, MySQL, Bind9 DNS, vsFTPd and User/Domain setup in a couple minutes. For new/fresh servers, existing servers, and local servers (development). Can be used to add new users / domains and home / application directory structures anytime.
+A bash script that automates Nginx, PHP, MySQL, Bind9 DNS, vsFTPd, PHP-FPM Setup and User/Domain setup in a couple minutes. For new/fresh servers, existing servers, and local servers (development). Can be used to add new users / domains and home / application directory structures anytime.
 
 Uses a standard default $HOME/$USER/public_html directory structure but can be edited for any type directory structure of choice
 
