@@ -7,7 +7,7 @@
 # REPO: https://github.com/GaryCornell/Auto-Server-Installer
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/22/2017
+# Updated:   09/24/2017
 
 # Check Nginx installed and version
 
@@ -145,7 +145,7 @@ $SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $CONFIG
 # Create a new php fpm pool config
    if [ $REMOTE == "y" ]; then
      echo -e "\nInstall PHP FPM conf file\n"
-     FPMCONF="$PHP_FPM_DIR/$DOMAIN.conf"
+     FPMCONF="$PHP7_FPM_DIR/$DOMAIN.conf"
      cp templates/conf.template $FPMCONF
 $SED -i "s/@@USER@@/$USERNAME/g" $FPMCONF
 $SED -i "s/@@GROUP@@/$USERNAME/g" $FPMCONF
@@ -156,7 +156,7 @@ $SED -i "s/@@MIN_SERVERS@@/$MIN_SERVERS/g" $FPMCONF
 $SED -i "s/@@MAX_SERVERS@@/$MAX_SERVERS/g" $FPMCONF
    else
      echo -e "\nInstall PHP FPM conf file\n"
-     FPMCONF="$PHP_FPM_DIR/$LOCAL.conf"
+     FPMCONF="$PHP7_FPM_DIR/$LOCAL.conf"
      cp templates/conf.template $FPMCONF
 $SED -i "s/@@USER@@/$USERNAME/g" $FPMCONF
 $SED -i "s/@@GROUP@@/$USERNAME/g" $FPMCONF
