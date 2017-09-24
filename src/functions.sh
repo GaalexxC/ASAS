@@ -12,8 +12,8 @@
 ###########
 # Globals #
 ###########
-declare -a osdist=( Ubuntu Debian )
-declare -a osrev=( 8 9 12.04 14.04 16.04 16.10 17.04 )
+declare -a osdist=( Debian Ubuntu )
+declare -a osrev=( 8 9 14.04 16.04 16.10 17.04 17.10 )
 
 lowercase(){
         echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
@@ -36,6 +36,16 @@ return
 
 #LicenseView() {
 #}
+
+phpDependencies() {
+apt update &&
+apt install -y language-pack-en-base &&
+export LC_ALL=en_US.UTF-8 &&
+export LANG=en_US.UTF-8 &&
+apt install -y software-properties-common &&
+add-apt-repository ppa:ondrej/php &&
+apt update
+}
 
 ##############
 # Root Check #
