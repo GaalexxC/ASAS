@@ -27,7 +27,7 @@ Uses a standard default $HOME/$USER/public_html directory structure but can be e
 
 #### New Menu Options
 
-  1. Nginx Installer (Stable/Mainline/Compiled)
+  1. Nginx Installer (Stable/Mainline/OpenSSL Build)
   2. PHP Installer (5.6 - 7.0 - 7.1)
   3. MySQL Installer (Percona-MariaDB-Oracle)
   4. Bind9 DNS Installer (Configure-Secure)
@@ -39,7 +39,10 @@ Uses a standard default $HOME/$USER/public_html directory structure but can be e
   10. Exit
 
 #### Dependencies
--ASAS requires several small applications to function properly such as whiptail, language-pack-en-base (fixes a Ubuntu UTF-8 bug) and software-properties-common.
+ASAS requires several small applications to function properly such as:
+- whiptail(User Interface installed by default on most Debian Flavors)
+- language-pack-en-base and software-properties-common (Ubuntu bug: ppa:ondrej/repo 'LANG=en_US.UTF-8' bug::https://github.com/oerdnj/deb.sury.org/issues/56)
+- build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev (required for compiling nginx with openSSL from source)
 If applicable, dependencies will be installed by script automagically.
   
 #### OS Compatibility
