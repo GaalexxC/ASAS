@@ -18,6 +18,30 @@ lowercase(){
         echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
 }
 
+rebootRequired() {
+NEWT_COLORS='
+   root=,blue
+  window=,lightgray
+  border=,white
+  shadow=,gray
+  button=lightgray,gray
+' \
+whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot\nRun our Kernel Cleaner after reboot" --ok-button "Reboot" 10 70
+reboot
+}
+
+ArebootRequired() {
+NEWT_COLORS='
+  root=,blue
+  window=,lightgray
+  border=,white
+  shadow=,gray
+  button=lightgray,gray
+' \
+whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
+reboot
+}
+
 completeOperation() {
 NEWT_COLORS='
   root=,blue
@@ -136,11 +160,11 @@ systemDetect() {
 ##########
 # System #
 ##########
-systemUpdater() {
+systemUpdate() {
 pkg=0
-dmesg -D
-setterm -term linux -msg off
-setterm -term linux -blank 0
+#dmesg -D
+#setterm -term linux -msg off
+#setterm -term linux -blank 0
 apt upgrade -y  2> /dev/null | \
     tr '[:upper:]' '[:lower:]' | \
 while read x; do
@@ -161,7 +185,7 @@ while read x; do
                 x=${x%% ...}
                 x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
                 sleep .5
-                echo ""
+                echo
                 printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
             fi
         ;;
@@ -174,10 +198,9 @@ NEWT_COLORS='
   shadow=,gray
   button=lightgray,gray
 ' \
-         whiptail --title "System Updater" \
-        --gauge "Downloading Updates..." 9 78 0
-dmesg -E
-setterm -term linux -msg on
+         whiptail --title "System Updater"  --gauge "\nDownloading Updates..." 9 78 0
+#dmesg -E
+#setterm -term linux -msg on
 #invoke-rc.d kbd restart # Restore screen blanking to default setting
 }
 
@@ -188,82 +211,17 @@ systemUpdate() {
     totalupgrade=$((security + nonsecurity))
   if [ "$UPGRADECHECK" != "0;0" ]; then
      if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
-pkg=0
-dmesg -D
-setterm -term linux -msg off
-setterm -term linux -blank 0
-apt upgrade -y  2> /dev/null | \
-    tr '[:upper:]' '[:lower:]' | \
-while read x; do
-    case $x in
-        *upgraded*newly*)
-            u=${x%% *}
-            n=${x%% newly installed*}
-            n=${n##*upgraded, }
-            r=${x%% to remove*}
-            r=${r##*installed, }
-            pkgs=$((u*2+n*2+r))
-            pkg=0
-        ;;
-        unpacking*|setting\ up*|found*|removing*\ ...)
-            if [ $pkgs -gt 0 ]; then
-                pkg=$((pkg+1))
-                x=${x%% (*}
-                x=${x%% ...}
-                x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
-                sleep .5
-                echo ""
-                printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
-            fi
-        ;;
-    esac
-done |
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-' \
-         whiptail --title "System Updater" \
-        --gauge "Downloading Updates..." 9 78 0
-dmesg -E
-setterm -term linux -msg on
-#invoke-rc.d kbd restart # Restore screen blanking to default setting
+     systemUpdater
+        if [ -f /var/run/reboot-required ]; then
+        rebootRequired
+  fi
      else
-         return
-     fi
+       return
+  fi
      else
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "Main Menu" 10 70
-         return
+       return
   fi
-}
-
-##########
-# Reboot #
-##########
-rebootRequired() {
-NEWT_COLORS='
-   root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-' \
-whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot\nRun our Kernel Cleaner after reboot" --ok-button "Reboot" 10 70
-reboot
-}
-
-ArebootRequired() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-' \
-whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
-reboot
 }
 
 ################
@@ -281,7 +239,7 @@ NEWT_COLORS='
       echo "Dependency Check..."
       sleep 1.5
       echo "Installing Whiptail - required by this script"
-      apt-get -qq install whiptail -y
+      apt install whiptail -y
       sleep 2
 else
        whipver=$(whiptail -v 2>&1)
@@ -435,7 +393,7 @@ NEWT_COLORS='
          return
      fi
    else
-        ftpver=$(vsftpd -v 2>&1)
+        ftpver=$(vsftpd -v 0>&1)
         whiptail --title "vsFTPd Check" --msgbox "$ftpver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 12 78
         return
    fi
@@ -521,25 +479,47 @@ ERROR() {
 }
 
 #apt update sources
-updateSources() {
-apt-get -qq update & PID=$!
-
-echo -e "\nChecking System Status...\n"
-    printf "["
-  while kill -0 $PID 2> /dev/null; do
-    printf  "▓▓▓"
-    sleep 1
-  done
-    printf "] complete"
-}
-
 #updateSources() {
-#	{
-#        apt update & PID=$!
-#
-#
-#	} | whiptail --gauge "\nChecking System Status..." 6 60 0
+# apt-get -qq update & PID=$!
+#    echo -e "\nChecking System Status...\n"
+#    printf "["
+#  while kill -0 $PID 2> /dev/null; do
+#    printf  "▓▓▓"
+#    sleep 1
+#  done
+#    printf "] complete"
 #}
+
+updateSources() {
+updt=0
+#dmesg -D
+#setterm -term linux -msg off
+#setterm -term linux -blank 0
+    apt update >> $SCRIPT_LOG | \
+    tr '[:upper:]' '[:lower:]' | \
+while read x; do
+    case $x in
+        *Hit*Get*)
+            u=${x%% *}
+            updts=$((u*1))
+            updt=0
+        ;;
+        Fetched*|Building*|Reading*\ ...)
+            if [ $updts -gt 0 ]; then
+                updt=$((updt+1))
+                x=${x%% (*}
+                x=${x%% ...}
+                x=$(echo ${x:1} | tr '[:lower:]' '[:upper:]')${x:1}
+                sleep .1
+                echo
+                printf "XXX\n$((updt*100/updts))\n${x} ...\nXXX\n$((updt*100/updts))\n"
+            fi
+        ;;
+    esac
+done | whiptail --title "System Check" --gauge "\nChecking for Updates..." 9 78 0
+#dmesg -E
+#setterm -term linux -msg on
+}
 
 ############
 # File End #
