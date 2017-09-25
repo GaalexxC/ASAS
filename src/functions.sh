@@ -480,48 +480,48 @@ ERROR() {
     echo "[$timeAndDate] [ERROR]  $msg" >> $SCRIPT_LOG
 }
 
-#apt update sources
-#updateSources() {
-# apt-get -qq update & PID=$!
-#    echo -e "\nChecking System Status...\n"
-#    printf "["
-#  while kill -0 $PID 2> /dev/null; do
-#    printf  "▓▓▓"
-#    sleep 1
-#  done
-#    printf "] complete"
-#}
-
+apt update sources
 updateSources() {
-updt=0
+ apt-get -qq update & PID=$!
+    echo -e "\nScanning System...\n"
+    printf "["
+  while kill -0 $PID 2> /dev/null; do
+    printf  "▓▓▓"
+    sleep 1
+  done
+    printf "] complete"
+}
+
+#updateSources() {
+#updt=0
 #dmesg -D
 #setterm -term linux -msg off
 #setterm -term linux -blank 0
-    apt update 2> /dev/null | \
-    tr '[:upper:]' '[:lower:]' | \
-while read x; do
-    case $x in
-        *Hit*Get*)
-            u=${x%% *}
-            updts=$((u*1))
-            updt=0
-        ;;
-        Fetched*|Building*|Reading*\ ...)
-            if [ $updts -gt 0 ]; then
-                updt=$((updt+1))
-                x=${x%% (*}
-                x=${x%% ...}
-                x=$(echo ${x:1} | tr '[:lower:]' '[:upper:]')${x:1}
-                sleep .1
-                echo
-                printf "XXX\n$((updt*100/updts))\n${x} ...\nXXX\n$((updt*100/updts))\n"
-            fi
-        ;;
-    esac
-done | whiptail --title "System Check" --gauge "\nChecking for Updates..." 9 78 0
+#    apt update 2> /dev/null | \
+#    tr '[:upper:]' '[:lower:]' | \
+#while read x; do
+#    case $x in
+#        *Hit*Get*)
+#            u=${x%% *}
+#            updts=$((u*1))
+#            updt=0
+#        ;;
+#        Fetched*|Building*|Reading*\ ...)
+#            if [ $updts -gt 0 ]; then
+#                updt=$((updt+1))
+#                x=${x%% (*}
+#                x=${x%% ...}
+#                x=$(echo ${x:1} | tr '[:lower:]' '[:upper:]')${x:1}
+#                sleep .1
+#                echo
+#                printf "XXX\n$((updt*100/updts))\n${x} ...\nXXX\n$((updt*100/updts))\n"
+#            fi
+#        ;;
+#    esac
+#done | whiptail --title "System Check" --gauge "\nChecking for Updates..." 9 78 0
 #dmesg -E
 #setterm -term linux -msg on
-}
+#}
 
 ############
 # File End #

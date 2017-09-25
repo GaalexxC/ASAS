@@ -48,14 +48,16 @@ asd
     echo "* patent use. This program comes with ABSOLUTELY NO WARRANTY      *"
     echo "* and we assume NO LIABILITY. Use at your own risk.               *"
     echo "*******************************************************************"
-    echo
 
+    updateSources
+    echo
+    echo
     read -p "Press [Enter] to begin system check..."
 
     whiptailCheckInstall
     validateRoot
     systemDetect
-    updateSources
+    #updateSources
     systemUpdate
 
 clear
