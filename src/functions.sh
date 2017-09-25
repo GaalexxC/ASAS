@@ -8,38 +8,15 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/24/2017
+# Updated:   09/25/2017
 
-###########
-# Globals #
-###########
-
+#*****************************
+#
+# Global Functions
+#
+#*****************************
 lowercase(){
         echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
-}
-
-rebootRequired() {
-NEWT_COLORS='
-   root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-' \
-whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot\nRun our Kernel Cleaner after reboot" --ok-button "Reboot" 10 70
-reboot
-}
-
-ArebootRequired() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-' \
-whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
-reboot
 }
 
 completeOperation() {
@@ -50,12 +27,39 @@ NEWT_COLORS='
   shadow=,gray
   button=lightgray,gray
 ' \
-whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter] for main menu" --ok-button "Main Menu" 8 70
+whiptail --title "Operation Complete" --msgbox "\nOperation Complete\nPress [Enter] for main menu" --ok-button "Main Menu" 10 70
 return
 }
 
-#scriptUpdateCheck() {
-#}
+rebootRequired() {
+NEWT_COLORS='
+   root=,blue
+  window=,lightgray
+  border=,white
+  shadow=,gray
+  button=lightgray,gray
+'
+  if [ -f /var/run/reboot-required ]; then
+    whiptail --title "Reboot Required" --msgbox "\nYour Kernel was modified a reboot is required\nPress [Enter] to reboot\nRun our Kernel Cleaner after boot to remove old kernel" --ok-button "Reboot" 10 70
+    reboot
+  fi
+}
+
+PostrebootRequired() {
+NEWT_COLORS='
+  root=,blue
+  window=,lightgray
+  border=,white
+  shadow=,gray
+  button=lightgray,gray
+'
+  if [ -f /var/run/reboot-required ]; then
+    whiptail --title "Reboot Required" --msgbox "\nYour Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
+    reboot
+  else
+    completeOperation
+  fi
+}
 
 #LicenseView() {
 #}
@@ -70,9 +74,6 @@ add-apt-repository ppa:ondrej/php &&
 apt update
 }
 
-##############
-# Root Check #
-##############
 validateRoot() {
 NEWT_COLORS='
   root=,blue
@@ -82,17 +83,18 @@ NEWT_COLORS='
   button=lightgray,gray
 '
     if [ "$(id -u)" != "0" ]; then
-       whiptail --title "System Check" --msgbox "You need root privileges to run this script.\nPress [Enter] to exit, Bye Bye" --ok-button "Exit" 8 70
+       whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
        exit 1
     else
-       whiptail --title "System Check" --msgbox "Root User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 8 70
+       whiptail --title "System Check" --msgbox "\nRoot User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
     fi
 }
 
-
-#############
-# Detection #
-#############
+#*****************************
+#
+# System Detect Functions
+#
+#*****************************
 systemDetect() {
 	OS=`lowercase \`uname\``
 	KERNEL=`uname -r`
@@ -157,10 +159,12 @@ systemDetect() {
         fi
 }
 
-##########
-# System #
-##########
-systemUpdate() {
+#*****************************
+#
+# System Functions
+#
+#*****************************
+systemUpdater() {
 pkg=0
 #dmesg -D
 #setterm -term linux -msg off
@@ -210,17 +214,15 @@ systemUpdate() {
     nonsecurity=$(echo "${UPGRADECHECK}" | cut -d ";" -f 1)
     totalupgrade=$((security + nonsecurity))
   if [ "$UPGRADECHECK" != "0;0" ]; then
-     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
+    if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
      systemUpdater
-        if [ -f /var/run/reboot-required ]; then
-        rebootRequired
-  fi
-     else
-       return
-  fi
-     else
+     rebootRequired
+  else
+        return
+    fi
+  else
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "Main Menu" 10 70
-       return
+        return
   fi
 }
 
@@ -495,7 +497,7 @@ updt=0
 #dmesg -D
 #setterm -term linux -msg off
 #setterm -term linux -blank 0
-    apt update >> $SCRIPT_LOG | \
+    apt update 2> /dev/null | \
     tr '[:upper:]' '[:lower:]' | \
 while read x; do
     case $x in
