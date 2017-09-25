@@ -55,7 +55,7 @@ asd
     whiptailCheckInstall
     validateRoot
     systemDetect
-    #updateSources
+    updateSources
     systemUpdate
 
 clear
