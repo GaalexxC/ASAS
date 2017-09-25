@@ -8,11 +8,9 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/24/2017
+# Updated:   09/25/2017
 
-  if [ -f /var/run/reboot-required ]; then
     rebootRequired
-  fi
 
 echo -e "\nChecking for old kernels\n"
 
@@ -42,7 +40,7 @@ echo -e "\nCleanup Complete\n"
 sleep 1
 
   if [ -f /var/run/reboot-required ]; then
-    ArebootRequired
+    PostrebootRequired
   else
     completeOperation
   fi
