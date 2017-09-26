@@ -1,7 +1,7 @@
 ![License](https://img.shields.io/badge/License-GNUv3-blue.svg)  ![Version](https://img.shields.io/badge/Version-2.10-blue.svg)  ![Development](https://img.shields.io/badge/Development-Active-blue.svg)
 
 ```diff
-- THIS IS AN INCOMPLETE DEVELOPMENT VERSION AND SHOULD NOT BE USED IN ANY ENVIRONMENT YET!!!
+- THIS IS AN INCOMPLETE DEVELOPMENT VERSION AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
 ```
 # Auto Server Admin Script [ASAS] 2.10
 
