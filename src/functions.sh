@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/25/2017
+# Updated:   09/26/2017
 
 #*****************************
 #
@@ -17,6 +17,17 @@
 #*****************************
 lowercase(){
         echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
+}
+
+updateSources() {
+apt-get -qq update & PID=$!
+    echo -e "\nScanning System...\n"
+    printf "["
+  while kill -0 $PID 2> /dev/null; do
+    printf  "▓▓▓"
+    sleep 1
+  done
+    printf "] complete"
 }
 
 completeOperation() {
@@ -40,8 +51,10 @@ NEWT_COLORS='
   button=lightgray,gray
 '
   if [ -f /var/run/reboot-required ]; then
-    whiptail --title "Reboot Required" --msgbox "\nYour Kernel was modified a reboot is required\nPress [Enter] to reboot\nRun our Kernel Cleaner after boot to remove old kernel" --ok-button "Reboot" 10 70
+    whiptail --title "Reboot Required" --msgbox "\nYour Kernel was modified a reboot is required\nPress [Enter] to reboot\n\nRun our Kernel Cleaner after boot to remove old kernel(s)\nand update vmlinuz & initrd.img files" --ok-button "Reboot" 10 70
     reboot
+  else
+    completeOperation
   fi
 }
 
@@ -60,9 +73,6 @@ NEWT_COLORS='
     completeOperation
   fi
 }
-
-#LicenseView() {
-#}
 
 phpDependencies() {
 apt update &&
@@ -86,9 +96,12 @@ NEWT_COLORS='
        whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
        exit 1
     else
-       whiptail --title "System Check" --msgbox "\nRoot User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
+       whiptail --title "System Check" --msgbox "Root User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
     fi
 }
+
+#LicenseView() {
+#}
 
 #*****************************
 #
@@ -169,7 +182,7 @@ pkg=0
 #dmesg -D
 #setterm -term linux -msg off
 #setterm -term linux -blank 0
-apt upgrade -y  2> /dev/null | \
+$(package) -y 2> /dev/null | \
     tr '[:upper:]' '[:lower:]' | \
 while read x; do
     case $x in
@@ -179,18 +192,23 @@ while read x; do
             n=${n##*upgraded, }
             r=${x%% to remove*}
             r=${r##*installed, }
-            pkgs=$((u*2+n*2+r))
+            pkgs=$((u*3+n*3+r))
             pkg=0
         ;;
-        unpacking*|setting\ up*|found*|removing*\ ...)
+        preparing*|unpacking*|setting\ up*|updating*|installing*|found*|removing*\ ...)
             if [ $pkgs -gt 0 ]; then
                 pkg=$((pkg+1))
                 x=${x%% (*}
                 x=${x%% ...}
                 x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
                 sleep .5
-                echo
+                echo ""
+                echo ""
                 printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
+                echo 99
+                sleep .50
+                echo 100
+                sleep 5
             fi
         ;;
     esac
@@ -215,6 +233,9 @@ systemUpdate() {
     totalupgrade=$((security + nonsecurity))
   if [ "$UPGRADECHECK" != "0;0" ]; then
     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
+      package() {
+         printf "apt upgrade"
+       }
      systemUpdater
      rebootRequired
   else
@@ -226,9 +247,11 @@ systemUpdate() {
   fi
 }
 
-################
-# CheckInstall #
-################
+#*****************************
+#
+# Check Install
+#
+#*****************************
 whiptailCheckInstall() {
 NEWT_COLORS='
   root=,blue
@@ -243,37 +266,11 @@ NEWT_COLORS='
       echo "Installing Whiptail - required by this script"
       apt install whiptail -y
       sleep 2
-else
+   else
        whipver=$(whiptail -v 2>&1)
-       whiptail --title "System Check" --msgbox "$whipver installed\nPress [Enter] to continue" --ok-button "Continue" 8 70
-fi
+       whiptail --title "System Check" --msgbox "$whipver installed\nPress [Enter] to continue" --ok-button "Continue" 10 70
+   fi
 }
-
-2whiptailCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
-   if ! type whiptail > /dev/null 2>&1; then
-    {
-    i=1
-    while read -r line; do
-        i=$(( i + 1 ))
-        echo $i
-    done < <(apt-get install whiptail -y)
-  } | whiptail --title "System Check" --gauge "Please wait while installing Whiptail..." 6 60 0
-
-else
-       whipver=$(whiptail -v 2>&1)
-       whiptail --title "System Check" --msgbox "$whipver installed\nPress [Enter] to continue" --ok-button "Continue" 8 70
-fi
-}
-
-#clientCheckInstall() {
-#}
 
 emailCheckInstall() {
 NEWT_COLORS='
@@ -401,12 +398,20 @@ NEWT_COLORS='
    fi
 }
 
-#clearCheckInstall() {
+#systemCheckInstall() {
 #}
 
-################
-# CheckCompile #
-################
+#securityCheckInstall() {
+#}
+
+#clientCheckInstall() {
+#}
+
+#*****************************
+#
+# Check Compile
+#
+#*****************************
 nginxCheckCompile() {
 NEWT_COLORS='
   root=,blue
@@ -429,9 +434,11 @@ NEWT_COLORS='
    fi
 }
 
-###########
-# Logging #
-###########
+#*****************************
+#
+# Logging
+#
+#*****************************
 touch $SCRIPT_LOG
 
 SCRIPTENTRY() {
@@ -478,18 +485,6 @@ ERROR() {
     local msg="$1"
     timeAndDate=`date`
     echo "[$timeAndDate] [ERROR]  $msg" >> $SCRIPT_LOG
-}
-
-apt update sources
-updateSources() {
- apt-get -qq update & PID=$!
-    echo -e "\nScanning System...\n"
-    printf "["
-  while kill -0 $PID 2> /dev/null; do
-    printf  "▓▓▓"
-    sleep 1
-  done
-    printf "] complete"
 }
 
 #updateSources() {

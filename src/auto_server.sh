@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/25/2017
+# Updated:   09/26/2017
 # --------------START SOURCES
 set -o allexport
 source variables.conf
@@ -118,19 +118,20 @@ case $MAINNU in
         ;;
 
         "8)")
-                #kernelCheckInstall
+                #securityCheckInstall
                 source scripts/security_tools.sh
         ;;
 
         "9)")
-                #toolsCheckInstall
+                #systemCheckInstall
                 source scripts/system_tools.sh
         ;;
 
-        "10)")   exit
+        "10)")   
+               exit 1
 
         ;;
-esac
+   esac
 
-done
+ done
 exit

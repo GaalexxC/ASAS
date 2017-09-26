@@ -8,11 +8,9 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/24/2017
+# Updated:   09/25/2017
 
 clear
-
-#PHP Install Menu
 
 while [ 4 ]
 do
@@ -34,7 +32,6 @@ whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to se
         "4)" "Configure and Secure PHP.ini (Recommended)" OFF \
         "5)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
 )
-
 
 case $SELECTPHP in
         "1)")
@@ -68,11 +65,10 @@ case $SELECTPHP in
         ;;
 
         "4)")
-   if [ $CHECKPHP == "y" ]; then
-      echo -e "\nSecure PHP INI for FPM/CLI - \nThis will secure the following:\ncgi.fix_pathinfo=0\nexposephp=off\ndisable_functions = disable dangerous stuff"
+      echo -e "\nSecure PHP INI for FPM/CLI - \nThis will secure the following:\ncgi.fix_pathinfo=0\nexposephp=off\ndisable_functions = disable dangerous functions"
       echo -e "\nSecurity Check - Do you want to secure your php.ini? (y/n)"
-      read CHECKPHPINI
-   if [ $CHECKPHPINI == "y" ]; then
+      read MODIFYPHPINI
+   if [ $MODIFYPHPINI == "y" ]; then
       echo -e "\nMaking backup ups of original fpm and cli php.ini"
       sudo mv /etc/php/7.0/fpm/php.ini /etc/php/7.0/fpm/php.ini.bak
       sudo mv /etc/php/7.0/cli/php.ini /etc/php/7.0/cli/php.ini.bak
@@ -82,9 +78,6 @@ case $SELECTPHP in
       CONFIGCLI=$PHP7_CLI_INI
       cp config/phpini/php.ini $CONFIGCLI 2>/dev/null
       echo -e "\nphp.ini fpm and cli secured\n"
-   else
-      echo -e "\nNot a wise choice, We highly suggest securing your php.ini files\n"
-   fi
    else
      echo -e "\nSkipping php.ini fpm and cli security\n"
    fi
@@ -96,7 +89,8 @@ case $SELECTPHP in
       return
         ;;
 
-esac
+  esac
 
-done
+ done
+
 exit
