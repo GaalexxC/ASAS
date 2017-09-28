@@ -54,10 +54,9 @@ asd
     echo
     read -p "Press [Enter] to begin system check..."
 
-    whiptailCheckInstall
+    whiptailInstallCheck
     validateRoot
     systemDetect
-    #updateSources
     systemUpdate
 
 clear
