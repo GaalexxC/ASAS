@@ -103,8 +103,6 @@ case $MAINNU in
 
         "7)")
                 #clientCheckInstall
-                nginxCheckInstall
-                phpCheckInstall
                 source scripts/user_domain.sh
         ;;
 
