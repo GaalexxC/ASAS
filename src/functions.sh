@@ -8,17 +8,13 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/26/2017
+# Updated:   09/27/2017
 
 #*****************************
 #
 # Global Functions
 #
 #*****************************
-lowercase(){
-        echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
-}
-
 updateSources() {
 apt-get -qq update & PID=$!
     echo -e "\nScanning System...\n"
@@ -30,47 +26,32 @@ apt-get -qq update & PID=$!
     printf "] complete"
 }
 
+validateRoot() {
+NEWT_COLORS='$NEWTCOLOR'
+    if [ "$(id -u)" != "0" ]; then
+       whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 1$
+       exit 1
+    else
+       whiptail --title "System Check" --msgbox "Root User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
+    fi
+}
+
 completeOperation() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-' \
-whiptail --title "Operation Complete" --msgbox "\nOperation Complete\nPress [Enter] for main menu" --ok-button "Main Menu" 10 70
+whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter] for main menu" --ok-button "Main Menu" 10 70
 return
 }
 
 rebootRequired() {
-NEWT_COLORS='
-   root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
   if [ -f /var/run/reboot-required ]; then
-    whiptail --title "Reboot Required" --msgbox "\nYour Kernel was modified a reboot is required\nPress [Enter] to reboot\n\nRun our Kernel Cleaner after boot to remove old kernel(s)\nand update vmlinuz & initrd.img files" --ok-button "Reboot" 10 70
+    whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot\n\nRun our Kernel Cleaner after boot to remove old kernel(s)\nand update vmlinuz & initrd.img files" --ok-button "Reboot" 10 70
     reboot
-  else
-    completeOperation
   fi
 }
 
 PostrebootRequired() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
   if [ -f /var/run/reboot-required ]; then
-    whiptail --title "Reboot Required" --msgbox "\nYour Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
+    whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
     reboot
-  else
-    completeOperation
   fi
 }
 
@@ -84,24 +65,12 @@ add-apt-repository ppa:ondrej/php &&
 apt update
 }
 
-validateRoot() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
-    if [ "$(id -u)" != "0" ]; then
-       whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
-       exit 1
-    else
-       whiptail --title "System Check" --msgbox "Root User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
-    fi
-}
-
 #LicenseView() {
 #}
+
+lowercase(){
+        echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
+}
 
 #*****************************
 #
@@ -202,25 +171,11 @@ while read x; do
                 x=${x%% ...}
                 x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
                 sleep .5
-                echo ""
-                echo ""
                 printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
-                echo 99
-                sleep .50
-                echo 100
-                sleep 5
             fi
         ;;
     esac
-done |
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-' \
-         whiptail --title "System Updater"  --gauge "\nDownloading Updates..." 9 78 0
+done | whiptail --title "System Updater"  --gauge "\nDownloading Updates..." 9 78 0
 #dmesg -E
 #setterm -term linux -msg on
 #invoke-rc.d kbd restart # Restore screen blanking to default setting
@@ -238,6 +193,7 @@ systemUpdate() {
        }
      systemUpdater
      rebootRequired
+     completeOperation
   else
         return
     fi
@@ -252,34 +208,23 @@ systemUpdate() {
 # Check Install
 #
 #*****************************
-whiptailCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
+whiptailInstallCheck() {
    if ! type whiptail > /dev/null 2>&1; then
-      echo "Dependency Check..."
+      echo "Dependency Check...${RED}Whiptail not installed${NOCOL}"
       sleep 1.5
       echo "Installing Whiptail - required by this script"
       apt install whiptail -y
+      echo "${GREEN}Whiptail successfully installed${NOCOL}"
       sleep 2
    else
        whipver=$(whiptail -v 2>&1)
-       whiptail --title "System Check" --msgbox "$whipver installed\nPress [Enter] to continue" --ok-button "Continue" 10 70
+       echo
+       echo -e "${GREEN}Great!, $whipver is installed${NOCOL}"
+       sleep 2
    fi
 }
 
 emailCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
    if ! type postfix > /dev/null 2>&1; then
      if (whiptail --title "Postfix Check" --yesno "Postfix not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 11 78) then
         source scripts/mail_server.sh
@@ -294,13 +239,6 @@ NEWT_COLORS='
 }
 
 bindCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
    if ! type named > /dev/null 2>&1; then
      if (whiptail --title "Bind9 Check" --yesno "Bind9 not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
         source scripts/bind9_install.sh
@@ -315,13 +253,6 @@ NEWT_COLORS='
 }
 
 mysqlCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
    if ! type mysql > /dev/null 2>&1; then
      if (whiptail --title "MySQL Check" --yesno "MySQL not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 11 78) then
         source scripts/mysql_install.sh
@@ -336,13 +267,6 @@ NEWT_COLORS='
 }
 
 nginxCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
    if ! type nginx > /dev/null 2>&1; then
      if (whiptail --title "Nginx Check" --yesno "Nginx not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
         source scripts/nginx_install.sh
@@ -357,13 +281,6 @@ NEWT_COLORS='
 }
 
 phpCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
    if ! type php > /dev/null 2>&1; then
      if (whiptail --title "PHP Check" --yesno "PHP not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
         source scripts/php_install.sh
@@ -378,13 +295,6 @@ NEWT_COLORS='
 }
 
 vsftpdCheckInstall() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
    if ! type vsftpd > /dev/null 2>&1; then
      if (whiptail --title "vsFTPd Check" --yesno "vsFTPd not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
          source scripts/ftp_install.sh
@@ -413,13 +323,6 @@ NEWT_COLORS='
 #
 #*****************************
 nginxCheckCompile() {
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  shadow=,gray
-  button=lightgray,gray
-'
    if ! type nginx > /dev/null 2>&1; then
      if (whiptail --title "Nginx Check" --yesno "Nginx not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
         source scripts/nginx_compile.sh &&
