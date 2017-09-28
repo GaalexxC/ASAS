@@ -12,24 +12,25 @@
 
 #*****************************
 #
-# Global Functions
+# Global Functions / Variables
 #
 #*****************************
+NEWT_COLORS='$NEWTCOLOR'
+
 updateSources() {
 apt-get -qq update & PID=$!
     echo -e "\nScanning System...\n"
     printf "["
   while kill -0 $PID 2> /dev/null; do
-    printf  "▓▓▓"
+    printf  "${PURPLE}▓▓▓${NOCOL}"
     sleep 1
   done
-    printf "] complete"
+    printf "] ${GREEN}complete${NOCOL}"
 }
 
 validateRoot() {
-NEWT_COLORS='$NEWTCOLOR'
     if [ "$(id -u)" != "0" ]; then
-       whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 1$
+       whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
        exit 1
     else
        whiptail --title "System Check" --msgbox "Root User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
@@ -55,6 +56,7 @@ PostrebootRequired() {
   fi
 }
 
+# Work In Progress
 phpDependencies() {
 apt update &&
 apt install -y language-pack-en-base &&
@@ -220,7 +222,7 @@ whiptailInstallCheck() {
        whipver=$(whiptail -v 2>&1)
        echo -e "\n\nDependency Check..."
        sleep 1
-       echo -e "\n${GREEN}Great!, $whipver is installed${NOCOL}\n\n"
+       echo -e "\n${GREEN}Great! $whipver is installed${NOCOL}\n\n"
        sleep 1.5
    fi
 }
