@@ -23,7 +23,7 @@ apt-get -qq update & PID=$!
     echo -e "\nScanning System...\n"
     printf "["
   while kill -0 $PID 2> /dev/null; do
-    printf  "${PURPLE}▓▓▓${NOCOL}"
+    printf  "${BLUE}▓▓▓${NOCOL}"
     sleep 1
   done
     printf "] ${GREEN}complete${NOCOL}"
@@ -148,7 +148,7 @@ systemDetect() {
 # System Functions
 #
 #*****************************
-systemUpdater() {
+systemInstaller() {
 pkg=0
 #dmesg -D
 #setterm -term linux -msg off
@@ -166,7 +166,7 @@ while read x; do
             pkgs=$((u*2+n*2+r))
             pkg=0
         ;;
-        preparing*|unpacking*|setting\ up*|updating*|installing*|found*|removing*\ ...)
+        unpacking*|setting\ up*|updating*|installing*|found*|removing*\ ...)
             if [ $pkgs -gt 0 ]; then
                 pkg=$((pkg+1))
                 x=${x%% (*}
@@ -174,16 +174,18 @@ while read x; do
                 x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
                 sleep .5
                 printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
+                printf "Done"
+                sleep 3
             fi
         ;;
     esac
-done | whiptail --title "System Updater"  --gauge "\nDownloading Updates..." 9 78 0
+done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages..." 9 78 0
 #dmesg -E
 #setterm -term linux -msg on
 #invoke-rc.d kbd restart # Restore screen blanking to default setting
 }
 
-systemUpdate() {
+systemInstall() {
     UPGRADECHECK=$(/usr/lib/update-notifier/apt-check 2>&1)
     security=$(echo "${UPGRADECHECK}" | cut -d ";" -f 2)
     nonsecurity=$(echo "${UPGRADECHECK}" | cut -d ";" -f 1)
@@ -193,7 +195,7 @@ systemUpdate() {
       package() {
          printf "apt upgrade"
        }
-     systemUpdater
+     systemInstaller
      rebootRequired
      completeOperation
   else

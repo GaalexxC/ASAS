@@ -17,42 +17,39 @@ do
 
 SELECTPHP=$(
 whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to select a PHP version\nPHP 5.4/5.5 are no longer receiving security updates" 18 70 5 \
-        "1)" "PHP 5.6" OFF \
+        "1)" "PHP 7.1" OFF \
         "2)" "PHP 7.0 (Recommended)" ON \
-        "3)" "PHP 7.1" OFF \
+        "3)" "PHP 5.6" OFF \
         "4)" "Configure and Secure PHP.ini (Recommended)" OFF \
-        "5)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
+        "5)" "Purge PHP (Removes Everything!)" OFF \
+        "6)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTPHP in
         "1)")
-      echo -e "\nInstalling Depedencies"
-      phpDependencies
-      echo -e "\nInstalling PHP 7.1"
-      apt install $PHP71_PACKAGES
-      echo -e "\nPHP 7.1 Installed"
-      echo -e "\nSystem Updated\n"
+      package() {
+         printf "apt install $PHP71_PACKAGES"
+       }
+      systemInstaller
+      completeOperation
       return
         ;;
 
         "2)")
-      echo -e "\nInstalling Depedencies"
-      phpDependencies
-      echo -e "\nInstalling PHP 7.0"
-      apt install $PHP70_PACKAGES
-      echo -e "\nPHP 7.0 Installed"
-      echo -e "\nSystem Updated\n"
+      package() {
+         printf "apt install $PHP70_PACKAGES"
+       }
+      systemInstaller
+      completeOperation
       return
         ;;
 
         "3)")
-      echo -e "\nInstalling Depedencies"
-      phpDependencies
-      echo -e "\nInstalling PHP 5.6"
-      apt install $PHP56_PACKAGES
-      echo -e "\nPHP 5.6 Installed"
-      echo -e "\nSystem Updated\n"
-      return
+      package() {
+         printf "apt install $PHP56_PACKAGES"
+       }
+      systemInstaller
+      completeOperation
         ;;
 
         "4)")
@@ -76,6 +73,12 @@ case $SELECTPHP in
         ;;
 
         "5)")
+         sudo apt-get purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
+         sudo apt autoremove
+      return
+        ;;
+
+        "6)")
 
       return
         ;;

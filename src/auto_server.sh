@@ -36,9 +36,9 @@ asd
 
     echo -e "\nWelcome to Auto Server Admin Script [ASAS] 2.10\n"
 
-    echo -e "Installer Version: ${CYAN}$INSTALLER_VERSION${NOCOL}"
-    echo -e "Installer Revision: ${CYAN}$INSTALLER_REVISION${NOCOL}"
-    echo -e "Installer MD5: ${CYAN}$INSTALLER_MD5${NOCOL}\n"
+    echo -e "Installer Version: ${BLUE}$INSTALLER_VERSION${NOCOL}"
+    echo -e "Installer Revision: ${BLUE}$INSTALLER_REVISION${NOCOL}"
+    echo -e "Installer MD5: ${BLUE}$INSTALLER_MD5${NOCOL}\n"
     sleep 1
 
     echo "*******************************************************************"
