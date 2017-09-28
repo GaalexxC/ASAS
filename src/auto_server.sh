@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/26/2017
+# Updated:   09/27/2017
 # --------------START SOURCES
 set -o allexport
 source variables.conf
