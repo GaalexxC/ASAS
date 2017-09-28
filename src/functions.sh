@@ -174,8 +174,7 @@ while read x; do
                 x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
                 sleep .5
                 printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
-                printf "Done"
-                sleep 3
+                sleep 2
             fi
         ;;
     esac

@@ -16,12 +16,12 @@ while [ 4 ]
 do
 
 SELECTPHP=$(
-whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to select a PHP version\nPHP 5.4/5.5 are no longer receiving security updates" 18 70 5 \
+whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to select a PHP version\nPHP 5.4/5.5 are no longer receiving security updates" 18 70 6 \
         "1)" "PHP 7.1" OFF \
         "2)" "PHP 7.0 (Recommended)" ON \
         "3)" "PHP 5.6" OFF \
         "4)" "Configure and Secure PHP.ini (Recommended)" OFF \
-        "5)" "Purge PHP (Removes Everything!)" OFF \
+        "5)" "Purge PHP (Warning! Removes Everything!)" OFF \
         "6)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
 )
 
@@ -73,8 +73,10 @@ case $SELECTPHP in
         ;;
 
         "5)")
-         sudo apt-get purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
+         sudo apt purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
          sudo apt autoremove
+         rm -rf /etc/php
+         read -p "PHP has been removed from the system, Press [Enter] to return to main menu"
       return
         ;;
 

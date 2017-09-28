@@ -18,11 +18,12 @@ while [ 3 ]
 do
 
 SELECTNGINX=$(
-whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version" 15 60 4 \
+whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version" 15 60 5 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
-        "3)" "Build Nginx source with Openssl" OFF \
-        "4)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
+        "3)" "Build Nginx source with Openssl (Advanced)" OFF \
+        "4)" "Purge Nginx (WARNING! Removes Everything!)" OFF \
+        "5)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTNGINX in
@@ -152,6 +153,15 @@ case $SELECTNGINX in
         ;;
 
         "4)")
+
+         sudo apt purge `dpkg -l | grep nginx| awk '{print $2}' |tr "\n" " "`
+         sudo apt autoremove
+         rm -rf /etc/nginx
+         read -p "Nginx has been removed from the system, Press [Enter] to return to main menu"
+      return
+        ;;
+
+        "5)")
 
       return
         ;;

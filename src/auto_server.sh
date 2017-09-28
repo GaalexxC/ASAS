@@ -56,7 +56,7 @@ asd
 
     validateRoot
     systemDetect
-    systemUpdate
+    systemInstall
 
 clear
 
