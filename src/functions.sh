@@ -12,7 +12,7 @@
 
 #*****************************
 #
-# Global Functions / Variables
+# Global Functions
 #
 #*****************************
 readarray -t newtcolor < templates/palette
@@ -59,7 +59,6 @@ PostrebootRequired() {
 
 # Work In Progress
 phpDependencies() {
-apt update &&
 apt install -y language-pack-en-base &&
 export LC_ALL=en_US.UTF-8 &&
 export LANG=en_US.UTF-8 &&
@@ -230,14 +229,14 @@ whiptailInstallCheck() {
 
 emailCheckInstall() {
    if ! type postfix > /dev/null 2>&1; then
-     if (whiptail --title "Postfix Check" --yesno "Postfix not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 11 78) then
+     if (whiptail --title "Postfix Check" --yesno "Postfix not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
         source scripts/mail_server.sh
     else
          return
      fi
    else
         postver=$(postfix -v)
-        whiptail --title "Postfix Check" --msgbox "$postver is already installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 12 78
+        whiptail --title "Postfix Check" --msgbox "$postver is already installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
         return
    fi
 }
@@ -251,21 +250,21 @@ bindCheckInstall() {
      fi
    else
         bindver=$(named -v)
-        whiptail --title "Bind9 Check" --msgbox "$bindver is already installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 11 78
+        whiptail --title "Bind9 Check" --msgbox "$bindver is already installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
         return
    fi
 }
 
 mysqlCheckInstall() {
    if ! type mysql > /dev/null 2>&1; then
-     if (whiptail --title "MySQL Check" --yesno "MySQL not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 11 78) then
+     if (whiptail --title "MySQL Check" --yesno "MySQL not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
         source scripts/mysql_install.sh
     else
 	 return
      fi
     else
         dbver=$(mysql -V 2>&1)
-        whiptail --title "MySQL Check" --msgbox "$dbver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 12 78
+        whiptail --title "MySQL Check" --msgbox "$dbver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
         return
    fi
 }
@@ -279,7 +278,7 @@ nginxCheckInstall() {
      fi
    else
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 11 78
+        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
         return
    fi
 }
@@ -293,7 +292,7 @@ phpCheckInstall() {
      fi
    else
         phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-        whiptail --title "PHP Check" --msgbox "$phpver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 11 78
+        whiptail --title "PHP Check" --msgbox "$phpver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
         return
    fi
 }
@@ -307,7 +306,7 @@ vsftpdCheckInstall() {
      fi
    else
         ftpver=$(vsftpd -v 0>&1)
-        whiptail --title "vsFTPd Check" --msgbox "$ftpver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 12 78
+        whiptail --title "vsFTPd Check" --msgbox "$ftpver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
         return
    fi
 }
@@ -336,7 +335,7 @@ nginxCheckCompile() {
      fi
    else
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 11 78
+        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
         return
    fi
 }
@@ -403,7 +402,7 @@ ERROR() {
 #    tr '[:upper:]' '[:lower:]' | \
 #while read x; do
 #    case $x in
-#        *Hit*Get*)
+#        *)
 #            u=${x%% *}
 #            updts=$((u*1))
 #            updt=0

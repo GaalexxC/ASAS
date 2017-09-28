@@ -8,33 +8,31 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/24/2017
+# Updated:   09/27/2017
 
-# Check Nginx/PHP installed and version
+# Check Nginx/PHP
 
-     echo "Checking if Nginx is installed"
-    if ! type nginx > /dev/null 2>&1; then
-     echo "Nginx not installed! You must have Nginx installed to continue"
-     read -p "Press [Enter] key to return to menu..."
-     return
+   if ! type nginx > /dev/null 2>&1; then
+     if (whiptail --title "Nginx Check" --yesno "Nginx not installed and is required\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        source scripts/nginx_install.sh
     else
-     echo -e "Nginx is installed you can continue\n"
-     nginx -v
-     read -p "Press [Enter] key to continue..."
-    fi
+         return
+     fi
+   else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to continue" --ok-button "Continue" 10 70
+   fi
 
-     echo -e "\nChecking if PHP is installed"
-    if ! type php > /dev/null 2>&1; then
-     echo "PHP not installed! You must have PHP installed to continue"
-     read -p "Press [Enter] key to install PHP..."
-      apt -qq update
-      apt install $PHP7_PACKAGES -y
-      echo -e "\nPHP Installed"
-      echo -e "\nSystem Updated\n"
+   if ! type php > /dev/null 2>&1; then
+     if (whiptail --title "PHP Check" --yesno "PHP not installed and required\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        source scripts/php_install.sh
     else
-     echo -e "PHP is installed you can continue\n"
-     read -p "Press [Enter] key to continue..."
-    fi
+         return
+     fi
+   else
+        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+        whiptail --title "PHP Check" --msgbox "$phpver is currently installed\nPress [Enter] to continue" --ok-button "Continue" 10 70
+   fi
 
       echo -e "\nJust double checking your setup, /$HOME_PARTITION partition with $ROOT_DIRECTORY as your root ?"
 
