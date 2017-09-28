@@ -21,7 +21,7 @@ SELECTNGINX=$(
 whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version" 15 60 4 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
-        "3)" "Custom Nginx Compiled with Openssl" OFF \
+        "3)" "Build Nginx source with Openssl" OFF \
         "4)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
 )
 
