@@ -15,7 +15,8 @@
 # Global Functions / Variables
 #
 #*****************************
-NEWT_COLORS='$NEWTCOLOR'
+readarray -t newtcols < templates/palette
+NEWT_COLORS="${newtcols[@]}"
 
 updateSources() {
 apt-get -qq update & PID=$!

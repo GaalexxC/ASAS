@@ -1,0 +1,14 @@
+root=blue
+window=,lightgray
+border=,white
+listbox=,lightgray
+actlistbox=,yellow
+shadow=,black
+button=lightgray,gray
+checkbox=,blue
+entry=,blue
+label=yellow,green
+helpline=,gray
+roottext=green,black
+emptyscale=gray
+disabledentry=green,

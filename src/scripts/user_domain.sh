@@ -10,7 +10,7 @@
 # Created:   06/15/2016
 # Updated:   09/24/2017
 
-# Check Nginx installed and version
+# Check Nginx/PHP installed and version
 
      echo "Checking if Nginx is installed"
     if ! type nginx > /dev/null 2>&1; then
