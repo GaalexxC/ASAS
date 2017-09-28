@@ -50,11 +50,10 @@ asd
     echo "*******************************************************************"
 
     updateSources
-    echo
-    echo
+    whiptailInstallCheck
+
     read -p "Press [Enter] to begin system check..."
 
-    whiptailInstallCheck
     validateRoot
     systemDetect
     systemUpdate
@@ -64,15 +63,6 @@ clear
 while [ 1 ]
 do
 MAINNU=$(
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  listbox=black,lightgray
-  actlistbox=black,yellow
-  shadow=,gray
-  button=lightgray,gray
-' \
 whiptail --title "Auto Server Installer 2.10" --menu "\nSelect the function you want to perform" 20 80 10 \
         "1)" "Nginx Installer (Stable/Mainline/Compiled)"   \
         "2)" "PHP Installer (PHP5 - PHP7)"  \

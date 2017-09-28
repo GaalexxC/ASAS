@@ -210,17 +210,18 @@ systemUpdate() {
 #*****************************
 whiptailInstallCheck() {
    if ! type whiptail > /dev/null 2>&1; then
-      echo "Dependency Check...${RED}Whiptail not installed${NOCOL}"
+      echo -e "\n\nDependency Check...${RED}Whiptail not installed${NOCOL}"
       sleep 1.5
-      echo "Installing Whiptail - required by this script"
+      echo -e "\nInstalling Whiptail - required by this script"
       apt install whiptail -y
-      echo "${GREEN}Whiptail successfully installed${NOCOL}"
+      echo -e "\n${GREEN}Whiptail successfully installed${NOCOL}\n\n"
       sleep 2
    else
        whipver=$(whiptail -v 2>&1)
-       echo
-       echo -e "${GREEN}Great!, $whipver is installed${NOCOL}"
-       sleep 2
+       echo -e "\n\nDependency Check..."
+       sleep 1
+       echo -e "\n${GREEN}Great!, $whipver is installed${NOCOL}\n\n"
+       sleep 1.5
    fi
 }
 
