@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/25/2017
+# Updated:   09/27/2017
 
 clear
 
@@ -16,15 +16,6 @@ while [ 4 ]
 do
 
 SELECTPHP=$(
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  checkbox=black,lightgray
-  actcheckbox=black,blue
-  shadow=,gray
-  button=lightgray,gray
-' \
 whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to select a PHP version\nPHP 5.4/5.5 are no longer receiving security updates" 18 70 5 \
         "1)" "PHP 5.6" OFF \
         "2)" "PHP 7.0 (Recommended)" ON \

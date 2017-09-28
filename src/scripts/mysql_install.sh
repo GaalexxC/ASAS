@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/24/2017
+# Updated:   09/27/2017
 
 clear
 
@@ -18,15 +18,6 @@ while [ 2 ]
 do
 
 SELECTMYSQL=$(
-NEWT_COLORS='
-  root=,blue
-  window=,lightgray
-  border=,white
-  checkbox=black,lightgray
-  actcheckbox=black,blue
-  shadow=,gray
-  button=lightgray,gray
-' \
 whiptail --title "MySQL Server Installer" --radiolist "\nUse up/down arrows and tab to select a MySQL Server" 15 60 4 \
         "1)" "Percona MySQL Server 5.7 (Recommended)" ON \
         "2)" "MariaDB MySQL Server 10.2" OFF \
