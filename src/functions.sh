@@ -163,7 +163,7 @@ while read x; do
             n=${n##*upgraded, }
             r=${x%% to remove*}
             r=${r##*installed, }
-            pkgs=$((u*3+n*3+r))
+            pkgs=$((u*2+n*2+r))
             pkg=0
         ;;
         preparing*|unpacking*|setting\ up*|updating*|installing*|found*|removing*\ ...)
