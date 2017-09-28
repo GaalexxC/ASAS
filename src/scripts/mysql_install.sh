@@ -1,7 +1,7 @@
 #!/bin/bash
 # ASAS 2.10
 # @author: GCornell for devCU Software
-# @contact: support@devcu.com
+# @contact: gacornell@devcu.com
 # Compatibility: Debian Core Systems (Tested on Ubuntu 14x-16x-17x & Debian 8/9)
 # MAIN: https://www.devcu.com
 # CODE: https://github.com/GaalexxC/ASAS
