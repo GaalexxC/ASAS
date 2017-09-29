@@ -63,7 +63,7 @@ clear
 while [ 1 ]
 do
 MAINNU=$(
-whiptail --title "ASAS 2.10" --menu "\nSelect operation from the menu" 20 80 10 \
+whiptail --title "ASAS 2.10" --menu "\nSelect operation from the menu" 20 78 10 \
         "1)" "Nginx Installer (Stable/Mainline/Compiled)"   \
         "2)" "PHP Installer (PHP5 - PHP7)"  \
         "3)" "MySQL Installer (Percona-MariaDB-Oracle)" \
