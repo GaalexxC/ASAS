@@ -129,8 +129,7 @@ case $SELECTNGINX in
       fi
         echo
         echo
-         read -p "Hit [ENTER] to return to main menu..."
-      return
+         read -p "Hit [ENTER] to return to Nginx menu..."
         ;;
 
         "3)")
@@ -158,10 +157,17 @@ case $SELECTNGINX in
         "6)")
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
-        whiptail --title "Security Check" --msgbox "Diffie-Hellman cert already exists!\n\nPress [Enter] to return to Nginx menu" --ok-button "Nginx Menu" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!PATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
-        DiffieHellman
-        whiptail --title "Security Check" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\n\nPress [Enter] to return to Nginx menu" --ok-button "Nginx  Menu" 10 70
+      secureCommand() {
+         output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
+         printf "$output"
+       }
+      secureApp() {
+         printf "openssl"
+       }
+        secureCheckModify
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       fi
         ;;
 

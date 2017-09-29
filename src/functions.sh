@@ -15,41 +15,9 @@
 # Global Functions
 #
 #*****************************
-## NEWT Color palette for whiptail GUI ##
+## NEWT Color palette for ASAS whiptail GUI ##
 readarray -t newtcolor < templates/palette
 NEWT_COLORS="${newtcolor[@]}"
-
-DiffieHellman() {
-{
-        i="0"
-            openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 2> /dev/null &
-            sleep 2
-            while (true)
-            do
-            proc=$(ps aux | grep -v grep | grep -e "openssl")
-            if [[ "$proc" == "" ]] && [[ "$i" -eq "0" ]];
-            then
-                break;
-            elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
-            then
-                sleep 2
-                echo 98
-                sleep 1.5
-                echo 99
-                sleep 1.5
-                echo 100
-                sleep 2
-                break;
-            elif [[ "91" -eq "$i" ]]
-            then
-                i="80"
-            fi
-            sleep 1
-            i=$(expr $i + 1)
-            printf "XXX\n$i\nGenerating dhparam.pem file... ${x}\nXXX\n$i\n"
-        done
-  } | whiptail --title "Security Check"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
-}
 
 ## shhh...Check for updates
 updateSources() {
@@ -73,7 +41,7 @@ validateRoot() {
 }
 
 completeOperation() {
-whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter] for main menu" --ok-button "Main Menu" 10 70
+whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter] for main menu" --ok-button "OK" 10 70
 return
 }
 
@@ -234,7 +202,7 @@ systemInstall() {
         return
     fi
   else
-     whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "Main Menu" 10 70
+     whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
         return
   fi
 }
@@ -270,7 +238,7 @@ emailCheckInstall() {
      fi
    else
         postver=$(postfix -v)
-        whiptail --title "Postfix Check" --msgbox "$postver is already installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
+        whiptail --title "Postfix Check" --msgbox "$postver is already installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
    fi
 }
@@ -284,7 +252,7 @@ bindCheckInstall() {
      fi
    else
         bindver=$(named -v)
-        whiptail --title "Bind9 Check" --msgbox "$bindver is already installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
+        whiptail --title "Bind9 Check" --msgbox "$bindver is already installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
    fi
 }
@@ -298,7 +266,7 @@ mysqlCheckInstall() {
      fi
     else
         dbver=$(mysql -V 2>&1)
-        whiptail --title "MySQL Check" --msgbox "$dbver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
+        whiptail --title "MySQL Check" --msgbox "$dbver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
    fi
 }
@@ -326,7 +294,7 @@ phpCheckInstall() {
      fi
    else
         phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-        whiptail --title "PHP Check" --msgbox "$phpver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
+        whiptail --title "PHP Check" --msgbox "$phpver is currently installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
    fi
 }
@@ -340,7 +308,7 @@ vsftpdCheckInstall() {
      fi
    else
         ftpver=$(vsftpd -v 0>&1)
-        whiptail --title "vsFTPd Check" --msgbox "$ftpver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
+        whiptail --title "vsFTPd Check" --msgbox "$ftpver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
    fi
 }
@@ -369,12 +337,54 @@ nginxCheckCompile() {
      fi
    else
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
+        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
    fi
 }
 
+#*****************************
+#
+# Security Functions
+#
+#*****************************
+secureCheckModify() {
+{
+        i="0"
+            $(secureCommand) 2> /dev/null &
+            sleep 2
+            while (true)
+            do
+            proc=$(ps aux | grep -v grep | grep -e "$(secureApp)")
+            if [[ "$proc" == "" ]] && [[ "$i" -eq "0" ]];
+            then
+                break;
+            elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
+            then
+                sleep 2
+                echo 95
+                sleep 1.5
+                echo 99
+                sleep 1.5
+                echo 100
+                sleep 2
+                break;
+            elif [[ "60" -eq "$i" ]]
+            then
+                i="40"
+            fi
+            sleep 1
+            i=$(expr $i + 1)
+            printf "XXX\n$i\nGenerating dhparam.pem file... ${output}\nXXX\n$i\n"
+        done
+  } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
+}
 
+
+#*****************************
+#
+# Testing Ground
+#
+#*****************************
 #updateSources() {
 #updt=0
 #dmesg -D
