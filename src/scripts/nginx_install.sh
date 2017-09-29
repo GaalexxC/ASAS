@@ -18,12 +18,14 @@ while [ 3 ]
 do
 
 SELECTNGINX=$(
-whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version" 15 60 5 \
+whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version\nUpon selection operation will begin without prompts" 20 78 7 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
-        "4)" "Purge Nginx (WARNING! Removes Everything!)" OFF \
-        "5)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
+        "4)" "Remove Nginx (Preserves Configurations)" OFF \
+        "5)" "Purge Nginx (WARNING! Removes Everything!)" OFF \
+        "6)" "Generate 2048bit Diffie-Hellman (Required for Nginx SSL/TLS)" OFF \
+        "7)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTNGINX in
@@ -63,87 +65,71 @@ case $SELECTNGINX in
    fi
 
 # -------
-# Diffie-Hellman:
-# -------
-      echo -e "\nSecurity Check - Generating 2048bit Diffie-Hellman for TLS"
-   if [ -f /etc/ssl/certs/dhparam.pem ]
-   then
-      echo -e "\nGreat! the file exists\n"
-   else
-         echo -e "\nFile doesnt exist, creating now"
-      openssl dhparam 2048 -out /etc/ssl/certs/dhparam.pem
-   fi
-      echo -e "\nFinished DH TLS Generation\n"
-
-# -------
 # NGINX CONFIG:
 # -------
-   if [ $INSTALLNGINX == "y" ]; then
-     echo -e "\nMaking backup of original nginx.conf"
-     sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-     echo -e "\nUpdating nginx.conf with cache optimization and secure rules\n"
-     CONFIGCONF='/etc/nginx/'
-     cp config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
-     sleep 1
-
-     echo -e "\nCreate nginx $NGINX_SITES_AVAILABLE if doesnt exist"
-   if [ -d "$NGINX_SITES_AVAILABLE" ]
-   then
-     echo -e "\nDirectory $NGINX_SITES_AVAILABLE exists."
-   else
-     mkdir -p $NGINX_SITES_AVAILABLE
-     echo -e "\nFinished directory creation"
-   fi
-     sleep 1 
-
-     echo -e "\nCreate nginx $NGINX_SITES_ENABLED if doesnt exist"
-   if [ -d "$NGINX_SITES_ENABLED" ]
-   then
-     echo -e "\nDirectory $NGINX_SITES_ENABLED exists."
-   else
-     mkdir -p $NGINX_SITES_ENABLED
-     echo -e "\nFinished directory creation"
-   fi
-     sleep 1
-
-     echo -e "\nCreate nginx $NGINX_CONFD if doesnt exist"
-   if [ -d "$NGINX_CONFD" ]
-   then
-     echo -e "\nDirectory $NGINX_CONFD exists."
-   else
-     mkdir -p $NGINX_CONFD
-     echo -e "\nFinished directory creation"
-   fi
-     sleep 1
+      if [ $INSTALLNGINX == "y" ]; then
+        echo -e "\nMaking backup of original nginx.conf"
+        sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+        echo -e "\nUpdating nginx.conf with cache optimization and secure rules\n"
+        CONFIGCONF='/etc/nginx/'
+        cp config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
+        sleep 1
+        echo -e "\nCreate nginx $NGINX_SITES_AVAILABLE if doesnt exist"
+      if [ -d "$NGINX_SITES_AVAILABLE" ]
+      then
+        echo -e "\nDirectory $NGINX_SITES_AVAILABLE exists."
+      else
+        mkdir -p $NGINX_SITES_AVAILABLE
+        echo -e "\nFinished directory creation"
+      fi
+        sleep 1
+        echo -e "\nCreate nginx $NGINX_SITES_ENABLED if doesnt exist"
+      if [ -d "$NGINX_SITES_ENABLED" ]
+      then
+        echo -e "\nDirectory $NGINX_SITES_ENABLED exists."
+      else
+        mkdir -p $NGINX_SITES_ENABLED
+        echo -e "\nFinished directory creation"
+      fi
+        sleep 1
+        echo -e "\nCreate nginx $NGINX_CONFD if doesnt exist"
+      if [ -d "$NGINX_CONFD" ]
+      then
+        echo -e "\nDirectory $NGINX_CONFD exists."
+      else
+        mkdir -p $NGINX_CONFD
+        echo -e "\nFinished directory creation"
+      fi
+        sleep 1
 # -------
 # NGINX VHOST:
 # -------
-     echo -e "\nCreate nginx vhosts.conf if doesnt exist"
-   if [ -f /etc/nginx/conf.d/vhosts.conf ]
-   then
-     echo -e "\nGreat! the file exists"
-   else
-     echo -e "\nThe file doesnt exist, creating..."
-     touch /etc/nginx/conf.d/vhosts.conf
-     echo "include /etc/nginx/sites-enabled/*.vhost;" >>/etc/nginx/conf.d/vhosts.conf
-   fi
-     echo -e "\nFinished vhosts.conf creation"
-     sleep 1
+        echo -e "\nCreate nginx vhosts.conf if doesnt exist"
+      if [ -f /etc/nginx/conf.d/vhosts.conf ]
+      then
+        echo -e "\nGreat! the file exists"
+      else
+        echo -e "\nThe file doesnt exist, creating..."
+        touch /etc/nginx/conf.d/vhosts.conf
+        echo "include /etc/nginx/sites-enabled/*.vhost;" >>/etc/nginx/conf.d/vhosts.conf
+      fi
+        echo -e "\nFinished vhosts.conf creation"
+        sleep 1
 # Create, chown and optimize nginx cache/gzip directories!
-     echo -e "\nCreate, chown and optimize nginx cache/gzip directories"
-     mkdir -p /var/cache/nginx
-     mkdir -p /var/cache/nginx/fcgi
-     mkdir -p /var/cache/nginx/tmp
-     chown -R www-data:root /var/cache/nginx
-     echo -e "\nOperation Complete"
-     echo -e "\nRestart Services\n"
-     $NGINX_INIT
-   else
-     echo -e "\nSkipping Nginx directory setup"
-   fi
-   echo
-   echo
-   read -p "Hit [ENTER] to return to main menu..."
+        echo -e "\nCreate, chown and optimize nginx cache/gzip directories"
+        mkdir -p /var/cache/nginx
+        mkdir -p /var/cache/nginx/fcgi
+        mkdir -p /var/cache/nginx/tmp
+        chown -R www-data:root /var/cache/nginx
+        echo -e "\nOperation Complete"
+        echo -e "\nRestart Services\n"
+         $NGINX_INIT
+      else
+        echo -e "\nSkipping Nginx directory setup"
+      fi
+        echo
+        echo
+         read -p "Hit [ENTER] to return to main menu..."
       return
         ;;
 
@@ -154,19 +140,45 @@ case $SELECTNGINX in
 
         "4)")
 
-         sudo apt purge `dpkg -l | grep nginx| awk '{print $2}' |tr "\n" " "`
+         sudo apt remove `dpkg -l | grep nginx| awk '{print $2}' |tr "\n" " "`
          sudo apt autoremove
-         rm -rf /etc/nginx
-         read -p "Nginx has been removed from the system, Press [Enter] to return to main menu"
+         read -p "Nginx has been removed, configurations preserved\n\nPress [Enter] to return to main menu"
       return
         ;;
 
         "5)")
 
+         sudo apt purge `dpkg -l | grep nginx| awk '{print $2}' |tr "\n" " "`
+         sudo apt autoremove
+         rm -rf /etc/nginx
+         read -p "Nginx has been removed from the system\n\nPress [Enter] to return to main menu"
       return
         ;;
 
-esac
+        "6)")
+        echo -e "\nSecurity Check - Generating 2048bit Diffie-Hellman for Nginx TLS"
+      if [ -f /etc/ssl/certs/dhparam.pem ]
+      then
+        echo -e "\nGreat! Diffie-Hellman cert already exists\n"
+        read -p "Press [Enter] to return to main menu"
+      return
+      else
+        echo -e "\nFile doesnt exist, creating now"
+        openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+        echo -e "Finished Diffie-Hellman cert generation @ /etc/ssl/certs/dhparam.pem\n"
+        read -p "Press [Enter] to return to main menu"
+      return
+      fi
+        ;;
 
-done
+        "7)")
+
+      return
+        ;;
+
+    esac
+
+  done
+
 exit
+
