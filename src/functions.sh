@@ -8,16 +8,50 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/27/2017
+# Updated:   09/29/2017
 
 #*****************************
 #
 # Global Functions
 #
 #*****************************
+## NEWT Color palette for whiptail GUI ##
 readarray -t newtcolor < templates/palette
 NEWT_COLORS="${newtcolor[@]}"
 
+DiffieHellman() {
+{
+        i="0"
+            openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 2> /dev/null &
+            sleep 2
+            while (true)
+            do
+            proc=$(ps aux | grep -v grep | grep -e "openssl")
+            if [[ "$proc" == "" ]] && [[ "$i" -eq "0" ]];
+            then
+                break;
+            elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
+            then
+                sleep 2
+                echo 98
+                sleep 1.5
+                echo 99
+                sleep 1.5
+                echo 100
+                sleep 2
+                break;
+            elif [[ "91" -eq "$i" ]]
+            then
+                i="80"
+            fi
+            sleep 1
+            i=$(expr $i + 1)
+            printf "XXX\n$i\nGenerating dhparam.pem file... ${x}\nXXX\n$i\n"
+        done
+  } | whiptail --title "Security Check"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
+}
+
+## shhh...Check for updates
 updateSources() {
 apt-get -qq update & PID=$!
     echo -e "\nScanning System...\n"
@@ -340,58 +374,6 @@ nginxCheckCompile() {
    fi
 }
 
-#*****************************
-#
-# Logging
-#
-#*****************************
-touch $SCRIPT_LOG
-
-SCRIPTENTRY() {
- timeAndDate=`date`
- script_name=`basename "$0"`
- script_name="${script_name%.*}"
- echo "[$timeAndDate] [DEBUG]  > $script_name started new process" >> $SCRIPT_LOG
-}
-
-SCRIPTEXIT() {
- script_name=`basename "$0"`
- script_name="${script_name%.*}"
- echo "[$timeAndDate] [DEBUG]  < $script_name $FUNCNAME" >> $SCRIPT_LOG
-}
-
-ENTRY() {
- local cfn="${FUNCNAME[1]}"
- timeAndDate=`date`
- echo "[$timeAndDate] [DEBUG]  > $cfn $FUNCNAME" >> $SCRIPT_LOG
-}
-
-EXIT() {
- local cfn="${FUNCNAME[1]}"
- timeAndDate=`date`
- echo "[$timeAndDate] [DEBUG]  < $cfn $FUNCNAME" >> $SCRIPT_LOG
-}
-
-INFO() {
- local function_name="${FUNCNAME[1]}"
-    local msg="$1"
-    timeAndDate=`date`
-    echo "[$timeAndDate] [INFO]  $msg" >> $SCRIPT_LOG
-}
-
-DEBUG() {
- local function_name="${FUNCNAME[1]}"
-    local msg="$1"
-    timeAndDate=`date`
- echo "[$timeAndDate] [DEBUG]  $msg" >> $SCRIPT_LOG
-}
-
-ERROR() {
- local function_name="${FUNCNAME[1]}"
-    local msg="$1"
-    timeAndDate=`date`
-    echo "[$timeAndDate] [ERROR]  $msg" >> $SCRIPT_LOG
-}
 
 #updateSources() {
 #updt=0

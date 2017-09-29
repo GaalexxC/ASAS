@@ -156,18 +156,12 @@ case $SELECTNGINX in
         ;;
 
         "6)")
-        echo -e "\nSecurity Check - Generating 2048bit Diffie-Hellman for Nginx TLS"
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
-        echo -e "\nGreat! Diffie-Hellman cert already exists\n"
-        read -p "Press [Enter] to return to main menu"
-      return
+        whiptail --title "Security Check" --msgbox "Diffie-Hellman cert already exists!\n\nPress [Enter] to return to Nginx menu" --ok-button "Nginx Menu" 10 70
       else
-        echo -e "\nFile doesnt exist, creating now"
-        openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-        echo -e "Finished Diffie-Hellman cert generation @ /etc/ssl/certs/dhparam.pem\n"
-        read -p "Press [Enter] to return to main menu"
-      return
+        DiffieHellman
+        whiptail --title "Security Check" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\n\nPress [Enter] to return to Nginx menu" --ok-button "Nginx  Menu" 10 70
       fi
         ;;
 
