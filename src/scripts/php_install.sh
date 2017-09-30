@@ -16,14 +16,15 @@ while [ 4 ]
 do
 
 SELECTPHP=$(
-whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to select a PHP version\nUpon selection operation will begin without prompts" 20 78 7 \
+whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to select a PHP version\nUpon selection operation will begin without prompts" 20 78 8 \
         "1)" "PHP 7.1" OFF \
         "2)" "PHP 7.0 (Recommended)" ON \
         "3)" "PHP 5.6" OFF \
         "4)" "Configure and Secure PHP.ini (Recommended)" OFF \
         "5)" "Remove PHP (Preserves Configurations)" OFF \
         "6)" "Purge PHP (Warning! Removes Everything!)" OFF \
-        "7)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
+        "7)" "Return to Main Menu" OFF \
+        "8)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTPHP in
@@ -90,10 +91,12 @@ case $SELECTPHP in
         ;;
 
         "7)")
-
       return
         ;;
 
+        "8)")
+      exit 1
+        ;;
   esac
 
  done

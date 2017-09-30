@@ -18,20 +18,25 @@ while [ 3 ]
 do
 
 SELECTNGINX=$(
-whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version\nUpon selection operation will begin without prompts" 20 78 7 \
+whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version\nUpon selection operation will begin without prompts" 20 78 8 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
         "4)" "Remove Nginx (Preserves Configurations)" OFF \
         "5)" "Purge Nginx (WARNING! Removes Everything!)" OFF \
         "6)" "Generate 2048bit Diffie-Hellman (Required for Nginx SSL/TLS)" OFF \
-        "7)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
+        "7)" "Return to Main Menu" OFF \
+        "8)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTNGINX in
         "1)")
-
-      return
+   if ! type nginx > /dev/null 2>&1; then
+        return
+      else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      fi
         ;;
 
         "2)")
@@ -137,8 +142,12 @@ case $SELECTNGINX in
         ;;
 
         "3)")
-
-      return
+      if ! type nginx > /dev/null 2>&1; then
+        return
+      else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      fi
         ;;
 
         "4)")
@@ -176,10 +185,12 @@ case $SELECTNGINX in
         ;;
 
         "7)")
-
       return
         ;;
 
+        "8)")
+      exit 1
+        ;;
     esac
 
   done
