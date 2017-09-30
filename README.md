@@ -20,6 +20,7 @@
 </pre>
 
 - Bash script that automates basic Linux Sysadmin tasks...
+See the (Wiki for more info and usage)[https://github.com/GaalexxC/ASAS/wiki]
 
 ## License
 
