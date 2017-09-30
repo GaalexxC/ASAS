@@ -20,7 +20,6 @@
 </pre>
 
 - Bash script that automates basic Linux Sysadmin tasks...
-- Installs, configures, secures, and optimizes: Nginx, PHP, MySQL, Bind9 DNS, vsFTPd, Mail Server(Postfix/Dovecot)PHP-FPM Setup and User/Domain setup in a couple minutes. For new/fresh servers, existing servers, and local servers (development). Can be used to add new users / domains and home / application directory structures anytime.
 
 ## License
 
