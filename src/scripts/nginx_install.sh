@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/27/2017
+# Updated:   09/30/2017
 
 clear
 
@@ -35,7 +35,7 @@ case $SELECTNGINX in
         ;;
 
         "2)")
-# Install and/or upgrade Nginx to stable
+   if ! type nginx > /dev/null 2>&1; then
       echo -e  "\nDo you want to install Nginx Stable(y/n)"
       read INSTALLNGINX
    if [ $INSTALLNGINX == "y" ]; then
@@ -130,6 +130,10 @@ case $SELECTNGINX in
         echo
         echo
          read -p "Hit [ENTER] to return to Nginx menu..."
+      else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      fi
         ;;
 
         "3)")
