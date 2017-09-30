@@ -49,13 +49,13 @@ asd
     echo "* and we assume NO LIABILITY. Use at your own risk.               *"
     echo "*******************************************************************"
 
-    updateSources
     whiptailInstallCheck
 
     read -p "Press [Enter] to begin system check..."
 
     validateRoot
     systemDetect
+    updateSources
     systemInstall
 
 clear
