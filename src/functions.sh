@@ -19,18 +19,6 @@
 readarray -t newtcolor < templates/palette
 NEWT_COLORS="${newtcolor[@]}"
 
-## shhh...Check for updates
-updateSources() {
-apt-get -qq update & PID=$!
-    echo -e "\nScanning System...\n"
-    printf "["
-  while kill -0 $PID 2> /dev/null; do
-    printf  "${BLUE}▓▓▓${NOCOL}"
-    sleep 1
-  done
-    printf "] ${GREEN}complete${NOCOL}"
-}
-
 validateRoot() {
     if [ "$(id -u)" != "0" ]; then
        whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
@@ -46,13 +34,6 @@ return
 }
 
 rebootRequired() {
-  if [ -f /var/run/reboot-required ]; then
-    whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot\n\nRun our Kernel Cleaner after boot to remove old kernel(s)\nand update vmlinuz & initrd.img files" --ok-button "Reboot" 10 70
-    reboot
-  fi
-}
-
-PostrebootRequired() {
   if [ -f /var/run/reboot-required ]; then
     whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
     reboot
@@ -374,6 +355,43 @@ secureCheckModify() {
   } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
 }
 
+#*****************************
+#
+# Update Source List Functions
+#
+#*****************************
+updateSources() {
+{
+        i="0"
+            apt update 2> /dev/null &
+            sleep 1
+            while (true)
+            do
+            proc=$(ps aux | grep -v grep | grep -e "apt")
+            if [[ "$proc" == "" ]] && [[ "$i" -eq "0" ]];
+            then
+                break;
+            elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
+            then
+                sleep .25
+                echo 98
+                sleep .25
+                echo 99
+                sleep .5
+                echo 100
+                sleep 1
+                break;
+            elif [[ "60" -eq "$i" ]]
+            then
+                i="40"
+            fi
+            sleep .10
+            i=$(expr $i + 1)
+            z=$(echo "$output")
+            printf "XXX\n$i\nUpdating apt sources... ${z}\nXXX\n$i\n"
+        done
+  } | whiptail --title "Update Check"  --gauge "\nChecing for system updates" 9 78 0
+}
 
 #*****************************
 #
