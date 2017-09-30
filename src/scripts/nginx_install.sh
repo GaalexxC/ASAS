@@ -157,7 +157,7 @@ case $SELECTNGINX in
         "6)")
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
-        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!PATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
       secureCommand() {
          output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
