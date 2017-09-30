@@ -156,7 +156,7 @@ while read x; do
                 x=${x%% ...}
                 x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
                 sleep .25
-                printf "XXX\n$((pkg*100/pkgs))\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
+                printf "XXX\n$((pkg*100/pkgs))\n\n${x} ...\nXXX\n$((pkg*100/pkgs))\n"
             fi
         ;;
     esac
@@ -350,7 +350,7 @@ secureCheckModify() {
             sleep 1
             i=$(expr $i + 1)
             z=$(echo "$output")
-            printf "XXX\n$i\nGenerating dhparam.pem file... ${z}\nXXX\n$i\n"
+            printf "XXX\n$i\n\nGenerating dhparam.pem file... ${z}\nXXX\n$i\n"
         done
   } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
 }
@@ -361,36 +361,27 @@ secureCheckModify() {
 #
 #*****************************
 updateSources() {
-{
-        i="0"
-            apt update 2> /dev/null &
-            sleep 1
-            while (true)
-            do
-            proc=$(ps aux | grep -v grep | grep -e "apt")
-            if [[ "$proc" == "" ]] && [[ "$i" -eq "0" ]];
-            then
-                break;
-            elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
-            then
-                sleep .25
-                echo 98
-                sleep .25
-                echo 99
-                sleep .5
-                echo 100
-                sleep 1
-                break;
-            elif [[ "60" -eq "$i" ]]
-            then
-                i="40"
-            fi
-            sleep .10
-            i=$(expr $i + 1)
-            z=$(echo "$output")
-            printf "XXX\n$i\nUpdating apt sources... ${z}\nXXX\n$i\n"
-        done
-  } | whiptail --title "Update Check"  --gauge "\nChecing for system updates" 9 78 0
+         i=0
+         apt update 2> /dev/null | \
+         tr '[:upper:]' '[:lower:]' | \
+            while read x; do
+            case $x in
+        *inrelease*)
+            z=4
+            i=0
+        ;;
+            fetched*|building*|reading*|all*\ ...)
+            if [ $z -gt 0 ]; then
+                i=$((i+1))
+                x=${x%% (*}
+                x=${x%% ...}
+                x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
+                sleep .50
+                printf "XXX\n$((i*100/z))\n\n${x}\nXXX\n$((i*100/z))\n"
+           fi
+        ;;
+    esac
+done | whiptail --title "Update Check"  --gauge "\nChecking for system updates" 9 78 0
 }
 
 #*****************************
@@ -398,36 +389,29 @@ updateSources() {
 # Testing Ground
 #
 #*****************************
-#updateSources() {
-#updt=0
-#dmesg -D
-#setterm -term linux -msg off
-#setterm -term linux -blank 0
-#    apt update 2> /dev/null | \
-#    tr '[:upper:]' '[:lower:]' | \
-#while read x; do
-#    case $x in
-#        *)
-#            u=${x%% *}
-#            updts=$((u*1))
-#            updt=0
-#        ;;
-#        Fetched*|Building*|Reading*\ ...)
-#            if [ $updts -gt 0 ]; then
-#                updt=$((updt+1))
-#                x=${x%% (*}
-#                x=${x%% ...}
-#                x=$(echo ${x:1} | tr '[:lower:]' '[:upper:]')${x:1}
-#                sleep .1
-#                echo
-#                printf "XXX\n$((updt*100/updts))\n${x} ...\nXXX\n$((updt*100/updts))\n"
-#            fi
-#        ;;
-#    esac
-#done | whiptail --title "System Check" --gauge "\nChecking for Updates..." 9 78 0
-#dmesg -E
-#setterm -term linux -msg on
-#}
+secureCheckModify2() {
+            i=0
+            $(secureCommand) 2> /dev/null | \
+            while read x; do
+            case $x in
+        *+*)
+            z=20
+            i=0
+        ;;
+           +*\ ...)
+            proc=$(ps aux | grep -v grep | grep -e "$(secureApp)")
+            if [[ "$proc" == "" ]] && [[ $z -gt 0 ]]; then
+                i=$((i+1))
+                x=${x% (*}
+                x=${x% ...}
+                x=$(echo ${x:1})
+                sleep .50
+                printf "XXX\n$((i*100/z))\n\n${x}\nXXX\n$((i*100/z))\n"
+           fi
+        ;;
+    esac
+done | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
+}
 
 ############
 # File End #
