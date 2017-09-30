@@ -273,29 +273,23 @@ mysqlCheckInstall() {
 
 nginxCheckInstall() {
    if ! type nginx > /dev/null 2>&1; then
-     if (whiptail --title "Nginx Check" --yesno "Nginx not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        whiptail --title "Nginx Check-Install" --msgbox "Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
         source scripts/nginx_install.sh
-    else
-         return
-     fi
    else
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "Main Menu" 10 70
-        return
+        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        source scripts/nginx_install.sh
    fi
 }
 
 phpCheckInstall() {
    if ! type php > /dev/null 2>&1; then
-     if (whiptail --title "PHP Check" --yesno "PHP not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
         source scripts/php_install.sh
-    else
-         return
-     fi
    else
         phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-        whiptail --title "PHP Check" --msgbox "$phpver is currently installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
-        return
+        whiptail --title "PHP Check-Install" --msgbox "$phpver is currently installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        source scripts/php_install.sh
    fi
 }
 
