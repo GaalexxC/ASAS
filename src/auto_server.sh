@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/27/2017
+# Updated:   09/30/2017
 # --------------START SOURCES
 set -o allexport
 source variables.conf
@@ -70,7 +70,7 @@ whiptail --title "ASAS 2.10" --menu "\nSelect operation from the menu" 20 78 10 
         "4)" "Bind9 DNS Installer (Configure-Secure)" \
         "5)" "vsFTPd Installer (Configure-Secure)" \
         "6)" "Mail Server Installer (Postfix-Dovecot)" \
-        "7)" "Quick Web User & Domain Setup" \
+        "7)" "Web User & Domain Setup" \
         "8)" "Security Tools" \
         "9)" "System Tools" \
        "10)" "Exit"  3>&2 2>&1 1>&3

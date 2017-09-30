@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/29/2017
+# Updated:   09/30/2017
 
 #*****************************
 #
@@ -360,7 +360,7 @@ secureCheckModify() {
                 break;
             elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
             then
-                sleep 2
+                sleep .5
                 echo 95
                 sleep 1.5
                 echo 99
@@ -374,7 +374,8 @@ secureCheckModify() {
             fi
             sleep 1
             i=$(expr $i + 1)
-            printf "XXX\n$i\nGenerating dhparam.pem file... ${output}\nXXX\n$i\n"
+            z=$(echo "$output")
+            printf "XXX\n$i\nGenerating dhparam.pem file... ${z}\nXXX\n$i\n"
         done
   } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
 }
