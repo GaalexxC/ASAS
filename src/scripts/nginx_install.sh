@@ -40,39 +40,20 @@ case $SELECTNGINX in
         ;;
 
         "2)")
-   if ! type nginx > /dev/null 2>&1; then
-      echo -e  "\nDo you want to install Nginx Stable(y/n)"
-      read INSTALLNGINX
-   if [ $INSTALLNGINX == "y" ]; then
-      echo -e  "\nChecking if Nginx stable repo exists"
-   if grep -q $NGINX_STABLE $APT_SOURCES; then
-      echo "Great! we found '$NGINX_STABLE' lets install:"
-      echo -e  "\nLooking for latest nginx, this may take a few seconds..."
-      apt -qq update
-      apt install nginx fcgiwrap -y
-      nginx -v
-      echo -e "\nNginx Installed"
-   else
-      echo "We couldnt find '$NGINX_STABLE' adding it now and updating:"
-      echo "deb http://nginx.org/packages/ubuntu/ xenial nginx" >> $APT_SOURCES
-      echo "deb-src http://nginx.org/packages/ubuntu/ xenial nginx" >> $APT_SOURCES
-      apt clean
-      echo "Grabbing signing key"
-      curl -O https://nginx.org/keys/nginx_signing.key && apt-key add ./nginx_signing.key
-      echo -e  "\nLooking for nginx, this may take a few seconds..."
-      apt -qq update
-      apt-get install nginx fcgiwrap -y
-      nginx -v
-      echo -e "\nNginx installed successfully\n"
-   fi
-   else
-      echo -e "\nSkipping Nginx stable install\n"
-   fi
+    if ! type nginx > /dev/null 2>&1; then
+      debrepo="deb http://nginx.org/packages/ubuntu/ xenial nginx"
+      debsrcrepo="deb-src http://nginx.org/packages/ubuntu/ xenial nginx"
+      nginxRepoAdd
+      updateSources
+      package() {
+         printf "apt install nginx fcgiwrap"
+       }
+      systemInstaller
+      sleep 2
 
 # -------
 # NGINX CONFIG:
 # -------
-      if [ $INSTALLNGINX == "y" ]; then
         echo -e "\nMaking backup of original nginx.conf"
         sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
         echo -e "\nUpdating nginx.conf with cache optimization and secure rules\n"
@@ -129,12 +110,9 @@ case $SELECTNGINX in
         echo -e "\nOperation Complete"
         echo -e "\nRestart Services\n"
          $NGINX_INIT
-      else
-        echo -e "\nSkipping Nginx directory setup"
-      fi
-        echo
-        echo
-         read -p "Hit [ENTER] to return to Nginx menu..."
+        sleep 3
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -151,20 +129,42 @@ case $SELECTNGINX in
         ;;
 
         "4)")
-
-         sudo apt remove `dpkg -l | grep nginx| awk '{print $2}' |tr "\n" " "`
-         sudo apt autoremove
-         read -p "Nginx has been removed, configurations preserved\n\nPress [Enter] to return to main menu"
-      return
+         apt remove nginx -y
+         apt autoremove -y
+         sed -i.bak '/nginx/d' $APT_SOURCES
+         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed, configurations preserved\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
         ;;
 
         "5)")
+     if type nginx > /dev/null 2>&1; then
+      if (whiptail --title "Purge Nginx" --yesno "Warning! This will delete Nginx from your system!\nAll configurations removed, there is no going back!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
 
-         sudo apt purge `dpkg -l | grep nginx| awk '{print $2}' |tr "\n" " "`
-         sudo apt autoremove
+       package() {
+         printf "apt purge nginx fcgiwrap spawn-fcgi"
+       }
+       systemInstaller
+       sleep 2
+       package() {
+         printf "apt autoremove"
+       }
+       systemInstaller
+       sleep 2
+         echo "removing directories"
          rm -rf /etc/nginx
-         read -p "Nginx has been removed from the system\n\nPress [Enter] to return to main menu"
-      return
+         echo "Removing Nginx repos"
+         sed -i.bak '/nginx/d' $APT_SOURCES
+       package() {
+         printf "apt autoclean"
+       }
+       systemInstaller
+         sleep 4
+         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+     else
+         whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
+     fi
+     else
+         whiptail --title "Nginx Check-Install" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+     fi
         ;;
 
         "6)")

@@ -33,6 +33,11 @@ whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter
 return
 }
 
+cancelOperation() {
+whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] for main menu" --ok-button "OK" 10 70
+return
+}
+
 rebootRequired() {
   if [ -f /var/run/reboot-required ]; then
     whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
@@ -186,6 +191,24 @@ systemInstall() {
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
         return
   fi
+}
+
+nginxRepoAdd() {
+{
+    echo "$debrepo" >> $APT_SOURCES
+    echo "$debsrcrepo" >> $APT_SOURCES
+    sleep 2
+    echo -e "XXX\n25\nAdding Nginx stable repo... \nXXX"
+    sleep 1
+    echo -e "XXX\n50\nAdding Nginx stable repo... Done.\nXXX"
+    sleep 1
+    echo -e "XXX\n75\nFetch Nginx signing key... \nXXX"
+    curl -O https://nginx.org/keys/nginx_signing.key 2> /dev/null &&
+    apt-key add ./nginx_signing.key 2> /dev/null &
+    sleep 1
+    echo -e "XXX\n100\nFetch Nginx signing key... Done.\nXXX"
+    sleep 1
+  } | whiptail --title "Nginx Stable Repo" --gauge "Preparing to install Nginx Stable" 9 78 0
 }
 
 #*****************************
