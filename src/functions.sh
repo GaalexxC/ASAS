@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/30/2017
+# Updated:   10/01/2017
 
 #*****************************
 #
@@ -58,8 +58,14 @@ apt update
 #LicenseView() {
 #}
 
-lowercase(){
+lowercase() {
         echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
+}
+
+clean_string() {
+        clean=$1
+        clean=${clean//\"/}
+        echo $clean
 }
 
 #*****************************
@@ -67,66 +73,44 @@ lowercase(){
 # System Detect Functions
 #
 #*****************************
-systemDetect() {
-	OS=`lowercase \`uname\``
-	KERNEL=`uname -r`
-	MACH=`uname -m`
+systemDetect()
+{
+        OS=`uname`
+        KERNEL=`uname -r`
+        ARCH=`uname -m`
         declare -a osdist=( Debian Ubuntu )
         declare -a osrev=( 8 9 14.04 15.10 16.04 16.10 17.04 17.10 )
 
-	if [ "${OS}" == "windowsnt" ]; then
-		OS=windows
-	elif [ "${OS}" == "darwin" ]; then
-		OS=mac
-	else
-		OS=`uname`
-		if [ "${OS}" = "SunOS" ] ; then
-			OS=Solaris
-			ARCH=`uname -p`
-			OSSTR="${OS} ${REV}(${ARCH} `uname -v`)"
-		elif [ "${OS}" = "AIX" ] ; then
-			OSSTR="${OS} `oslevel` (`oslevel -r`)"
-		elif [ "${OS}" = "Linux" ] ; then
-			if [ -f /etc/redhat-release ] ; then
-				DistroBasedOn='RedHat'
-				DIST=`cat /etc/redhat-release |sed s/\ release.*//`
-				PSUEDONAME=`cat /etc/redhat-release | sed s/.*\(// | sed s/\)//`
-				REV=`cat /etc/redhat-release | sed s/.*release\ // | sed s/\ .*//`
-			elif [ -f /etc/SuSE-release ] ; then
-				DistroBasedOn='SuSe'
-				PSUEDONAME=`cat /etc/SuSE-release | tr "\n" ' '| sed s/VERSION.*//`
-				REV=`cat /etc/SuSE-release | tr "\n" ' ' | sed s/.*=\ //`
-			elif [ -f /etc/mandrake-release ] ; then
-				DistroBasedOn='Mandrake'
-				PSUEDONAME=`cat /etc/mandrake-release | sed s/.*\(// | sed s/\)//`
-				REV=`cat /etc/mandrake-release | sed s/.*release\ // | sed s/\ .*//`
-			elif [ -f /etc/debian_version ] ; then
-				DistroBasedOn='Debian'
-				if [ -f /etc/lsb-release ] ; then
-			        	DIST=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -F=  '{ print $2 }'`
-			                PSUEDONAME=`cat /etc/lsb-release | grep '^DISTRIB_CODENAME' | awk -F=  '{ print $2 }'`
-			                REV=`cat /etc/lsb-release | grep '^DISTRIB_RELEASE' | awk -F=  '{ print $2 }'`
-            			fi
-			fi
-			if [ -f /etc/UnitedLinux-release ] ; then
-				DIST="${DIST}[`cat /etc/UnitedLinux-release | tr "\n" ' ' | sed s/VERSION.*//`]"
-			fi
-			OS=`lowercase $OS`
-			DistroBasedOn=`lowercase $DistroBasedOn`
-		 	readonly OS
-		 	readonly DIST
-			readonly DistroBasedOn
-		 	readonly PSUEDONAME
-		 	readonly REV
-		 	readonly KERNEL
-		 	readonly MACH
-		fi
+        if [ "${OS}" = "Linux" ]; then
+                if [ -f /etc/debian_version ]; then
+                        BASEDON='Debian'
+                        DISTRIBUTION=`cat /etc/*-release | grep '^NAME' | awk -F=  '{ print $2 }'`
+                        VERSION=`cat /etc/*-release | grep '^VERSION_ID' | awk -F=  '{ print $2 }'`
+                        CODENAME=`cat /etc/*-release | grep '^VERSION' | awk -F=  '{ print $2 }'`
+                        RELEASE=`cat /etc/*-release | grep '^PRETTY_NAME' | awk -F=  '{ print $2 }'`
+                        fi
+                fi
+        OS=`clean_string "$OS"`
+        DISTRIBUTION=`clean_string $DISTRIBUTION`
+        BASEDON=`clean_string "$BASEDON"`
+        CODENAME=`clean_string "$CODENAME"`
+        RELEASE=`clean_string "$RELEASE"`
+        VERSION=`clean_string $VERSION`
+        KERNEL=`clean_string "$KERNEL"`
+        ARCH=`clean_string "$ARCH"`
 
-	fi
-        if [[ "${osdist[*]}" =~ "$DIST"  && "${osrev[*]}" =~ "$REV" ]] ; then
-                whiptail --title "System Detect" --msgbox "OS: $OS\nDIST: $DIST\nPSUEDONAME: $PSUEDONAME\nREV: $REV\nDistroBasedOn: $DistroBasedOn\nKERNEL: $KERNEL\nMACH: $MACH\n\nGreat, $DIST - $REV is supported" --ok-button "Continue" 16 70 6
+        readonly OS
+        readonly DISTRIBUTION
+        readonly BASEDON
+        readonly CODENAME
+        readonly VERSION
+        readonly RELEASE
+        readonly KERNEL
+        readonly ARCH
+        if [[ "${osdist[*]}" =~ "$DISTRIBUTION"  && "${osrev[*]}" =~ "$VERSION" ]] ; then
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRIBUTION\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBasedOn: $BASEDON\nKernel: $KERNEL\nArchetecture: $ARCH\n\nGreat $DISTRIBUTION - $VERSION is supported" --ok-button "Continue" 16 70 6
         else
-                whiptail --title "System Detect" --msgbox "OS: $OS\nDIST: $DIST\nPSUEDONAME: $PSUEDONAME\nREV: $REV\nDistroBasedOn: $DistroBasedOn\nKERNEL: $KERNEL\nMACH: $MACH\n\nSorry $DIST - $REV is not supported" --ok-button "Exit" 16 70 6
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRIBUTION\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBasedOn: $BASEDON\nKernel: $KERNEL\nArchetecture: $ARCH\n\nSorry $DISTRIBUTION - $VERSION is not supported" --ok-button "Exit" 16 70 6
         exit 1
         fi
 }
