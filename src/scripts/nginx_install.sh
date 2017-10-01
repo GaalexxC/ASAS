@@ -107,7 +107,8 @@ case $SELECTNGINX in
         mkdir -p /var/cache/nginx/fcgi
         mkdir -p /var/cache/nginx/tmp
         chown -R www-data:root /var/cache/nginx
-        echo -e "\nOperation Complete"
+        echo -e "\nRemove signing key"
+        rm -rf ./nginx_signing.key
         echo -e "\nRestart Services\n"
          $NGINX_INIT
         sleep 3
@@ -196,4 +197,3 @@ case $SELECTNGINX in
   done
 
 exit
-
