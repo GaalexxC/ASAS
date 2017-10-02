@@ -150,7 +150,7 @@ while read x; do
             fi
         ;;
     esac
-done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages..." 9 78 0
+done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages..." 10 70 0
 #dmesg -E
 #setterm -term linux -msg on
 #invoke-rc.d kbd restart # Restore screen blanking to default setting
@@ -217,7 +217,7 @@ nginxRepoAdd() {
     sleep 1
     echo -e "XXX\n100\n\nFetch Nginx signing key... Done.\nXXX"
     sleep 1
-  } | whiptail --title "Nginx Stable Repo" --gauge "\nPreparing to install Nginx Stable" 10 78 0
+  } | whiptail --title "Nginx Stable Repo" --gauge "\nPreparing to install Nginx Stable" 10 70 0
 }
 
 #*****************************
@@ -384,7 +384,7 @@ secureCheckModify() {
             z=$(echo "$output")
             printf "XXX\n$i\n\nGenerating dhparam.pem file... ${z}\nXXX\n$i\n"
         done
-  } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
+  } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 10 70 0
 }
 
 #*****************************
@@ -413,7 +413,7 @@ updateSources() {
            fi
         ;;
     esac
-done | whiptail --title "Package Check"  --gauge "\nRefreshing package cache" 9 78 0
+done | whiptail --title "Package Check"  --gauge "\nRefreshing package cache" 10 70 0
 }
 
 #*****************************
@@ -442,7 +442,7 @@ secureCheckModify2() {
            fi
         ;;
     esac
-done | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 9 78 0
+done | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 10 70 0
 }
 
 ############
