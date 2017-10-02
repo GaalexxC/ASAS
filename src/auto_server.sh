@@ -14,7 +14,6 @@ set -o allexport
 source variables.conf
 source functions.sh
 # --------------END SOURCES
-
 asd() {
 cat <<"EOT"
 
@@ -55,6 +54,9 @@ asd
 
     validateRoot
     systemDetect
+    pkgcache() {
+       printf "apt update"
+    }
     updateSources
     systemInstall
 
