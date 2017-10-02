@@ -8,7 +8,7 @@
 # REPO: https://www.devcu.net
 # License: GNU General Public License v3.0
 # Created:   06/15/2016
-# Updated:   09/30/2017
+# Updated:   10/01/2017
 
 clear
 
@@ -41,12 +41,20 @@ case $SELECTNGINX in
 
         "2)")
     if ! type nginx > /dev/null 2>&1; then
+     if [ "$DISTRO" = "Ubuntu" ]; then
       debrepo="deb http://nginx.org/packages/ubuntu/ xenial nginx"
       debsrcrepo="deb-src http://nginx.org/packages/ubuntu/ xenial nginx"
+     else
+      debrepo="deb http://nginx.org/packages/debian/ jessie nginx"
+      debsrcrepo="deb-src http://nginx.org/packages/debian/ jessie nginx"
+     fi
       nginxRepoAdd
+      pkgcache() {
+         printf "apt update"
+       }
       updateSources
       package() {
-         printf "apt install nginx fcgiwrap"
+         printf "apt --yes --force-yes install nginx fcgiwrap"
        }
       systemInstaller
       sleep 2
@@ -55,7 +63,7 @@ case $SELECTNGINX in
 # NGINX CONFIG:
 # -------
         echo -e "\nMaking backup of original nginx.conf"
-        sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+        mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
         echo -e "\nUpdating nginx.conf with cache optimization and secure rules\n"
         CONFIGCONF='/etc/nginx/'
         cp config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
@@ -130,35 +138,40 @@ case $SELECTNGINX in
         ;;
 
         "4)")
-         apt remove nginx -y
-         apt autoremove -y
+     if type nginx > /dev/null 2>&1; then
+         apt --yes --force-yes remove nginx
+         apt-get --yes --force-yes autoremove
          sed -i.bak '/nginx/d' $APT_SOURCES
          whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed, configurations preserved\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+     else
+         whiptail --title "Nginx Check-Install" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+     fi
         ;;
 
         "5)")
      if type nginx > /dev/null 2>&1; then
-      if (whiptail --title "Purge Nginx" --yesno "Warning! This will delete Nginx from your system!\nAll configurations removed, there is no going back!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
+      if (whiptail --title "Purge Nginx" --yesno "Warning! This will wipe Nginx from your system!\nAll configurations/logs/repos...etc removed!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
 
        package() {
-         printf "apt purge nginx fcgiwrap spawn-fcgi"
+         printf "apt --yes --force-yes purge nginx fcgiwrap spawn-fcgi"
        }
        systemInstaller
-       sleep 2
-       package() {
-         printf "apt autoremove"
+       sleep 1
+       pkgcache() {
+          printf "apt-get --yes --force-yes autoremove"
        }
-       systemInstaller
-       sleep 2
+       updateSources
+       sleep 1
          echo "removing directories"
          rm -rf /etc/nginx
+         rm -rf /var/log/nginx
          echo "Removing Nginx repos"
          sed -i.bak '/nginx/d' $APT_SOURCES
-       package() {
-         printf "apt autoclean"
+       pkgcache() {
+          printf "apt-get autoclean"
        }
-       systemInstaller
-         sleep 4
+       updateSources
+       sleep 1
          whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
      else
          whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70

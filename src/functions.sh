@@ -75,24 +75,25 @@ clean_string() {
 #*****************************
 systemDetect()
 {
-        OS=`uname`
+	OS=`lowercase \`uname\``
         KERNEL=`uname -r`
         ARCH=`uname -m`
         declare -a osdist=( Debian Ubuntu )
         declare -a osrev=( 8 9 14.04 15.10 16.04 16.10 17.04 17.10 )
 
-        if [ "${OS}" = "Linux" ]; then
+        if [ "${OS}" = "linux" ] ; then
                 if [ -f /etc/debian_version ]; then
-                        BASEDON='Debian'
-                        DISTRIBUTION=`cat /etc/*-release | grep '^NAME' | awk -F=  '{ print $2 }'`
+                        DistroBaseCore='Debian'
+                        DISTRO=`cat /etc/*-release | grep '^NAME' | awk -F=  '{ print $2 }'`
                         VERSION=`cat /etc/*-release | grep '^VERSION_ID' | awk -F=  '{ print $2 }'`
                         CODENAME=`cat /etc/*-release | grep '^VERSION' | awk -F=  '{ print $2 }'`
                         RELEASE=`cat /etc/*-release | grep '^PRETTY_NAME' | awk -F=  '{ print $2 }'`
                         fi
                 fi
-        OS=`clean_string "$OS"`
-        DISTRIBUTION=`clean_string $DISTRIBUTION`
-        BASEDON=`clean_string "$BASEDON"`
+
+        OS=`lowercase $OS`
+        DISTRO=`clean_string $DISTRO`
+        DistroBaseCore=`clean_string "$DistroBaseCore"`
         CODENAME=`clean_string "$CODENAME"`
         RELEASE=`clean_string "$RELEASE"`
         VERSION=`clean_string $VERSION`
@@ -100,17 +101,17 @@ systemDetect()
         ARCH=`clean_string "$ARCH"`
 
         readonly OS
-        readonly DISTRIBUTION
-        readonly BASEDON
+        readonly DISTRO
+        readonly DistroBaseCore
         readonly CODENAME
         readonly VERSION
         readonly RELEASE
         readonly KERNEL
         readonly ARCH
-        if [[ "${osdist[*]}" =~ "$DISTRIBUTION"  && "${osrev[*]}" =~ "$VERSION" ]] ; then
-                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRIBUTION\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBasedOn: $BASEDON\nKernel: $KERNEL\nArchetecture: $ARCH\n\nGreat $DISTRIBUTION - $VERSION is supported" --ok-button "Continue" 16 70 6
+        if [[ "${osdist[*]}" =~ "$DISTRO"  && "${osrev[*]}" =~ "$VERSION" ]] ; then
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRO\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBaseCore: $DistroBaseCore\nKernel: $KERNEL\nArchetecture: $ARCH\n\nGreat $DISTRO - $VERSION is supported" --ok-button "Continue" 16 70 6
         else
-                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRIBUTION\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBasedOn: $BASEDON\nKernel: $KERNEL\nArchetecture: $ARCH\n\nSorry $DISTRIBUTION - $VERSION is not supported" --ok-button "Exit" 16 70 6
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRO\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBaseCore: $DistroBaseCore\nKernel: $KERNEL\nArchetecture: $ARCH\n\nSorry $DISTRO - $VERSION is not supported" --ok-button "Exit" 16 70 6
         exit 1
         fi
 }
@@ -125,7 +126,7 @@ pkg=0
 #dmesg -D
 #setterm -term linux -msg off
 #setterm -term linux -blank 0
-$(package) -y 2> /dev/null | \
+$(package) 2> /dev/null | \
     tr '[:upper:]' '[:lower:]' | \
 while read x; do
     case $x in
@@ -155,11 +156,16 @@ done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages...
 #invoke-rc.d kbd restart # Restore screen blanking to default setting
 }
 
+# ** Debian 8x/9x no longer support update-notifier. This works but is a bit sloppy IMO **
+# ** Will work on something more efficient and elegant if possible in future. Looks like **
+# ** a bird sanctuary with all the nesting going on. elif may be more friendly??? **
 systemInstall() {
+  if [ "$DISTRO" = "Ubuntu" ]; then
     UPGRADECHECK=$(/usr/lib/update-notifier/apt-check 2>&1)
     security=$(echo "${UPGRADECHECK}" | cut -d ";" -f 2)
     nonsecurity=$(echo "${UPGRADECHECK}" | cut -d ";" -f 1)
     totalupgrade=$((security + nonsecurity))
+
   if [ "$UPGRADECHECK" != "0;0" ]; then
     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
@@ -175,6 +181,25 @@ systemInstall() {
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
         return
   fi
+
+  else
+    UPGRADECHECK=$(apt-get -s upgrade | grep -Po "^\d+ (?=upgraded)" 2>&1)
+   if [ "$UPGRADECHECK" -gt 0 ]; then
+    if (whiptail --title "System Check" --yesno "$UPGRADECHECK Updates are available\n\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
+      package() {
+         printf "apt upgrade"
+       }
+     systemInstaller
+     rebootRequired
+     completeOperation
+  else
+        return
+    fi
+  else
+     whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
+        return
+  fi
+fi
 }
 
 nginxRepoAdd() {
@@ -182,17 +207,17 @@ nginxRepoAdd() {
     echo "$debrepo" >> $APT_SOURCES
     echo "$debsrcrepo" >> $APT_SOURCES
     sleep 2
-    echo -e "XXX\n25\nAdding Nginx stable repo... \nXXX"
+    echo -e "XXX\n25\n\nAdding Nginx stable repo... \nXXX"
     sleep 1
-    echo -e "XXX\n50\nAdding Nginx stable repo... Done.\nXXX"
+    echo -e "XXX\n50\n\nAdding Nginx stable repo... Done.\nXXX"
     sleep 1
-    echo -e "XXX\n75\nFetch Nginx signing key... \nXXX"
+    echo -e "XXX\n75\n\nFetch Nginx signing key... \nXXX"
     curl -O https://nginx.org/keys/nginx_signing.key 2> /dev/null &&
     apt-key add ./nginx_signing.key 2> /dev/null &
     sleep 1
-    echo -e "XXX\n100\nFetch Nginx signing key... Done.\nXXX"
+    echo -e "XXX\n100\n\nFetch Nginx signing key... Done.\nXXX"
     sleep 1
-  } | whiptail --title "Nginx Stable Repo" --gauge "Preparing to install Nginx Stable" 9 78 0
+  } | whiptail --title "Nginx Stable Repo" --gauge "\nPreparing to install Nginx Stable" 10 78 0
 }
 
 #*****************************
@@ -369,26 +394,26 @@ secureCheckModify() {
 #*****************************
 updateSources() {
          i=0
-         apt update 2> /dev/null | \
+         $(pkgcache) 2> /dev/null | \
          tr '[:upper:]' '[:lower:]' | \
             while read x; do
             case $x in
         *inrelease*)
-            z=4
+            count=4
             i=0
         ;;
             fetched*|building*|reading*|all*\ ...)
-            if [ $z -gt 0 ]; then
+            if [[ "$count" -gt 0 ]]; then
                 i=$((i+1))
                 x=${x%% (*}
                 x=${x%% ...}
                 x=$(echo ${x:0:1} | tr '[:lower:]' '[:upper:]')${x:1}
                 sleep .50
-                printf "XXX\n$((i*100/z))\n\n${x}\nXXX\n$((i*100/z))\n"
+                printf "XXX\n$((i*100/count))\n\n${x}\nXXX\n$((i*100/count))\n"
            fi
         ;;
     esac
-done | whiptail --title "Update Check"  --gauge "\nChecking for system updates" 9 78 0
+done | whiptail --title "Package Check"  --gauge "\nRefreshing package cache" 9 78 0
 }
 
 #*****************************
@@ -402,18 +427,18 @@ secureCheckModify2() {
             while read x; do
             case $x in
         *+*)
-            z=20
+            count=20
             i=0
         ;;
            +*\ ...)
             proc=$(ps aux | grep -v grep | grep -e "$(secureApp)")
-            if [[ "$proc" == "" ]] && [[ $z -gt 0 ]]; then
+            if [[ "$proc" == "" ]] && [[ $count -gt 0 ]]; then
                 i=$((i+1))
                 x=${x% (*}
                 x=${x% ...}
                 x=$(echo ${x:1})
                 sleep .50
-                printf "XXX\n$((i*100/z))\n\n${x}\nXXX\n$((i*100/z))\n"
+                printf "XXX\n$((i*100/count))\n\n${x}\nXXX\n$((i*100/count))\n"
            fi
         ;;
     esac
