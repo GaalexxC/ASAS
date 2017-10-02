@@ -12,14 +12,14 @@
 |    //     '-.  ___________________________ .-'     \\    |
 |   ;|         \/--------------------------//         |;   |
 \   ||       |\_)      devCU Software      (_/|       ||   /
- \  | \  . \ ;  |         Presents         || ; / .  / |  /
+ \  | \  . \ ;  |    Open Source Project   || ; / .  / |  /
   '\_\ \\ \ \ \ |                          ||/ / / // /_/'
         \\ \ \ \| Auto Server Admin Script |/ / / //
          `'-\_\_\         ASAS 2.10        /_/_/-'`
                 '--------------------------'
 </pre>
 
-- Bash script that automates basic Linux Sysadmin tasks...
+- Bash script that automates basic Linux sysadmin tasks...
 See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
 ## License
