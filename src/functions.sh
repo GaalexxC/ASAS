@@ -30,7 +30,7 @@
 #
 #*****************************
 ## NEWT Color palette for ASAS whiptail GUI ##
-readarray -t newtcolor < templates/palette
+readarray -t newtcolor < bin/palette
 NEWT_COLORS="${newtcolor[@]}"
 
 validateRoot() {
