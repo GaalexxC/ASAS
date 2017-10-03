@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 08:50 EDT                                       #
+#        &Updated:   10/03/2017 12:20 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -66,6 +66,7 @@ case $SELECTNGINX in
        }
        systemInstaller
        sleep 1
+       nginxConfigure
      else
        ngxver=$(nginx -v 2>&1)
        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -94,70 +95,7 @@ case $SELECTNGINX in
        }
       systemInstaller
       sleep 1
-
-# -------
-# NGINX CONFIG:
-# -------
-        echo -e "\nMaking backup of original nginx.conf"
-        mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-        echo -e "\nUpdating nginx.conf with cache optimization and secure rules\n"
-        CONFIGCONF='/etc/nginx/'
-        cp config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
-        sleep 1
-        echo -e "\nCreate nginx $NGINX_SITES_AVAILABLE if doesnt exist"
-      if [ -d "$NGINX_SITES_AVAILABLE" ]
-      then
-        echo -e "\nDirectory $NGINX_SITES_AVAILABLE exists."
-      else
-        mkdir -p $NGINX_SITES_AVAILABLE
-        echo -e "\nFinished directory creation"
-      fi
-        sleep 1
-        echo -e "\nCreate nginx $NGINX_SITES_ENABLED if doesnt exist"
-      if [ -d "$NGINX_SITES_ENABLED" ]
-      then
-        echo -e "\nDirectory $NGINX_SITES_ENABLED exists."
-      else
-        mkdir -p $NGINX_SITES_ENABLED
-        echo -e "\nFinished directory creation"
-      fi
-        sleep 1
-        echo -e "\nCreate nginx $NGINX_CONFD if doesnt exist"
-      if [ -d "$NGINX_CONFD" ]
-      then
-        echo -e "\nDirectory $NGINX_CONFD exists."
-      else
-        mkdir -p $NGINX_CONFD
-        echo -e "\nFinished directory creation"
-      fi
-        sleep 1
-# -------
-# NGINX VHOST:
-# -------
-        echo -e "\nCreate nginx vhosts.conf if doesnt exist"
-      if [ -f /etc/nginx/conf.d/vhosts.conf ]
-      then
-        echo -e "\nGreat! the file exists"
-      else
-        echo -e "\nThe file doesnt exist, creating..."
-        touch /etc/nginx/conf.d/vhosts.conf
-        echo "include /etc/nginx/sites-enabled/*.vhost;" >>/etc/nginx/conf.d/vhosts.conf
-      fi
-        echo -e "\nFinished vhosts.conf creation"
-        sleep 1
-# Create, chown and optimize nginx cache/gzip directories!
-        echo -e "\nCreate, chown and optimize nginx cache/gzip directories"
-        mkdir -p /var/cache/nginx
-        mkdir -p /var/cache/nginx/fcgi
-        mkdir -p /var/cache/nginx/tmp
-        chown -R www-data:root /var/cache/nginx
-        echo -e "\nRemove signing key"
-        rm -rf ./nginx_signing.key
-        echo -e "\nRestart Services\n"
-         $NGINX_INIT
-        sleep 3
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        nginxConfigure
       else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
