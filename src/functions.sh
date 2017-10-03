@@ -3,12 +3,12 @@
 #                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
 #        @author: GCornell for devCU Software Open Source Projects              #
 #        @contact: gacornell@devcu.com                                          #
-#        $OS: Debian Core Systems (Tested on Ubuntu 14x -> 17x & Debian 8x/9x)  #
+#        $OS: Debian Core (Tested on Ubuntu 14x -> 17x / Debian 7.x -> 9.x)     #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/02/2017 02:12 EDT                                       #
+#        &Updated:   10/03/2017 03:45 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -100,8 +100,9 @@ systemDetect()
                         DistroBaseCore='Debian'
                         DISTRO=`cat /etc/*-release | grep '^NAME' | awk -F=  '{ print $2 }'`
                         VERSION=`cat /etc/*-release | grep '^VERSION_ID' | awk -F=  '{ print $2 }'`
-                        CODENAME=`cat /etc/*-release | grep '^VERSION' | awk -F=  '{ print $2 }'`
+                        CODENAME=`lsb_release -c --short`
                         RELEASE=`cat /etc/*-release | grep '^PRETTY_NAME' | awk -F=  '{ print $2 }'`
+                        DISTRIB_CODENAME=`cat /etc/*-release | grep '^DISTRIB_CODENAME' | awk -F=  '{ print $2 }'`
                         fi
                 fi
 
@@ -137,9 +138,6 @@ systemDetect()
 #*****************************
 systemInstaller() {
 pkg=0
-#dmesg -D
-#setterm -term linux -msg off
-#setterm -term linux -blank 0
 $(package) 2> /dev/null | \
     tr '[:upper:]' '[:lower:]' | \
 while read x; do
@@ -165,9 +163,6 @@ while read x; do
         ;;
     esac
 done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages..." 10 70 0
-#dmesg -E
-#setterm -term linux -msg on
-#invoke-rc.d kbd restart # Restore screen blanking to default setting
 }
 
 # ** Debian 8x/9x no longer support update-notifier. This works but is a bit sloppy IMO **
@@ -218,8 +213,6 @@ fi
 
 nginxRepoAdd() {
 {
-    echo "$debrepo" >> $APT_SOURCES
-    echo "$debsrcrepo" >> $APT_SOURCES
     sleep 2
     echo -e "XXX\n25\n\nAdding Nginx stable repo... \nXXX"
     sleep 1
