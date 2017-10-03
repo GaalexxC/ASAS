@@ -32,8 +32,10 @@ Pre-Release Development
 
 ## Thanks!
 
-Microsoft
+- Microsoft
 Ironically, to a Windows OS for creating a pure Linux environment allowing me to test all these great releases in concert. Windows 10 Hyper-V, 9 containers, all rsync synchronized for rapid updates and development.
+- Bustelo
+For obvious reasons...
 
 ## Copyrights
 
