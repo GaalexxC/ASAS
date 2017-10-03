@@ -3,12 +3,12 @@
 #                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
 #        @author: GCornell for devCU Software Open Source Projects              #
 #        @contact: gacornell@devcu.com                                          #
-#        $OS: Debian Core (Tested on Ubuntu 14x -> 17x / Debian 7.x -> 9.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 14x -> 17x / Debian 8.x -> 9.x)     #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 06:50 EDT                                       #
+#        &Updated:   10/03/2017 08:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -165,35 +165,31 @@ while read x; do
 done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages..." 10 70 0
 }
 
-# ** Debian 8x/9x no longer support update-notifier. This works but is a bit sloppy IMO **
-# ** Will work on something more efficient and elegant if possible in future. Looks like **
+# TODO
+# ** Debian 8x/9x no longer support update-notifier Damn Them! This is a bit messy IMO **
+# ** Maybe code something more efficient and elegant if possible in future. Looks like **
 # ** a bird sanctuary with all the nesting going on. elif may be more friendly??? **
 systemUpgrades() {
-  if [ "$DISTRO" = "Ubuntu" ]; then
-    UPGRADECHECK=$(/usr/lib/update-notifier/apt-check 2>&1)
-    security=$(echo "${UPGRADECHECK}" | cut -d ";" -f 2)
-    nonsecurity=$(echo "${UPGRADECHECK}" | cut -d ";" -f 1)
+    UPGRADECHECK=$(apt-get -s upgrade | grep -Po "^\d+ (?=upgraded)" 2>&1)
+    UPGRADES=$(/usr/lib/update-notifier/apt-check 2>&1)
+    security=$(echo "${UPGRADES}" | cut -d ";" -f 2)
+    nonsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 1)
     totalupgrade=$((security + nonsecurity))
 
-  if [ "$UPGRADECHECK" != "0;0" ]; then
+  if [ "$UPGRADECHECK" -gt 0 ]; then
+   if [ "$DISTRO" = "Ubuntu" ]; then
     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
          echo "apt --yes --force-yes upgrade"
        }
-     systemInstaller
-     rebootRequired
-     completeOperation
-  else
-        return
+      systemInstaller
+      rebootRequired
+      completeOperation
+   else
+      return
     fi
-  else
-     whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
-        return
-  fi
-
-  else
-    UPGRADECHECK=$(apt-get -s upgrade | grep -Po "^\d+ (?=upgraded)" 2>&1)
-   if [ "$UPGRADECHECK" -gt 0 ]; then
+   fi
+   if [ "$DISTRO" = "Debian" ]; then
     if (whiptail --title "System Check" --yesno "$UPGRADECHECK Updates are available\n\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
          printf "apt --yes --force-yes upgrade"
@@ -201,22 +197,22 @@ systemUpgrades() {
      systemInstaller
      rebootRequired
      completeOperation
-  else
-        return
+   else
+      return
     fi
-  else
+   fi
+   else
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
-        return
+     return
   fi
-fi
 }
 
 nginxRepoAdd() {
 {
     sleep 2
-    echo -e "XXX\n25\n\nAdding Nginx stable repo... \nXXX"
+    echo -e "XXX\n25\n\nAdding Nginx repos... \nXXX"
     sleep 1
-    echo -e "XXX\n50\n\nAdding Nginx stable repo... Done.\nXXX"
+    echo -e "XXX\n50\n\nAdding Nginx repos... Done.\nXXX"
     sleep 1
     echo -e "XXX\n75\n\nFetch Nginx signing key... \nXXX"
     curl -O https://nginx.org/keys/nginx_signing.key 2> /dev/null &&
@@ -224,7 +220,7 @@ nginxRepoAdd() {
     sleep 1
     echo -e "XXX\n100\n\nFetch Nginx signing key... Done.\nXXX"
     sleep 1
-  } | whiptail --title "Nginx Stable Repo" --gauge "\nPreparing to install Nginx Stable" 10 70 0
+  } | whiptail --title "Nginx Repos" --gauge "\nPreparing to install Nginx" 10 70 0
 }
 
 #*****************************
