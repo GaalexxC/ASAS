@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 08:50 EDT                                       #
+#        &Updated:   10/03/2017 10:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -171,13 +171,12 @@ done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages...
 # ** a bird sanctuary with all the nesting going on. elif may be more friendly??? **
 systemUpgrades() {
     UPGRADECHECK=$(apt-get -s upgrade | grep -Po "^\d+ (?=upgraded)" 2>&1)
+  if [ "$UPGRADECHECK" -gt 0 ]; then
+   if [ "$DISTRO" = "Ubuntu" ]; then
     UPGRADES=$(/usr/lib/update-notifier/apt-check 2>&1)
     security=$(echo "${UPGRADES}" | cut -d ";" -f 2)
     nonsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 1)
     totalupgrade=$((security + nonsecurity))
-
-  if [ "$UPGRADECHECK" -gt 0 ]; then
-   if [ "$DISTRO" = "Ubuntu" ]; then
     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
          echo "apt --yes --force-yes upgrade"
