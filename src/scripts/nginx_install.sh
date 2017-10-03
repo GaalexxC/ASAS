@@ -3,12 +3,12 @@
 #                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
 #        @author: GCornell for devCU Software Open Source Projects              #
 #        @contact: gacornell@devcu.com                                          #
-#        $OS: Debian Core Systems (Tested on Ubuntu 14x -> 17x & Debian 8x/9x)  #
+#        $OS: Debian Core (Tested on Ubuntu 14x -> 17x / Debian 7.x -> 9.x)     #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/02/2017 02:12 EDT                                       #
+#        &Updated:   10/03/2017 03:45 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -46,21 +46,43 @@ whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows 
 case $SELECTNGINX in
         "1)")
    if ! type nginx > /dev/null 2>&1; then
-        return
-      else
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-      fi
+    if [ "$DISTRO" = "Ubuntu" ]; then
+       echo "deb http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+       echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+        elif [ "$DISTRO" = "Debian" ]; then
+       echo "deb http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
+       echo "deb-src http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
+     else
+       whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
+        exit 1
+    fi
+       nginxRepoAdd
+       pkgcache() {
+         printf "apt update"
+       }
+       updateSources
+       package() {
+         printf "apt --yes --force-yes install nginx fcgiwrap"
+       }
+       systemInstaller
+       sleep 1
+     else
+       ngxver=$(nginx -v 2>&1)
+       whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+   fi
         ;;
 
         "2)")
     if ! type nginx > /dev/null 2>&1; then
      if [ "$DISTRO" = "Ubuntu" ]; then
-      debrepo="deb http://nginx.org/packages/ubuntu/ xenial nginx"
-      debsrcrepo="deb-src http://nginx.org/packages/ubuntu/ xenial nginx"
+      echo "deb http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+      echo "deb-src http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+     elif [ "$DISTRO" = "Debian" ]; then
+      echo "deb http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
+      echo "deb-src http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
      else
-      debrepo="deb http://nginx.org/packages/debian/ jessie nginx"
-      debsrcrepo="deb-src http://nginx.org/packages/debian/ jessie nginx"
+      whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
+      exit 1
      fi
       nginxRepoAdd
       pkgcache() {
@@ -71,7 +93,7 @@ case $SELECTNGINX in
          printf "apt --yes --force-yes install nginx fcgiwrap"
        }
       systemInstaller
-      sleep 2
+      sleep 1
 
 # -------
 # NGINX CONFIG:
@@ -164,7 +186,7 @@ case $SELECTNGINX in
 
         "5)")
      if type nginx > /dev/null 2>&1; then
-      if (whiptail --title "Purge Nginx" --yesno "Warning! This will wipe Nginx from your system!\nAll configurations/logs/repos...etc removed!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
+      if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
 
        package() {
          printf "apt --yes --force-yes purge nginx fcgiwrap spawn-fcgi"
