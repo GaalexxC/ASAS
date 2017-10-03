@@ -37,7 +37,7 @@ Pre-Release Development
 Ironically, to a Windows OS for creating a pure Linux environment allowing me to test all these great releases in concert. Windows 10 Hyper-V, 9 containers, all rsync synchronized for rapid updates and development.
 - Café Bustelo
 
-For obvious reasons...
+For obvious reasons...:coffee:
 
 ## Copyrights
 
