@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 03:45 EDT                                       #
+#        &Updated:   10/03/2017 06:49 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -73,7 +73,7 @@ asd
        printf "apt update"
     }
     updateSources
-    systemInstall
+    systemUpgrades
 
 clear
 

@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 03:45 EDT                                       #
+#        &Updated:   10/03/2017 06:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -168,7 +168,7 @@ done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages...
 # ** Debian 8x/9x no longer support update-notifier. This works but is a bit sloppy IMO **
 # ** Will work on something more efficient and elegant if possible in future. Looks like **
 # ** a bird sanctuary with all the nesting going on. elif may be more friendly??? **
-systemInstall() {
+systemUpgrades() {
   if [ "$DISTRO" = "Ubuntu" ]; then
     UPGRADECHECK=$(/usr/lib/update-notifier/apt-check 2>&1)
     security=$(echo "${UPGRADECHECK}" | cut -d ";" -f 2)
