@@ -26,8 +26,6 @@
 #################################################################################
 clear
 
-#Nginx Install Menu
-
 while [ 3 ]
 do
 
@@ -37,7 +35,7 @@ whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows 
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
         "4)" "Remove Nginx (Preserves Configurations)" OFF \
-        "5)" "Purge Nginx (WARNING! Removes Everything!)" OFF \
+        "5)" "Purge Nginx (WARNING! Totally Wiped Clean!)" OFF \
         "6)" "Generate 2048bit Diffie-Hellman (Required for Nginx SSL/TLS)" OFF \
         "7)" "Return to Main Menu" OFF \
         "8)" "Exit" OFF 3>&1 1>&2 2>&3
@@ -67,6 +65,8 @@ case $SELECTNGINX in
        systemInstaller
        sleep 1
        nginxConfigure
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
      else
        ngxver=$(nginx -v 2>&1)
        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -96,6 +96,8 @@ case $SELECTNGINX in
       systemInstaller
       sleep 1
         nginxConfigure
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -113,10 +115,29 @@ case $SELECTNGINX in
 
         "4)")
      if type nginx > /dev/null 2>&1; then
-         apt --yes --force-yes remove nginx
-         apt-get --yes --force-yes autoremove
-         sed -i.bak '/nginx/d' $APT_SOURCES
-         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed, configurations preserved\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
+
+       package() {
+         printf "apt --yes --force-yes remove nginx fcgiwrap spawn-fcgi"
+       }
+       systemInstaller
+       sleep 1
+       pkgcache() {
+          printf "apt-get --yes --force-yes autoremove"
+       }
+       updateSources
+       sleep 1
+       nginxRemove
+       sleep 1
+       pkgcache() {
+          printf "apt-get autoclean"
+       }
+       updateSources
+       sleep 1
+         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+     else
+         whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
+     fi
      else
          whiptail --title "Nginx Check-Install" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      fi
@@ -136,17 +157,14 @@ case $SELECTNGINX in
        }
        updateSources
        sleep 1
-         echo "removing directories"
-         rm -rf /etc/nginx
-         rm -rf /var/log/nginx
-         echo "Removing Nginx repos"
-         sed -i.bak '/nginx/d' $APT_SOURCES
+       nginxPurge
+       sleep 1
        pkgcache() {
           printf "apt-get autoclean"
        }
        updateSources
        sleep 1
-         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
      else
          whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
      fi

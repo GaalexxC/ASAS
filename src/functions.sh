@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 12:20 EDT                                       #
+#        &Updated:   10/03/2017 15:36 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -204,22 +204,6 @@ systemUpgrades() {
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
      return
   fi
-}
-
-nginxRepoAdd() {
-{
-    sleep 2
-    echo -e "XXX\n25\n\nAdding Nginx repos... \nXXX"
-    sleep 1
-    echo -e "XXX\n50\n\nAdding Nginx repos... Done.\nXXX"
-    sleep 1
-    echo -e "XXX\n75\n\nFetch Nginx signing key... \nXXX"
-    curl -O https://nginx.org/keys/nginx_signing.key 2> /dev/null &&
-    apt-key add ./nginx_signing.key 2> /dev/null &
-    sleep 1
-    echo -e "XXX\n100\n\nFetch Nginx signing key... Done.\nXXX"
-    sleep 1
-  } | whiptail --title "Nginx Repos" --gauge "\nPreparing to install Nginx" 10 70 0
 }
 
 #*****************************
@@ -418,67 +402,135 @@ updateSources() {
 done | whiptail --title "Package Check"  --gauge "\nRefreshing package cache" 10 70 0
 }
 
+#*****************************
+#
+# Nginx Functions
+#
+#*****************************
+nginxRepoAdd() {
+{
+    sleep 1
+    echo -e "XXX\n25\n\nAdding Nginx repos... \nXXX"
+    sleep 1
+    echo -e "XXX\n50\n\nAdding Nginx repos... Done.\nXXX"
+    sleep 1
+    echo -e "XXX\n75\n\nFetch Nginx signing key... \nXXX"
+    curl -O https://nginx.org/keys/nginx_signing.key 2> /dev/null &&
+    apt-key add ./nginx_signing.key 2> /dev/null &
+    sleep 1
+    echo -e "XXX\n100\n\nFetch Nginx signing key... Done.\nXXX"
+    sleep 1
+  } | whiptail --title "Nginx Setup" --gauge "\nAdd Nginx repos" 10 70 0
+}
+
+nginxRemove() {
+{
+    sleep .75
+    echo -e "XXX\n25\n\nRemoving Nginx logs... Done.\nXXX"
+    rm -rf /var/log/nginx
+    sleep .75
+    echo -e "XXX\n50\n\nRemoving Nginx cache... Done.\nXXX"
+    rm -rf /var/cache/nginx
+    sleep .75
+    echo -e "XXX\n75\n\nRemoving Nginx repos... \nXXX"
+    sed -i.bak '/nginx/d' $APT_SOURCES
+    sleep .75
+    echo -e "XXX\n100\n\nConfiguration preserved @ /etc/nginx... Done.\nXXX"
+    sleep 1
+  } | whiptail --title "Nginx Remove" --gauge "\nWiping traces of Nginx" 10 70 0
+}
+
+nginxPurge() {
+{
+    sleep .75
+    echo -e "XXX\n20\n\nRemoving Nginx configurations... \nXXX"
+    rm -rf /etc/nginx
+    sleep .75
+    echo -e "XXX\n40\n\nRemoving Nginx logs... Done.\nXXX"
+    rm -rf /var/log/nginx
+    sleep .75
+    echo -e "XXX\n60\n\nRemoving Nginx cache... Done.\nXXX"
+    rm -rf /var/cache/nginx
+    sleep .75
+    echo -e "XXX\n80\n\nRemoving Nginx repos... \nXXX"
+    sed -i.bak '/nginx/d' $APT_SOURCES
+    sleep .75
+    echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
+    sleep 1
+  } | whiptail --title "Nginx Purge" --gauge "\nWiping traces of Nginx" 10 70 0
+}
+
 nginxConfigure() {
-        echo -e "\nMaking backup of original nginx.conf"
-        mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-        echo -e "\nUpdating nginx.conf with cache optimization and secure rules\n"
-        CONFIGCONF='/etc/nginx/'
-        cp config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
-        sleep 1
-        echo -e "\nCreate nginx $NGINX_SITES_AVAILABLE if doesnt exist"
-      if [ -d "$NGINX_SITES_AVAILABLE" ]
-      then
-        echo -e "\nDirectory $NGINX_SITES_AVAILABLE exists."
-      else
-        mkdir -p $NGINX_SITES_AVAILABLE
-        echo -e "\nFinished directory creation"
-      fi
-        sleep 1
-        echo -e "\nCreate nginx $NGINX_SITES_ENABLED if doesnt exist"
-      if [ -d "$NGINX_SITES_ENABLED" ]
-      then
-        echo -e "\nDirectory $NGINX_SITES_ENABLED exists."
-      else
-        mkdir -p $NGINX_SITES_ENABLED
-        echo -e "\nFinished directory creation"
-      fi
-        sleep 1
-        echo -e "\nCreate nginx $NGINX_CONFD if doesnt exist"
-      if [ -d "$NGINX_CONFD" ]
-      then
-        echo -e "\nDirectory $NGINX_CONFD exists."
-      else
-        mkdir -p $NGINX_CONFD
-        echo -e "\nFinished directory creation"
-      fi
-        sleep 1
-# -------
-# NGINX VHOST:
-# -------
-        echo -e "\nCreate nginx vhosts.conf if doesnt exist"
-      if [ -f /etc/nginx/conf.d/vhosts.conf ]
-      then
-        echo -e "\nGreat! the file exists"
-      else
-        echo -e "\nThe file doesnt exist, creating..."
-        touch /etc/nginx/conf.d/vhosts.conf
-        echo "include /etc/nginx/sites-enabled/*.vhost;" >>/etc/nginx/conf.d/vhosts.conf
-      fi
-        echo -e "\nFinished vhosts.conf creation"
-        sleep 1
-# Create, chown and optimize nginx cache/gzip directories!
-        echo -e "\nCreate, chown and optimize nginx cache/gzip directories"
-        mkdir -p /var/cache/nginx
-        mkdir -p /var/cache/nginx/fcgi
-        mkdir -p /var/cache/nginx/tmp
-        chown -R www-data:root /var/cache/nginx
-        echo -e "\nRemove signing key"
-        rm -rf ./nginx_signing.key
-        echo -e "\nRestart Services\n"
-         $NGINX_INIT
-        sleep 3
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+{
+    sleep 1
+    echo -e "XXX\n7\n\nMaking backup of default nginx.conf...\nXXX"
+    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+    sleep .50
+    echo -e "XXX\n13\n\nInstalling optimized nginx.conf...\nXXX"
+    CONFIGCONF='/etc/nginx/'
+    cp config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
+    sleep .50
+    echo -e "XXX\n20\n\nCreate $NGINX_SITES_AVAILABLE if doesnt exist...\nXXX"
+    sleep .25
+    if [ -d "$NGINX_SITES_AVAILABLE" ]
+    then
+    echo -e "XXX\n26\n\nDirectory $NGINX_SITES_AVAILABLE exists...\nXXX"
+    else
+    mkdir -p $NGINX_SITES_AVAILABLE
+    echo -e "XXX\n26\n\nDirectory $NGINX_SITES_AVAILABLE created...\nXXX"
+    fi
+    sleep .50
+    echo -e "XXX\n35\n\nCreate nginx $NGINX_SITES_ENABLED if doesnt exist...\nXXX"
+    sleep .25
+    if [ -d "$NGINX_SITES_ENABLED" ]
+    then
+    echo -e "XXX\n43\n\nDirectory $NGINX_SITES_ENABLED exists...\nXXX"
+    else
+    mkdir -p $NGINX_SITES_ENABLED
+    echo -e "XXX\n43\n\nDirectory $NGINX_SITES_ENABLED created...\nXXX"
+    fi
+    sleep .50
+    echo -e "XXX\n56\n\nCreate nginx $NGINX_CONFD if doesnt exist...\nXXX"
+    sleep .25
+    if [ -d "$NGINX_CONFD" ]
+    then
+    echo -e "XXX\n65\n\nDirectory $NGINX_CONFD exists...\nXXX"
+    else
+    mkdir -p $NGINX_CONFD
+    echo -e "XXX\n65\n\nDirectory $NGINX_CONFD created...\nXXX"
+    fi
+    sleep .50
+    echo -e "XXX\n73\n\nCreate nginx vhosts.conf if doesnt exist...\nXXX"
+    sleep .25
+    if [ -f /etc/nginx/conf.d/vhosts.conf ]
+    then
+    echo -e "XXX\n82\n\nGreat! vhosts.conf file exists...\nXXX"
+    else
+    touch /etc/nginx/conf.d/vhosts.conf
+    echo "include /etc/nginx/sites-enabled/*.vhost;" >>/etc/nginx/conf.d/vhosts.conf
+    echo -e "XXX\n82\n\nFile vhosts.conf created...\nXXX"
+    fi
+    sleep .50
+    echo -e "XXX\n91\n\nCreate, chown and optimize nginx cache/gzip directories"...\nXXX"
+    mkdir -p /var/cache/nginx
+    mkdir -p /var/cache/nginx/fcgi
+    mkdir -p /var/cache/nginx/tmp
+    chown -R www-data:root /var/cache/nginx
+    sleep .50
+    echo -e "XXX\n95\n\nCleanup - Remove Nginx signing key"...\nXXX"
+    rm -rf ./nginx_signing.key
+    sleep 1.0
+    echo -e "XXX\n98\n\nRestarting Nginx service... Done.\nXXX"
+    $NGINX_INIT 2> /dev/null
+    if [ $? -eq 0 ]; then
+    echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
+    sleep 1.25
+    else
+    echo -e "XXX\n100\n\nNginx failed, check your logs...\nXXX"
+    sleep 1.25
+    fi
+    sleep 1
+  } | whiptail --title "Nginx Setup" --gauge "\nNginx directory and configuration" 10 70 0
 }
 
 
