@@ -178,7 +178,7 @@ systemInstall() {
   if [ "$UPGRADECHECK" != "0;0" ]; then
     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
-         printf "apt upgrade"
+         echo "apt --yes --force-yes upgrade"
        }
      systemInstaller
      rebootRequired
@@ -196,7 +196,7 @@ systemInstall() {
    if [ "$UPGRADECHECK" -gt 0 ]; then
     if (whiptail --title "System Check" --yesno "$UPGRADECHECK Updates are available\n\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
-         printf "apt upgrade"
+         printf "apt --yes --force-yes upgrade"
        }
      systemInstaller
      rebootRequired
