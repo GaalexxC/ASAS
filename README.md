@@ -41,7 +41,7 @@ For obvious reasons...:coffee:
 
 ## Jeers!
 
-- Debian Developers
+- Debian Developers :x:
 
 For removing update-notifier and screwing lots of sysadmins :rage:
 
