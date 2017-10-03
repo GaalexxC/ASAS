@@ -32,12 +32,20 @@ Pre-Release Development
 
 ## Thanks!
 
-- Microsoft
+- Microsoft :heavy_check_mark:
 
 Ironically, to a Windows OS for creating a pure Linux environment allowing me to test all these great releases in concert. Windows 10 Hyper-V, 9 containers, all rsync synchronized for rapid updates and development.
-- Café Bustelo
+- Café Bustelo :heavy_check_mark:
 
 For obvious reasons...:coffee:
+
+## Jeers!
+
+- Debian Developers
+
+For removing update-notifier and screwing lots of sysadmins :rage:
+
+For not fully embracing apt :rage:
 
 ## Copyrights
 
