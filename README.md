@@ -43,7 +43,7 @@ For obvious reasons...:coffee:
 
 - Debian Developers
 
-For not fully embracing apt
+For not fully embracing apt and removing update-notifier
 
 ## Copyrights
 
