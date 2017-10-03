@@ -28,7 +28,12 @@ GNU General Public License v3.0
 
 ## Development / Contribute
 
-Pre-Release Active Rapid Development
+Pre-Release Development
+
+## Thanks!
+
+Microsoft
+Ironically, to a Windows OS for creating a pure Linux environment allowing me to test all these great releases in concert. Windows 10 Hyper-V, 9 containers, all rsync synchronized for rapid updates and development.
 
 ## Copyrights
 
