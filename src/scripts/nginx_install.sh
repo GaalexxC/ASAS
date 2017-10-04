@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 12:20 EDT                                       #
+#        &Updated:   10/04/2017 02:15 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -35,7 +35,7 @@ whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows 
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
         "4)" "Remove Nginx (Preserves Configurations)" OFF \
-        "5)" "Purge Nginx (WARNING! Totally Wiped Clean!)" OFF \
+        "5)" "Purge Nginx (Wipe Nginx Clean)" OFF \
         "6)" "Generate 2048bit Diffie-Hellman (Required for Nginx SSL/TLS)" OFF \
         "7)" "Return to Main Menu" OFF \
         "8)" "Exit" OFF 3>&1 1>&2 2>&3
@@ -106,11 +106,82 @@ case $SELECTNGINX in
 
         "3)")
       if ! type nginx > /dev/null 2>&1; then
-        return
-      else
+      package() {
+         printf "apt --yes --force-yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap"
+       }
+      systemInstaller
+        mkdir $CURDIR/source/
+        cd $CURDIR/source
+      wgetURL() {
+          printf "wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz"
+        }
+      wgetFiles
+      wgetURL() {
+          printf "wget http://nginx.org/download/nginx-1.13.5.tar.gz"
+        }
+      wgetFiles
+        tar -zxvf openssl-1.1.0f.tar.gz
+        tar -zxvf nginx-1.13.5.tar.gz
+        cd $CURDIR/source/nginx-1.13.5/
+        ./configure --prefix=/etc/nginx \
+                    --sbin-path=/usr/sbin/nginx \
+                    --modules-path=/usr/lib/nginx/modules \
+                    --conf-path=/etc/nginx/nginx.conf \
+                    --error-log-path=/var/log/nginx/error.log \
+                    --http-log-path=/var/log/nginx/access.log \
+                    --pid-path=/var/run/nginx.pid \
+                    --lock-path=/var/run/nginx.lock \
+                    --http-client-body-temp-path=/var/cache/nginx/client_temp \
+                    --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+                    --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+                    --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+                    --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+                    --user=www-data \
+                    --group=www-data \
+                    --with-http_ssl_module \
+                    --with-http_realip_module \
+                    --with-http_addition_module \
+                    --with-http_sub_module \
+                    --with-http_dav_module \
+                    --with-http_flv_module \
+                    --with-http_mp4_module \
+                    --with-http_gunzip_module \
+                    --with-http_gzip_static_module \
+                    --with-http_random_index_module \
+                    --with-http_secure_link_module \
+                    --with-http_stub_status_module \
+                    --with-http_auth_request_module \
+                    --with-http_xslt_module=dynamic \
+                    --with-http_image_filter_module=dynamic \
+                    --with-http_geoip_module=dynamic \
+                    --with-http_perl_module=dynamic \
+                    --with-threads \
+                    --with-stream \
+                    --with-stream_ssl_module \
+                    --with-stream_geoip_module=dynamic \
+                    --with-http_slice_module \
+                    --with-mail \
+                    --with-mail_ssl_module \
+                    --with-file-aio \
+                    --with-http_v2_module \
+                    --with-openssl=$CURDIR/source/openssl-1.1.0f \
+                    --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
+                    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' && \
+        sudo make && \
+        sudo make install
+        cd $CURDIR
+        rm -rf source
+        DATE=$(date +'%Y-%m-%d')
+        nginxbuild=$(nginx -V 2>&1)
+        echo -e "\nBuild date: $DATE \n$nginxbuild" >> /etc/nginx/.build
+        nginxService
+        nginxConfigure
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully compiled\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-      fi
+        fi
         ;;
 
         "4)")

@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 15:36 EDT                                       #
+#        &Updated:   10/04/2017 02:08 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -461,6 +461,76 @@ nginxPurge() {
 }
 
 nginxConfigure() {
+        ./configure --prefix=/etc/nginx \
+                    --sbin-path=/usr/sbin/nginx \
+                    --modules-path=/usr/lib/nginx/modules \
+                    --conf-path=/etc/nginx/nginx.conf \
+                    --error-log-path=/var/log/nginx/error.log \
+                    --http-log-path=/var/log/nginx/access.log \
+                    --pid-path=/var/run/nginx.pid \
+                    --lock-path=/var/run/nginx.lock \
+                    --http-client-body-temp-path=/var/cache/nginx/client_temp \
+                    --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+                    --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+                    --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+                    --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+                    --user=nginx --group=nginx \
+                    --with-http_ssl_module \
+                    --with-http_realip_module \
+                    --with-http_addition_module \
+                    --with-http_sub_module \
+                    --with-http_dav_module \
+                    --with-http_flv_module \
+                    --with-http_mp4_module \
+                    --with-http_gunzip_module \
+                    --with-http_gzip_static_module \
+                    --with-http_random_index_module \
+                    --with-http_secure_link_module \
+                    --with-http_stub_status_module \
+                    --with-http_auth_request_module \
+                    --with-http_xslt_module=dynamic \
+                    --with-http_image_filter_module=dynamic \
+                    --with-http_geoip_module=dynamic \
+                    --with-http_perl_module=dynamic \
+                    --with-threads \
+                    --with-stream \
+                    --with-stream_ssl_module \
+                    --with-stream_geoip_module=dynamic \
+                    --with-http_slice_module \
+                    --with-mail \
+                    --with-mail_ssl_module \
+                    --with-file-aio \
+                    --with-http_v2_module \
+                    --with-openssl=../openssl-1.1.0f \
+                    --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
+                    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' && \
+                     make && \
+                     make install
+}
+
+nginxService() {
+{
+    sleep .75
+    echo -e "XXX\n25\n\nCreate Nginx systemd service... \nXXX"
+    CONFIGSERVICE='/lib/systemd/system/'
+    cp $CURRENT_DIR config/nginx/nginx.service $CONFIGSERVICE 2> /dev/null
+    chmod 0644 /lib/systemd/system/nginx.service
+    sleep .75
+    echo -e "XXX\n50\n\nNginx service file enabled... Done.\nXXX"
+    systemctl enable nginx.service 2> /dev/null
+    sleep .75
+    echo -e "XXX\n75\n\nCreate Nginx init.d service...\nXXX"
+    CONFIGINITD='/etc/init.d/'
+    cp $CURRENT_DIR config/nginx/nginx $CONFIGINITD 2> /dev/null
+    chmod 755 /etc/init.d/nginx
+    sleep .75
+    echo -e "XXX\n100\n\nNginx init.d file installed... Done.\nXXX"
+    update-rc.d nginx defaults 2> /dev/null
+    sleep .75
+  } | whiptail --title "Nginx Services" --gauge "\nCreating service files for Nginx" 10 70 0
+}
+
+nginxConfigure() {
 {
     sleep 1
     echo -e "XXX\n7\n\nMaking backup of default nginx.conf...\nXXX"
@@ -511,7 +581,7 @@ nginxConfigure() {
     echo -e "XXX\n82\n\nFile vhosts.conf created...\nXXX"
     fi
     sleep .50
-    echo -e "XXX\n91\n\nCreate, chown and optimize nginx cache/gzip directories"...\nXXX"
+    echo -e "XXX\n91\n\nCreate, chown and optimize nginx cache/gzip directories...\nXXX"
     mkdir -p /var/cache/nginx
     mkdir -p /var/cache/nginx/fcgi
     mkdir -p /var/cache/nginx/tmp
@@ -524,15 +594,21 @@ nginxConfigure() {
     $NGINX_INIT 2> /dev/null
     if [ $? -eq 0 ]; then
     echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
-    sleep 1.25
+    sleep 1.50
     else
     echo -e "XXX\n100\n\nNginx failed, check your logs...\nXXX"
-    sleep 1.25
+    sleep 1.50
     fi
     sleep 1
   } | whiptail --title "Nginx Setup" --gauge "\nNginx directory and configuration" 10 70 0
 }
 
+wgetFiles() {
+{
+  wget $(wgetURL) 2>&1 | \
+  stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }'
+  } | whiptail --title "Nginx Setup" --gauge "\nFetching build sources" 10 70 0
+}
 
 #*****************************
 #
