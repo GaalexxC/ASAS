@@ -70,7 +70,7 @@ case $SELECTNGINX in
        ngxver=$(nginx -v 2>&1)
        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
-        whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
+      cancelOperation
      fi
       else
        ngxver=$(nginx -v 2>&1)
@@ -116,7 +116,10 @@ case $SELECTNGINX in
         "3)")
    if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Nginx Compiler" --yesno "Nginx-OpenSSL source build\nYou can compile new, recompile, or upgrade compile\nDo you want to run source build?" --yes-button "Build" --no-button "Cancel" 10 70) then
+     if [ -f /etc/nginx/.build ]
+      then
         mv $NGINX_BUILD $NGINX_BUILD.old
+      fi
      if [ -f $CURDIR/$NGINX_LOG ]
       then
         mv $CURDIR/$NGINX_LOG $CURDIR/$NGINX_LOG.bak
@@ -141,6 +144,7 @@ case $SELECTNGINX in
         tar -zxvf $OPENSSL_SOURCE
         tar -zxvf $NGINX_SOURCE
         cd $CURDIR/source/nginx-1.13.5/
+        DATE_TIME=$(date)
         echo -e "Build date: $DATE_TIME\n\n" > $CURDIR/$NGINX_LOG
         ./configure --prefix=/etc/nginx \
                     --sbin-path=/usr/sbin/nginx \
@@ -185,12 +189,11 @@ case $SELECTNGINX in
                     --with-http_v2_module \
                     --with-openssl=$CURDIR/source/openssl-1.1.0f \
                     --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
-                    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' | tee -a $CURDIR/$NGINX_LOG && \
+                    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' && \
        sudo make | tee -a $CURDIR/$NGINX_LOG && \
        sudo make install | tee -a $CURDIR/$NGINX_LOG
        cd $CURDIR
        rm -rf source
-       DATE_TIME=$(date)
        nginxbuild=$(nginx -V 2>&1)
        echo -e "Build date: $DATE_TIME\n$nginxbuild" > $NGINX_BUILD
        nginxService
@@ -210,7 +213,7 @@ case $SELECTNGINX in
       then
        whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
        whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
-      return
+       return
      fi
      if type nginx > /dev/null 2>&1; then
       if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
@@ -250,7 +253,6 @@ case $SELECTNGINX in
      fi
      if type nginx > /dev/null 2>&1; then
       if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
-
        package() {
          printf "apt --yes --force-yes purge nginx fcgiwrap spawn-fcgi"
        }
@@ -269,18 +271,19 @@ case $SELECTNGINX in
        updateSources
        sleep 1
          whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-     else
-         whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
-     fi
+      else
+       cancelOperation
+      fi
      else
          whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      fi
        ;;
 
         "6)")
-     if [ -f /etc/nginx/.build ]
-      then
-      if (whiptail --title "Purge Nginx" --yesno "Warning! This tool will wipe Nginx source build from your system\nConfigurations will be archived to backups folder\n\nWould you like to uninstall Nginx?" --yes-button "Uninstall" --no-button "Cancel" 10 70) then
+    if ! type nginx > /dev/null 2>&1; then
+         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+     elif type nginx > /dev/null 2>&1 && [ -f /etc/nginx/.build ]; then
+      if (whiptail --title "Nginx Uninstall" --yesno "Warning! This tool will wipe Nginx source build from your system\nConfigurations will be archived to backups folder\n\nWould you like to uninstall Nginx?" --yes-button "Uninstall" --no-button "Cancel" 10 70) then
        package() {
          printf "apt --yes --force-yes purge fcgiwrap spawn-fcgi"
        }
@@ -291,50 +294,15 @@ case $SELECTNGINX in
        }
        updateSources
        sleep 1
-tar cvpfz /nginxconf_backup.tar.gz /etc/nginx/
-mv /nginxconf_backup.tar.gz $CURDIR/backups
-/etc/init.d/nginx stop
-update-rc.d -f /etc/init.d/nginx remove
-rm -rf /etc/nginx
-rm -rf /etc/init.d/nginx
-rm -rf /etc/rc0.d/K01nginx
-rm -rf /etc/rc1.d/K01nginx
-rm -rf /etc/rc2.d/S01nginx
-rm -rf /etc/rc3.d/S01nginx
-rm -rf /etc/rc4.d/S01nginx
-rm -rf /etc/rc5.d/S01nginx
-rm -rf /etc/rc6.d/K01nginx
-rm -rf /etc/systemd/system/multi-user.target.wants/nginx.service
-rm -rf /lib/systemd/system/nginx.service
-rm -rf /usr/lib/nginx
-rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/nginx.pm
-rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx
-rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/.packlist
-rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/nginx.so
-rm -rf /usr/local/share/man/man3/nginx.3pm
-rm -rf /usr/sbin/nginx
-rm -rf /usr/sbin/nginx.old
-rm -rf /usr/share/doc/fcgiwrap/examples/nginx.conf
-rm -rf /var/cache/nginx
-rm -rf /var/lib/lxcfs/cgroup/blkio/system.slice/nginx.service
-rm -rf /var/lib/lxcfs/cgroup/cpu,cpuacct/system.slice/nginx.service
-rm -rf /var/lib/lxcfs/cgroup/devices/system.slice/nginx.service
-rm -rf /var/lib/lxcfs/cgroup/memory/system.slice/nginx.service
-rm -rf /var/lib/lxcfs/cgroup/name=systemd/system.slice/nginx.service
-rm -rf /var/lib/lxcfs/cgroup/pids/system.slice/nginx.service
-rm -rf /var/log/nginx
-rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg
-rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4
-rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg/tmp
-rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4/tmp
-       sleep 15
+       cleanBuild
+       sleep 1
         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-    fi
-      elif type nginx > /dev/null 2>&1; then
-        whiptail --title "Nginx Uninstall" --msgbox "Nginx source build not detected\nYou cannot use this tool to uninstall Nginx\nPlease use remove or purge options in menu" --ok-button "OK" 10 70
       else
-       whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
-    fi
+       cancelOperation
+      fi
+     else
+        whiptail --title "Nginx Uninstall" --msgbox "Nginx source build not detected\nYou cannot use this tool to uninstall Nginx\nPlease use remove or purge options in menu" --ok-button "OK" 10 70
+      fi
         ;;
 
         "7)")

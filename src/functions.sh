@@ -463,6 +463,64 @@ nginxPurge() {
   } | whiptail --title "Nginx Purge" --gauge "\nWiping traces of Nginx" 10 70 0
 }
 
+cleanBuild() {
+{
+    sleep .75
+    echo -e "XXX\n10\n\nBacking up Nginx configurations... \nXXX"
+    tar cvpfz /nginxconf_backup.tar.gz /etc/nginx/ 2> /dev/null
+    mv /nginxconf_backup.tar.gz $CURDIR/backups
+    rm -rf /etc/nginx
+    sleep .75
+    echo -e "XXX\n25\n\nStopping Nginx webserver... Done.\nXXX"
+    /etc/init.d/nginx stop 2> /dev/null
+    sleep .75
+    echo -e "XXX\n37\n\nRemoving Nginx cache... Done.\nXXX"
+    rm -rf /var/cache/nginx
+    sleep .75
+    echo -e "XXX\n51\n\nRemoving Nginx services... \nXXX"
+    update-rc.d -f /etc/init.d/nginx remove
+    rm -rf /etc/init.d/nginx
+    rm -rf /etc/rc0.d/K01nginx
+    rm -rf /etc/rc1.d/K01nginx
+    rm -rf /etc/rc2.d/S01nginx
+    rm -rf /etc/rc3.d/S01nginx
+    rm -rf /etc/rc4.d/S01nginx
+    rm -rf /etc/rc5.d/S01nginx
+    rm -rf /etc/rc6.d/K01nginx
+    rm -rf /etc/systemd/system/multi-user.target.wants/nginx.service
+    rm -rf /lib/systemd/system/nginx.service
+    sleep .75
+    echo -e "XXX\n65\n\nRemoving Nginx logs... \nXXX"
+    rm -rf /var/log/nginx
+    sleep .75
+    echo -e "XXX\n78\n\nRemoving Nginx modules... \nXXX"
+    rm -rf /usr/lib/nginx
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/nginx.pm
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/.packlist
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/nginx.so
+    rm -rf /usr/local/share/man/man3/nginx.3pm
+    rm -rf /usr/sbin/nginx
+    rm -rf /usr/sbin/nginx.old
+    rm -rf /usr/share/doc/fcgiwrap/examples/nginx.conf
+    rm -rf /var/lib/lxcfs/cgroup/blkio/system.slice/nginx.service
+    rm -rf /var/lib/lxcfs/cgroup/cpu,cpuacct/system.slice/nginx.service
+    rm -rf /var/lib/lxcfs/cgroup/devices/system.slice/nginx.service
+    rm -rf /var/lib/lxcfs/cgroup/memory/system.slice/nginx.service
+    rm -rf /var/lib/lxcfs/cgroup/name=systemd/system.slice/nginx.service
+    rm -rf /var/lib/lxcfs/cgroup/pids/system.slice/nginx.service
+    sleep .75
+    echo -e "XXX\n90\n\nRemoving temporary files... \nXXX"
+    rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg
+    rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4
+    rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg/tmp
+    rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4/tmp
+    sleep .75
+    echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
+    sleep 1
+  } | whiptail --title "Nginx Clean Build" --gauge "\nWiping traces of Nginx" 10 70 0
+}
+
 nginxService() {
 {
     sleep 1
