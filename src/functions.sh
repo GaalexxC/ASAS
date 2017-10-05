@@ -124,9 +124,9 @@ systemDetect()
         readonly KERNEL
         readonly ARCH
         if [[ "${osdist[*]}" =~ "$DISTRO"  && "${osrev[*]}" =~ "$VERSION" ]] ; then
-                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRO\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBaseCore: $DistroBaseCore\nKernel: $KERNEL\nArchetecture: $ARCH\n\nGreat $DISTRO - $VERSION is supported" --ok-button "Continue" 16 70 6
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRO\nVersion: $VERSION\nCodename: $CODENAME\nCommonName: $RELEASE\nDistroBaseCore: $DistroBaseCore\nKernel: $KERNEL\nArchetecture: $ARCH\n\nGreat $DISTRO - $VERSION is supported" --ok-button "Continue" 16 70 6
         else
-                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRO\nCodename: $CODENAME\nVersion: $VERSION\nRevision: $RELEASE\nDistroBaseCore: $DistroBaseCore\nKernel: $KERNEL\nArchetecture: $ARCH\n\nSorry $DISTRO - $VERSION is not supported" --ok-button "Exit" 16 70 6
+                whiptail --title "System Detect" --msgbox "OS: $OS\nDistribution: $DISTRO\nVersion: $VERSION\nCodename: $CODENAME\nCommonName: $RELEASE\nDistroBaseCore: $DistroBaseCore\nKernel: $KERNEL\nArchetecture: $ARCH\n\nSorry $DISTRO - $VERSION is not supported" --ok-button "Exit" 16 70 6
         exit 1
         fi
 }
@@ -460,54 +460,6 @@ nginxPurge() {
   } | whiptail --title "Nginx Purge" --gauge "\nWiping traces of Nginx" 10 70 0
 }
 
-nginxConfigure() {
-        ./configure --prefix=/etc/nginx \
-                    --sbin-path=/usr/sbin/nginx \
-                    --modules-path=/usr/lib/nginx/modules \
-                    --conf-path=/etc/nginx/nginx.conf \
-                    --error-log-path=/var/log/nginx/error.log \
-                    --http-log-path=/var/log/nginx/access.log \
-                    --pid-path=/var/run/nginx.pid \
-                    --lock-path=/var/run/nginx.lock \
-                    --http-client-body-temp-path=/var/cache/nginx/client_temp \
-                    --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
-                    --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
-                    --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
-                    --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
-                    --user=nginx --group=nginx \
-                    --with-http_ssl_module \
-                    --with-http_realip_module \
-                    --with-http_addition_module \
-                    --with-http_sub_module \
-                    --with-http_dav_module \
-                    --with-http_flv_module \
-                    --with-http_mp4_module \
-                    --with-http_gunzip_module \
-                    --with-http_gzip_static_module \
-                    --with-http_random_index_module \
-                    --with-http_secure_link_module \
-                    --with-http_stub_status_module \
-                    --with-http_auth_request_module \
-                    --with-http_xslt_module=dynamic \
-                    --with-http_image_filter_module=dynamic \
-                    --with-http_geoip_module=dynamic \
-                    --with-http_perl_module=dynamic \
-                    --with-threads \
-                    --with-stream \
-                    --with-stream_ssl_module \
-                    --with-stream_geoip_module=dynamic \
-                    --with-http_slice_module \
-                    --with-mail \
-                    --with-mail_ssl_module \
-                    --with-file-aio \
-                    --with-http_v2_module \
-                    --with-openssl=../openssl-1.1.0f \
-                    --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
-                    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' && \
-                     make && \
-                     make install
-}
-
 nginxService() {
 {
     sleep .75
@@ -587,7 +539,7 @@ nginxConfigure() {
     mkdir -p /var/cache/nginx/tmp
     chown -R www-data:root /var/cache/nginx
     sleep .50
-    echo -e "XXX\n95\n\nCleanup - Remove Nginx signing key"...\nXXX"
+    echo -e "XXX\n95\n\nCleanup - Remove Nginx signing key...\nXXX"
     rm -rf ./nginx_signing.key
     sleep 1.0
     echo -e "XXX\n98\n\nRestarting Nginx service... Done.\nXXX"
@@ -607,7 +559,7 @@ wgetFiles() {
 {
   wget $(wgetURL) 2>&1 | \
   stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }'
-  } | whiptail --title "Nginx Setup" --gauge "\nFetching build sources" 10 70 0
+  } | whiptail --title "ASAS Downloader" --gauge "\nFetching build sources" 10 70 0
 }
 
 #*****************************

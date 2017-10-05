@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/04/2017 02:15 EDT                                       #
+#        &Updated:   10/04/2017 02:55 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -60,13 +60,13 @@ case $SELECTNGINX in
        }
        updateSources
        package() {
-         printf "apt --yes --force-yes install nginx fcgiwrap"
+         printf "apt --yes --force-yes install nginx fcgiwrap spawn-fcgi"
        }
        systemInstaller
        sleep 1
        nginxConfigure
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
      else
        ngxver=$(nginx -v 2>&1)
        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -91,13 +91,13 @@ case $SELECTNGINX in
        }
       updateSources
       package() {
-         printf "apt --yes --force-yes install nginx fcgiwrap"
+         printf "apt --yes --force-yes install nginx fcgiwrap spawn-fcgi"
        }
       systemInstaller
       sleep 1
         nginxConfigure
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -106,6 +106,7 @@ case $SELECTNGINX in
 
         "3)")
       if ! type nginx > /dev/null 2>&1; then
+      touch $SCRIPT_LOG
       package() {
          printf "apt --yes --force-yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap"
        }
@@ -136,8 +137,8 @@ case $SELECTNGINX in
                     --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
                     --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
                     --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
-                    --user=www-data \
-                    --group=www-data \
+                    --user=$WEB_SERVER_USER \
+                    --group=$WEB_SERVER_GROUP \
                     --with-http_ssl_module \
                     --with-http_realip_module \
                     --with-http_addition_module \
@@ -167,8 +168,8 @@ case $SELECTNGINX in
                     --with-openssl=$CURDIR/source/openssl-1.1.0f \
                     --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
                     --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' && \
-        sudo make && \
-        sudo make install
+        sudo make | tee -a $SCRIPT_LOG && \
+        sudo make install | tee -a $SCRIPT_LOG
         cd $CURDIR
         rm -rf source
         DATE=$(date +'%Y-%m-%d')
@@ -177,7 +178,7 @@ case $SELECTNGINX in
         nginxService
         nginxConfigure
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver sucessfully compiled\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Nginx Check" --msgbox "$ngxver successfully compiled\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
         else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
