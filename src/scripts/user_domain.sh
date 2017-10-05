@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 08:50 EDT                                       #
+#        &Updated:   10/05/2017 08:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -124,7 +124,7 @@ fi
 # Create a new domain vhost
    if [ $REMOTE == "y" ]; then
      CONFIG=$NGINX_SITES_AVAILABLE/$DOMAIN.vhost
-     cp templates/remote.vhost.template $CONFIG
+     cp $CURDIR/templates/remote.vhost.template $CONFIG 2> /dev/null
      echo -e "\nInstalled vhost conf\n"
 
 $SED -i "s/@@HOSTNAME@@/$DOMAIN/g" $CONFIG
@@ -135,7 +135,7 @@ $SED -i "s/@@SSL_PATH@@/\/$HOME_PARTITION\/$USERNAME\/ssl/g" $CONFIG
 $SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $CONFIG
    else
      CONFIG=$NGINX_SITES_AVAILABLE/$LOCAL.vhost
-     cp templates/local.vhost.template $CONFIG
+     cp $CURDIR/templates/local.vhost.template $CONFIG 2> /dev/null
      echo -e "\nInstalled vhost conf\n"
 
 $SED -i "s/@@HOSTNAME@@/$SERVER/g" $CONFIG
@@ -159,7 +159,7 @@ $SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $CONFIG
    if [ $REMOTE == "y" ]; then
      echo -e "\nInstall PHP FPM conf file\n"
      FPMCONF="$PHP7_FPM_DIR/$DOMAIN.conf"
-     cp templates/conf.template $FPMCONF
+     cp $CURDIR/templates/conf.template $FPMCONF 2> /dev/null
 $SED -i "s/@@USER@@/$USERNAME/g" $FPMCONF
 $SED -i "s/@@GROUP@@/$USERNAME/g" $FPMCONF
 $SED -i "s/@@HOME_DIR@@/\/$HOME_PARTITION\/$USERNAME/g" $FPMCONF
@@ -170,7 +170,7 @@ $SED -i "s/@@MAX_SERVERS@@/$MAX_SERVERS/g" $FPMCONF
    else
      echo -e "\nInstall PHP FPM conf file\n"
      FPMCONF="$PHP7_FPM_DIR/$LOCAL.conf"
-     cp templates/conf.template $FPMCONF
+     cp $CURDIR/templates/conf.template $FPMCONF 2> /dev/null
 $SED -i "s/@@USER@@/$USERNAME/g" $FPMCONF
 $SED -i "s/@@GROUP@@/$USERNAME/g" $FPMCONF
 $SED -i "s/@@HOME_DIR@@/\/$HOME_PARTITION\/$USERNAME/g" $FPMCONF
@@ -200,7 +200,7 @@ $SED -i "s/@@MAX_SERVERS@@/$MAX_SERVERS/g" $FPMCONF
 
 # Create a index.php placeholder page to avoid 403 error
      CONFIG=/$HOME_PARTITION/$HOME_DIR$PUBLIC_HTML_DIR/
-     cp $CURRENT_DIR skel/index.php $CONFIG
+     cp $CURDIR/skel/index.php $CONFIG 2> /dev/null
      echo -e "\nInstalled basic index.php placeholder\n"
 
      echo -e "\nSet Web Directory Permissions\n"
@@ -217,9 +217,9 @@ $SED -i "s/@@MAX_SERVERS@@/$MAX_SERVERS/g" $FPMCONF
      echo -e "\nPermissions Set\n"
 
      echo -e "\nRestart Services\n"
-     $NGINX_INIT
+     $NGINX_INIT 2> /dev/null
      echo
-     $PHP_FPM_INIT
+     $PHP_FPM_INIT 2> /dev/null
 
      echo -e "\nLooks like we are done!"
    if [ $REMOTE == "y" ]; then
