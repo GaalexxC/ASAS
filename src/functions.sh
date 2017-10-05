@@ -468,7 +468,7 @@ cleanBuild() {
     sleep .75
     echo -e "XXX\n10\n\nBacking up Nginx configurations... \nXXX"
     tar cvpfz /nginxconf_backup.tar.gz /etc/nginx/ 2> /dev/null
-    if [ ! -d  $CURDIR/backups ]
+    if [ ! -d  $CURDIR/backups ]; then
     mkdir $CURDIR/backups
     fi
     mv /nginxconf_backup.tar.gz $CURDIR/backups

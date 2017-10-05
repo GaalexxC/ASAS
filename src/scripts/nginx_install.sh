@@ -209,13 +209,7 @@ case $SELECTNGINX in
         ;;
 
         "4)")
-     if [ -f /etc/nginx/.build ]
-      then
-       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
-       whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
-       return
-     fi
-     if type nginx > /dev/null 2>&1; then
+     if type nginx > /dev/null 2>&1 && [ ! -f /etc/nginx/.build ]; then
       if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
 
        package() {
@@ -235,23 +229,21 @@ case $SELECTNGINX in
        }
        updateSources
        sleep 1
-         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-     else
-         whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
+       whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      else
+       cancelOperation
      fi
-     else
+      elif [ -f /etc/nginx/.build ]
+      then
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
+       whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
+      else
          whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
-     fi
+    fi
         ;;
 
         "5)")
-     if [ -f /etc/nginx/.build ]
-      then
-       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
-       whiptail --title "Nginx Uninstall" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
-      return
-     fi
-     if type nginx > /dev/null 2>&1; then
+     if type nginx > /dev/null 2>&1 && [ ! -f /etc/nginx/.build ]; then
       if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
        package() {
          printf "apt --yes --force-yes purge nginx fcgiwrap spawn-fcgi"
@@ -273,11 +265,15 @@ case $SELECTNGINX in
          whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
        cancelOperation
-      fi
-     else
-         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      fi
-       ;;
+      elif [ -f /etc/nginx/.build ]
+      then
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
+       whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
+      else
+         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+    fi
+        ;;
 
         "6)")
     if ! type nginx > /dev/null 2>&1; then
