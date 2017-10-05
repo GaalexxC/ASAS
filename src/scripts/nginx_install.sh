@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/04/2017 02:55 EDT                                       #
+#        &Updated:   10/05/2017 01:33 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -30,29 +30,31 @@ while [ 3 ]
 do
 
 SELECTNGINX=$(
-whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and tab to select an Nginx version\nUpon selection operation will begin without prompts" 20 78 8 \
+whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and space to select operation\n" 20 78 9 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
         "4)" "Remove Nginx (Preserves Configurations)" OFF \
-        "5)" "Purge Nginx (Wipe Nginx Clean)" OFF \
-        "6)" "Generate 2048bit Diffie-Hellman (Required for Nginx SSL/TLS)" OFF \
-        "7)" "Return to Main Menu" OFF \
-        "8)" "Exit" OFF 3>&1 1>&2 2>&3
+        "5)" "Purge Nginx (Wipe Clean)" OFF \
+        "6)" "Clean Source Build (Archives Configurations)" OFF \
+        "7)" "Generate 2048bit Diffie-Hellman (Required for Nginx SSL/TLS)" OFF \
+        "8)" "Return to Main Menu" OFF \
+        "9)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTNGINX in
         "1)")
    if ! type nginx > /dev/null 2>&1; then
+      if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Mainline version\n\nWould you like to install Nginx mainline" --yes-button "Install" --no-button "Cancel" 10 70) then
     if [ "$DISTRO" = "Ubuntu" ]; then
        echo "deb http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-       echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-        elif [ "$DISTRO" = "Debian" ]; then
-       echo "deb http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
+        echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+         elif [ "$DISTRO" = "Debian" ]; then
+        echo "deb http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
        echo "deb-src http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
-     else
+    else
        whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
-        exit 1
+         exit 1
     fi
        nginxRepoAdd
        pkgcache() {
@@ -65,26 +67,30 @@ case $SELECTNGINX in
        systemInstaller
        sleep 1
        nginxConfigure
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-     else
+       ngxver=$(nginx -v 2>&1)
+       whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      else
+        whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
+     fi
+      else
        ngxver=$(nginx -v 2>&1)
        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
    fi
         ;;
 
         "2)")
-    if ! type nginx > /dev/null 2>&1; then
-     if [ "$DISTRO" = "Ubuntu" ]; then
+   if ! type nginx > /dev/null 2>&1; then
+      if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Stable version\n\nWould you like to install Nginx stable" --yes-button "Install" --no-button "Cancel" 10 70) then
+    if [ "$DISTRO" = "Ubuntu" ]; then
       echo "deb http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-      echo "deb-src http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-     elif [ "$DISTRO" = "Debian" ]; then
-      echo "deb http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
-      echo "deb-src http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
-     else
+       echo "deb-src http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+        elif [ "$DISTRO" = "Debian" ]; then
+       echo "deb http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
+       echo "deb-src http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
+    else
       whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
-      exit 1
-     fi
+        exit 1
+    fi
       nginxRepoAdd
       pkgcache() {
          printf "apt update"
@@ -95,35 +101,47 @@ case $SELECTNGINX in
        }
       systemInstaller
       sleep 1
-        nginxConfigure
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      nginxConfigure
+       ngxver=$(nginx -v 2>&1)
+       whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
       else
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-      fi
+      cancelOperation
+     fi
+      else
+       ngxver=$(nginx -v 2>&1)
+       whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+   fi
         ;;
 
         "3)")
-      if ! type nginx > /dev/null 2>&1; then
-      touch $SCRIPT_LOG
-      package() {
-         printf "apt --yes --force-yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap"
+   if ! type nginx > /dev/null 2>&1; then
+    if (whiptail --title "Nginx Compiler" --yesno "Nginx-OpenSSL source build\nYou can compile new, recompile, or upgrade compile\nDo you want to run source build?" --yes-button "Build" --no-button "Cancel" 10 70) then
+        mv $NGINX_BUILD $NGINX_BUILD.old
+     if [ -f $CURDIR/$NGINX_LOG ]
+      then
+        mv $CURDIR/$NGINX_LOG $CURDIR/$NGINX_LOG.bak
+        touch $CURDIR/$NGINX_LOG
+      else
+        touch $CURDIR/$NGINX_LOG
+     fi
+       package() {
+         printf "apt --yes --force-yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi"
        }
-      systemInstaller
+       systemInstaller
         mkdir $CURDIR/source/
         cd $CURDIR/source
-      wgetURL() {
-          printf "wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz"
+       wgetURL() {
+          printf "wget https://www.openssl.org/source/$OPENSSL_SOURCE"
         }
-      wgetFiles
-      wgetURL() {
-          printf "wget http://nginx.org/download/nginx-1.13.5.tar.gz"
+       wgetFiles
+       wgetURL() {
+          printf "wget http://nginx.org/download/$NGINX_SOURCE"
         }
-      wgetFiles
-        tar -zxvf openssl-1.1.0f.tar.gz
-        tar -zxvf nginx-1.13.5.tar.gz
+       wgetFiles
+        tar -zxvf $OPENSSL_SOURCE
+        tar -zxvf $NGINX_SOURCE
         cd $CURDIR/source/nginx-1.13.5/
+        echo -e "Build date: $DATE_TIME\n\n" > $CURDIR/$NGINX_LOG
         ./configure --prefix=/etc/nginx \
                     --sbin-path=/usr/sbin/nginx \
                     --modules-path=/usr/lib/nginx/modules \
@@ -167,25 +185,33 @@ case $SELECTNGINX in
                     --with-http_v2_module \
                     --with-openssl=$CURDIR/source/openssl-1.1.0f \
                     --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
-                    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' && \
-        sudo make | tee -a $SCRIPT_LOG && \
-        sudo make install | tee -a $SCRIPT_LOG
-        cd $CURDIR
-        rm -rf source
-        DATE=$(date +'%Y-%m-%d')
-        nginxbuild=$(nginx -V 2>&1)
-        echo -e "\nBuild date: $DATE \n$nginxbuild" >> /etc/nginx/.build
-        nginxService
-        nginxConfigure
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver successfully compiled\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-        else
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-        fi
+                    --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' | tee -a $CURDIR/$NGINX_LOG && \
+       sudo make | tee -a $CURDIR/$NGINX_LOG && \
+       sudo make install | tee -a $CURDIR/$NGINX_LOG
+       cd $CURDIR
+       rm -rf source
+       DATE_TIME=$(date)
+       nginxbuild=$(nginx -V 2>&1)
+       echo -e "Build date: $DATE_TIME\n$nginxbuild" > $NGINX_BUILD
+       nginxService
+       nginxConfigure
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
+      else
+       cancelOperation
+      fi
+      else
+       ngxver=$(nginx -v 2>&1)
+       whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+      fi
         ;;
 
         "4)")
+     if [ -f /etc/nginx/.build ]
+      then
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
+       whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
+      return
+     fi
      if type nginx > /dev/null 2>&1; then
       if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
 
@@ -211,11 +237,17 @@ case $SELECTNGINX in
          whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
      fi
      else
-         whiptail --title "Nginx Check-Install" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      fi
         ;;
 
         "5)")
+     if [ -f /etc/nginx/.build ]
+      then
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build)"
+       whiptail --title "Nginx Uninstall" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
+      return
+     fi
      if type nginx > /dev/null 2>&1; then
       if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
 
@@ -241,11 +273,71 @@ case $SELECTNGINX in
          whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to go back" --ok-button "OK" 10 70
      fi
      else
-         whiptail --title "Nginx Check-Install" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      fi
-        ;;
+       ;;
 
         "6)")
+     if [ -f /etc/nginx/.build ]
+      then
+      if (whiptail --title "Purge Nginx" --yesno "Warning! This tool will wipe Nginx source build from your system\nConfigurations will be archived to backups folder\n\nWould you like to uninstall Nginx?" --yes-button "Uninstall" --no-button "Cancel" 10 70) then
+       package() {
+         printf "apt --yes --force-yes purge fcgiwrap spawn-fcgi"
+       }
+       systemInstaller
+       sleep 1
+       pkgcache() {
+          printf "apt-get --yes --force-yes autoremove"
+       }
+       updateSources
+       sleep 1
+tar cvpfz /nginxconf_backup.tar.gz /etc/nginx/
+mv /nginxconf_backup.tar.gz $CURDIR/backups
+/etc/init.d/nginx stop
+update-rc.d -f /etc/init.d/nginx remove
+rm -rf /etc/nginx
+rm -rf /etc/init.d/nginx
+rm -rf /etc/rc0.d/K01nginx
+rm -rf /etc/rc1.d/K01nginx
+rm -rf /etc/rc2.d/S01nginx
+rm -rf /etc/rc3.d/S01nginx
+rm -rf /etc/rc4.d/S01nginx
+rm -rf /etc/rc5.d/S01nginx
+rm -rf /etc/rc6.d/K01nginx
+rm -rf /etc/systemd/system/multi-user.target.wants/nginx.service
+rm -rf /lib/systemd/system/nginx.service
+rm -rf /usr/lib/nginx
+rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/nginx.pm
+rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx
+rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/.packlist
+rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/nginx.so
+rm -rf /usr/local/share/man/man3/nginx.3pm
+rm -rf /usr/sbin/nginx
+rm -rf /usr/sbin/nginx.old
+rm -rf /usr/share/doc/fcgiwrap/examples/nginx.conf
+rm -rf /var/cache/nginx
+rm -rf /var/lib/lxcfs/cgroup/blkio/system.slice/nginx.service
+rm -rf /var/lib/lxcfs/cgroup/cpu,cpuacct/system.slice/nginx.service
+rm -rf /var/lib/lxcfs/cgroup/devices/system.slice/nginx.service
+rm -rf /var/lib/lxcfs/cgroup/memory/system.slice/nginx.service
+rm -rf /var/lib/lxcfs/cgroup/name=systemd/system.slice/nginx.service
+rm -rf /var/lib/lxcfs/cgroup/pids/system.slice/nginx.service
+rm -rf /var/log/nginx
+rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg
+rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4
+rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg/tmp
+rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4/tmp
+       sleep 15
+        whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+    fi
+      elif type nginx > /dev/null 2>&1; then
+        whiptail --title "Nginx Uninstall" --msgbox "Nginx source build not detected\nYou cannot use this tool to uninstall Nginx\nPlease use remove or purge options in menu" --ok-button "OK" 10 70
+      else
+       whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+    fi
+        ;;
+
+        "7)")
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
         whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -262,11 +354,11 @@ case $SELECTNGINX in
       fi
         ;;
 
-        "7)")
+        "8)")
       return
         ;;
 
-        "8)")
+        "9)")
       exit 1
         ;;
     esac

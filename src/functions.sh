@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/04/2017 02:08 EDT                                       #
+#        &Updated:   10/05/2017 02:08 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -35,7 +35,7 @@ NEWT_COLORS="${newtcolor[@]}"
 
 validateRoot() {
     if [ "$(id -u)" != "0" ]; then
-       whiptail --title "System Check" --msgbox "\nYou need root privileges to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
+       whiptail --title "System Check" --msgbox "\nYou need to be root to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
        exit 1
     else
        whiptail --title "System Check" --msgbox "Root User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
@@ -59,7 +59,7 @@ rebootRequired() {
   fi
 }
 
-# Work In Progress
+# Work In Progress for bug patch
 phpDependencies() {
 apt install -y language-pack-en-base &&
 export LC_ALL=en_US.UTF-8 &&
@@ -281,6 +281,21 @@ nginxCheckInstall() {
    fi
 }
 
+nginxCheckCompile() {
+   if ! type nginx > /dev/null 2>&1; then
+     if (whiptail --title "Nginx Check" --yesno "Nginx not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        source scripts/nginx_compile.sh &&
+        source scripts/nginx_configure.sh | grep -v 'omitting directory'
+    else
+         return
+     fi
+   else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
+        return
+   fi
+}
+
 phpCheckInstall() {
    if ! type php > /dev/null 2>&1; then
         whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
@@ -320,20 +335,6 @@ vsftpdCheckInstall() {
 # Check Compile
 #
 #*****************************
-nginxCheckCompile() {
-   if ! type nginx > /dev/null 2>&1; then
-     if (whiptail --title "Nginx Check" --yesno "Nginx not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-        source scripts/nginx_compile.sh &&
-        source scripts/nginx_configure.sh | grep -v 'omitting directory'
-    else
-         return
-     fi
-   else
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
-        return
-   fi
-}
 
 #*****************************
 #
@@ -433,6 +434,7 @@ nginxRemove() {
     rm -rf /var/cache/nginx
     sleep .75
     echo -e "XXX\n75\n\nRemoving Nginx repos... \nXXX"
+    rm -rf /var/lib/apt/lists/nginx*
     sed -i.bak '/nginx/d' $APT_SOURCES
     sleep .75
     echo -e "XXX\n100\n\nConfiguration preserved @ /etc/nginx... Done.\nXXX"
@@ -453,6 +455,7 @@ nginxPurge() {
     rm -rf /var/cache/nginx
     sleep .75
     echo -e "XXX\n80\n\nRemoving Nginx repos... \nXXX"
+    rm -rf /var/lib/apt/lists/nginx*
     sed -i.bak '/nginx/d' $APT_SOURCES
     sleep .75
     echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
@@ -462,94 +465,130 @@ nginxPurge() {
 
 nginxService() {
 {
+    sleep 1
+    echo -e "XXX\n5\n\nChecking for Nginx service file...\nXXX"
+    if [ -f /lib/systemd/system/nginx.service ]
+    then
+    echo -e "XXX\n50\n\nNginx.service already exists, skipping...\nXXX"
     sleep .75
+    else
     echo -e "XXX\n25\n\nCreate Nginx systemd service... \nXXX"
     CONFIGSERVICE='/lib/systemd/system/'
-    cp $CURRENT_DIR config/nginx/nginx.service $CONFIGSERVICE 2> /dev/null
+    cp $CURDIR/config/nginx/nginx.service $CONFIGSERVICE 2> /dev/null
     chmod 0644 /lib/systemd/system/nginx.service
     sleep .75
-    echo -e "XXX\n50\n\nNginx service file enabled... Done.\nXXX"
     systemctl enable nginx.service 2> /dev/null
+    echo -e "XXX\n50\n\nNginx service file enabled... Done.\nXXX"
+    fi
     sleep .75
-    echo -e "XXX\n75\n\nCreate Nginx init.d service...\nXXX"
+    echo -e "XXX\n55\n\nChecking for Nginx init.d file...\nXXX"
+    if [ -f /etc/init.d/nginx ]
+    then
+    echo -e "XXX\n75\n\nNginx init.d already exists, skipping...\nXXX"
+    sleep .75
+    else
+    echo -e "XXX\n80\n\nCreate Nginx init.d service... \nXXX"
     CONFIGINITD='/etc/init.d/'
-    cp $CURRENT_DIR config/nginx/nginx $CONFIGINITD 2> /dev/null
+    cp $CURDIR/config/nginx/nginx $CONFIGINITD 2> /dev/null
     chmod 755 /etc/init.d/nginx
+    echo -e "XXX\n90\n\nNginx init.d file installed... Done.\nXXX"
     sleep .75
-    echo -e "XXX\n100\n\nNginx init.d file installed... Done.\nXXX"
     update-rc.d nginx defaults 2> /dev/null
+    echo -e "XXX\n100\n\nNginx init.d file enabled... Done.\nXXX"
+    fi
     sleep .75
   } | whiptail --title "Nginx Services" --gauge "\nCreating service files for Nginx" 10 70 0
 }
 
 nginxConfigure() {
 {
-    sleep 1
     echo -e "XXX\n7\n\nMaking backup of default nginx.conf...\nXXX"
+    sleep .75
+    if [ -f /etc/nginx/nginx.conf.bak ]
+    then
+    echo -e "XXX\n7\n\nBackup already exists, skipping nginx.conf...\nXXX"
+    sleep .75
+    else
     mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-    sleep .50
     echo -e "XXX\n13\n\nInstalling optimized nginx.conf...\nXXX"
+    sleep .75
     CONFIGCONF='/etc/nginx/'
-    cp config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
-    sleep .50
+    cp $CURDIR/config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
+    echo -e "XXX\n15\n\nInstalled optimized nginx.conf...\nXXX"
+    sleep .75
+    fi
     echo -e "XXX\n20\n\nCreate $NGINX_SITES_AVAILABLE if doesnt exist...\nXXX"
     sleep .25
     if [ -d "$NGINX_SITES_AVAILABLE" ]
     then
     echo -e "XXX\n26\n\nDirectory $NGINX_SITES_AVAILABLE exists...\nXXX"
+    sleep .75
     else
     mkdir -p $NGINX_SITES_AVAILABLE
     echo -e "XXX\n26\n\nDirectory $NGINX_SITES_AVAILABLE created...\nXXX"
+    sleep .75
     fi
-    sleep .50
     echo -e "XXX\n35\n\nCreate nginx $NGINX_SITES_ENABLED if doesnt exist...\nXXX"
-    sleep .25
+    sleep .75
     if [ -d "$NGINX_SITES_ENABLED" ]
     then
     echo -e "XXX\n43\n\nDirectory $NGINX_SITES_ENABLED exists...\nXXX"
+    sleep .75
     else
     mkdir -p $NGINX_SITES_ENABLED
     echo -e "XXX\n43\n\nDirectory $NGINX_SITES_ENABLED created...\nXXX"
+    sleep .75
     fi
-    sleep .50
     echo -e "XXX\n56\n\nCreate nginx $NGINX_CONFD if doesnt exist...\nXXX"
-    sleep .25
+    sleep .75
     if [ -d "$NGINX_CONFD" ]
     then
     echo -e "XXX\n65\n\nDirectory $NGINX_CONFD exists...\nXXX"
+    sleep .75
     else
     mkdir -p $NGINX_CONFD
     echo -e "XXX\n65\n\nDirectory $NGINX_CONFD created...\nXXX"
+    sleep .75
     fi
-    sleep .50
     echo -e "XXX\n73\n\nCreate nginx vhosts.conf if doesnt exist...\nXXX"
-    sleep .25
+    sleep .75
     if [ -f /etc/nginx/conf.d/vhosts.conf ]
     then
     echo -e "XXX\n82\n\nGreat! vhosts.conf file exists...\nXXX"
+    sleep .75
     else
     touch /etc/nginx/conf.d/vhosts.conf
     echo "include /etc/nginx/sites-enabled/*.vhost;" >>/etc/nginx/conf.d/vhosts.conf
     echo -e "XXX\n82\n\nFile vhosts.conf created...\nXXX"
+    sleep .75
     fi
-    sleep .50
-    echo -e "XXX\n91\n\nCreate, chown and optimize nginx cache/gzip directories...\nXXX"
+    echo -e "XXX\n91\n\nCreate nginx cache/gzip directories if doesnt exist...\nXXX"
+    sleep .75
+    if [ -d /var/cache/nginx/fcgi ] || [ -d /var/cache/nginx/tmp ];
+    then
+    echo -e "XXX\n93\n\nGreat! Cache directories exist...\nXXX"
+    sleep .75
+    else
     mkdir -p /var/cache/nginx
     mkdir -p /var/cache/nginx/fcgi
     mkdir -p /var/cache/nginx/tmp
     chown -R www-data:root /var/cache/nginx
-    sleep .50
+    echo -e "XXX\n93\n\nNginx cache directories created...\nXXX"
+    sleep .75
+    fi
     echo -e "XXX\n95\n\nCleanup - Remove Nginx signing key...\nXXX"
-    rm -rf ./nginx_signing.key
-    sleep 1.0
+    sleep .75
+    rm -rf $CURDIR/nginx_signing.key
     echo -e "XXX\n98\n\nRestarting Nginx service... Done.\nXXX"
+    sleep 1
     $NGINX_INIT 2> /dev/null
     if [ $? -eq 0 ]; then
     echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
-    sleep 1.50
+    sleep 1
     else
-    echo -e "XXX\n100\n\nNginx failed, check your logs...\nXXX"
-    sleep 1.50
+    echo -e "XXX\n100\n\nNginx failed, check nginx_binary.log...\nXXX"
+    sleep 3
+    exit 1
     fi
     sleep 1
   } | whiptail --title "Nginx Setup" --gauge "\nNginx directory and configuration" 10 70 0
