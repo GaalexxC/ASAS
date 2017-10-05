@@ -43,13 +43,11 @@ validateRoot() {
 }
 
 completeOperation() {
-whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter] for main menu" --ok-button "OK" 10 70
-return
+whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter] to return to menu" --ok-button "OK" 10 70
 }
 
 cancelOperation() {
-whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] for main menu" --ok-button "OK" 10 70
-return
+whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to return to menu" --ok-button "OK" 10 70
 }
 
 rebootRequired() {
@@ -174,10 +172,10 @@ systemUpgrades() {
   if [ "$UPGRADECHECK" -gt 0 ]; then
    if [ "$DISTRO" = "Ubuntu" ]; then
     UPGRADES=$(/usr/lib/update-notifier/apt-check 2>&1)
-    security=$(echo "${UPGRADES}" | cut -d ";" -f 2)
-    nonsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 1)
-    totalupgrade=$((security + nonsecurity))
-    if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$security are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
+    upsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 2)
+    upnonsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 1)
+    totalupgrade=$((upsecurity + upnonsecurity))
+    if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$upsecurity are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
          echo "apt --yes --force-yes upgrade"
        }
@@ -514,10 +512,7 @@ cleanBuild() {
     rm -rf /var/lib/lxcfs/cgroup/pids/system.slice/nginx.service
     sleep .75
     echo -e "XXX\n90\n\nRemoving temporary files... \nXXX"
-    rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg
-    rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4
-    rm -rf /var/tmp/systemd-private-57db717a18ab45d98da1e80f86b8f49c-nginx.service-uJEUPg/tmp
-    rm -rf /var/tmp/systemd-private-e91004cae68a4ed28987d5b583e79bec-nginx.service-aPvKW4/tmp
+    rm -rf /var/tmp/systemd-private-*-nginx.service-*
     sleep .75
     echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
     sleep 1
