@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/05/2017 12:23 EDT                                       #
+#        &Updated:   10/05/2017 01:33 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -114,7 +114,7 @@ case $SELECTNGINX in
         ;;
 
         "3)")
-   if ! type nginx > /dev/null 2>&1 || [ -f /etc/nginx/.build ]; then
+   if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Nginx Compiler" --yesno "Nginx-OpenSSL source build\nYou can compile new, recompile, or upgrade compile\nDo you want to run source build?" --yes-button "Build" --no-button "Cancel" 10 70) then
      if [ -f /etc/nginx/.build ]
       then
@@ -144,6 +144,7 @@ case $SELECTNGINX in
         tar -zxvf $OPENSSL_SOURCE
         tar -zxvf $NGINX_SOURCE
         cd $CURDIR/source/nginx-1.13.5/
+        DATE_TIME=$(date)
         echo -e "Build date: $DATE_TIME\n\n" > $CURDIR/$NGINX_LOG
         ./configure --prefix=/etc/nginx \
                     --sbin-path=/usr/sbin/nginx \
