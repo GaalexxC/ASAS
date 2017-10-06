@@ -28,7 +28,7 @@ GNU General Public License v3.0
 
 ## Development / Contribute
 
-Pre-Release Development
+Pre-Release Development. [More info here](https://github.com/GaalexxC/ASAS/wiki/Forking)
 
 ## Thanks!
 
