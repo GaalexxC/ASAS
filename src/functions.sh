@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/05/2017 02:08 EDT                                       #
+#        &Updated:   10/06/2017 03:03 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -454,8 +454,8 @@ nginxPurge() {
     sleep .75
     echo -e "XXX\n80\n\nRemoving Nginx repos... \nXXX"
     rm -rf /var/lib/apt/lists/nginx*
-    rm -rf/usr/local/lib/x86_64-linux-gnu/perl/5.20.2/nginx.pm
-    rm -rf/usr/local/lib/x86_64-linux-gnu/perl/5.20.2/auto/nginx
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/nginx.pm
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/auto/nginx
     sed -i.bak '/nginx/d' $APT_SOURCES
     sleep .75
     echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
@@ -515,8 +515,8 @@ cleanBuild() {
     sleep .75
     echo -e "XXX\n90\n\nRemoving temporary files... \nXXX"
     rm -rf /var/tmp/systemd-private-*-nginx.service-*
-    rm -rf/usr/local/lib/x86_64-linux-gnu/perl/5.20.2/nginx.pm
-    rm -rf/usr/local/lib/x86_64-linux-gnu/perl/5.20.2/auto/nginx
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/nginx.pm
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/auto/nginx
     sleep .75
     echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
     sleep 1
