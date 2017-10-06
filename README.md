@@ -34,7 +34,7 @@ Pre-Release Development
 
 - Microsoft
 
-Ironically, to a Windows OS for creating a pure Linux environment allowing me to test all these great releases in concert. Windows 10 Hyper-V, 7 containers, all rsync synchronized for rapid updates and development.
+Ironically, to a Windows OS for allowing me to test all these great releases in a pure Linux environment. Windows 10 Hyper-V, 7 containers, all rsync synchronized for rapid updates and development. if you are still using archaic apps like Cygwin based applications then you havent got a clue.
 - Café Bustelo
 
 For obvious reasons...:coffee:
