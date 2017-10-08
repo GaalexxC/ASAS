@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/05/2017 08:50 EDT                                       #
+#        &Updated:   10/08/2017 03:32 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -127,23 +127,23 @@ fi
      cp $CURDIR/templates/remote.vhost.template $CONFIG 2> /dev/null
      echo -e "\nInstalled vhost conf\n"
 
-$SED -i "s/@@HOSTNAME@@/$DOMAIN/g" $CONFIG
-$SED -i "s/@@IPADD@@/$IP/g" $CONFIG
-$SED -i "s#@@PATH@@#\/$HOME_PARTITION\/"$USERNAME$PUBLIC_HTML_DIR"#g" $CONFIG
-$SED -i "s/@@LOG_PATH@@/\/$HOME_PARTITION\/$USERNAME\/logs/g" $CONFIG
-$SED -i "s/@@SSL_PATH@@/\/$HOME_PARTITION\/$USERNAME\/ssl/g" $CONFIG
-$SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $CONFIG
+  $SED -i "s/@@HOSTNAME@@/$DOMAIN/g" $CONFIG
+  $SED -i "s/@@IPADD@@/$IP/g" $CONFIG
+  $SED -i "s#@@PATH@@#\/$HOME_PARTITION\/"$USERNAME$PUBLIC_HTML_DIR"#g" $CONFIG
+  $SED -i "s/@@LOG_PATH@@/\/$HOME_PARTITION\/$USERNAME\/logs/g" $CONFIG
+  $SED -i "s/@@SSL_PATH@@/\/$HOME_PARTITION\/$USERNAME\/ssl/g" $CONFIG
+  $SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $CONFIG
    else
      CONFIG=$NGINX_SITES_AVAILABLE/$LOCAL.vhost
      cp $CURDIR/templates/local.vhost.template $CONFIG 2> /dev/null
      echo -e "\nInstalled vhost conf\n"
 
-$SED -i "s/@@HOSTNAME@@/$SERVER/g" $CONFIG
-$SED -i "s/@@PORT@@/$PORT/g" $CONFIG
-$SED -i "s#@@PATH@@#\/$HOME_PARTITION\/"$USERNAME$PUBLIC_HTML_DIR"#g" $CONFIG
-$SED -i "s/@@LOG_PATH@@/\/$HOME_PARTITION\/$USERNAME\/logs/g" $CONFIG
-$SED -i "s/@@SSL_PATH@@/\/$HOME_PARTITION\/$USERNAME\/ssl/g" $CONFIG
-$SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $CONFIG
+  $SED -i "s/@@HOSTNAME@@/$SERVER/g" $CONFIG
+  $SED -i "s/@@PORT@@/$PORT/g" $CONFIG
+  $SED -i "s#@@PATH@@#\/$HOME_PARTITION\/"$USERNAME$PUBLIC_HTML_DIR"#g" $CONFIG
+  $SED -i "s/@@LOG_PATH@@/\/$HOME_PARTITION\/$USERNAME\/logs/g" $CONFIG
+  $SED -i "s/@@SSL_PATH@@/\/$HOME_PARTITION\/$USERNAME\/ssl/g" $CONFIG
+  $SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $CONFIG
    fi
 
      echo "FPM max children, must be higher then max servers, try 8:"
