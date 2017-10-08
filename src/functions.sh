@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/06/2017 03:03 EDT                                       #
+#        &Updated:   10/08/2017 16:00 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -33,21 +33,31 @@
 readarray -t newtcolor < bin/palette
 NEWT_COLORS="${newtcolor[@]}"
 
+# if [ ! -f $CURDIR/$CURDAY.$ERROR_LOG ]
+#    then
+#     touch $CURDIR/$CURDAY.$ERROR_LOG
+# fi
+
 validateRoot() {
-    if [ "$(id -u)" != "0" ]; then
-       whiptail --title "System Check" --msgbox "\nYou need to be root to run this script.\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
-       exit 1
+  if [ "$(id -u)" != "0" ]; then
+      whiptail --title "System Check" --msgbox "\nYou need to be root to run this script.\n\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
+      exit 1
     else
-       whiptail --title "System Check" --msgbox "Root User Confirmed\nPress [Enter] to continue" --ok-button "Continue" 10 70
-    fi
+       whiptail --title "System Check" --msgbox "Root User Confirmed\n\nPress [Enter] to continue" --ok-button "Continue" 10 70
+  fi
 }
 
 completeOperation() {
-whiptail --title "Operation Complete" --msgbox "Operation Complete\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+whiptail --title "Operation Complete" --msgbox "Operation Complete\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
 }
 
 cancelOperation() {
-whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+}
+
+errorOperation() {
+whiptail --title "Operation Error" --msgbox "Operation Failed\nCheck logs/error.log to debug\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+exit 1
 }
 
 rebootRequired() {
@@ -360,9 +370,9 @@ secureCheckModify() {
                 echo 100
                 sleep 2
                 break;
-            elif [[ "60" -eq "$i" ]]
+            elif [[ "71" -eq "$i" ]]
             then
-                i="40"
+                i="52"
             fi
             sleep 1
             i=$(expr $i + 1)
@@ -408,23 +418,21 @@ done | whiptail --title "Package Check"  --gauge "\nRefreshing package cache" 10
 #*****************************
 nginxRepoAdd() {
 {
-    sleep 1
     echo -e "XXX\n25\n\nAdding Nginx repos... \nXXX"
-    sleep 1
+    sleep .75
     echo -e "XXX\n50\n\nAdding Nginx repos... Done.\nXXX"
-    sleep 1
+    sleep .75
     echo -e "XXX\n75\n\nFetch Nginx signing key... \nXXX"
     curl -O https://nginx.org/keys/nginx_signing.key 2> /dev/null &&
     apt-key add ./nginx_signing.key 2> /dev/null &
-    sleep 1
+    sleep .75
     echo -e "XXX\n100\n\nFetch Nginx signing key... Done.\nXXX"
-    sleep 1
+    sleep .75
   } | whiptail --title "Nginx Setup" --gauge "\nAdd Nginx repos" 10 70 0
 }
 
 nginxRemove() {
 {
-    sleep .75
     echo -e "XXX\n25\n\nRemoving Nginx logs... Done.\nXXX"
     rm -rf /var/log/nginx
     sleep .75
@@ -442,7 +450,6 @@ nginxRemove() {
 
 nginxPurge() {
 {
-    sleep .75
     echo -e "XXX\n20\n\nRemoving Nginx configurations... \nXXX"
     rm -rf /etc/nginx
     sleep .75
@@ -465,7 +472,6 @@ nginxPurge() {
 
 cleanBuild() {
 {
-    sleep .75
     echo -e "XXX\n10\n\nBacking up Nginx configurations... \nXXX"
     tar cvpfz /nginxconf_backup.tar.gz /etc/nginx/ 2> /dev/null
     if [ ! -d  $CURDIR/backups ]; then
@@ -523,9 +529,50 @@ cleanBuild() {
   } | whiptail --title "Nginx Clean Build" --gauge "\nWiping traces of Nginx" 10 70 0
 }
 
+nginxMake() {
+{
+        i="0"
+            $(nginxCommand) &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation &
+            sleep 2
+            while (true)
+            do
+            proc=$(ps aux | grep -v grep | grep -e "make")
+            if [[ "$proc" == "" ]] && [[ "$i" -eq "0" ]];
+            then
+                break;
+            elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
+            then
+                sleep .5
+                echo 95
+                sleep 1.5
+                echo 99
+                sleep 1.5
+                echo 100
+                sleep 2
+                break;
+            elif [[ "94" -eq "$i" ]]
+            then
+                i="93"
+            fi
+            sleep 2.35
+            i=$(expr $i + 1)
+            printf "XXX\n$i\n\nCompiling Nginx [Running make]...\nBuild Log:$CURDIR/$NGINX_LOG/install-$CURDAY.log \nXXX\n$i\n"
+        done
+  } | whiptail --title "ASAS Compiler"  --gauge "\nReady to build Nginx w/ OpenSSL from source\n\nThis is going to take a few minutes" 10 70 0
+}
+
+nginxMakeInstall() {
+{
+       $(nginxCommand) &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation &
+     for ((i = 0 ; i <= 100 ; i+=25)); do
+        sleep 1
+        printf "XXX\n$i\n\nInstalling Nginx [Running make install]... \nXXX\n$i\n"
+        done
+  } | whiptail --title "ASAS Compiler"  --gauge "\nInstalling Nginx build" 10 70 0
+}
+
 nginxService() {
 {
-    sleep 1
     echo -e "XXX\n5\n\nChecking for Nginx service file...\nXXX"
     if [ -f /lib/systemd/system/nginx.service ]
     then
@@ -556,7 +603,7 @@ nginxService() {
     update-rc.d nginx defaults 2> /dev/null
     echo -e "XXX\n100\n\nNginx init.d file enabled... Done.\nXXX"
     fi
-    sleep .75
+    sleep 1
   } | whiptail --title "Nginx Services" --gauge "\nCreating service files for Nginx" 10 70 0
 }
 
@@ -578,7 +625,7 @@ nginxConfigure() {
     sleep .75
     fi
     echo -e "XXX\n20\n\nCreate $NGINX_SITES_AVAILABLE if doesnt exist...\nXXX"
-    sleep .25
+    sleep .75
     if [ -d "$NGINX_SITES_AVAILABLE" ]
     then
     echo -e "XXX\n26\n\nDirectory $NGINX_SITES_AVAILABLE exists...\nXXX"
@@ -632,26 +679,53 @@ nginxConfigure() {
     mkdir -p /var/cache/nginx
     mkdir -p /var/cache/nginx/fcgi
     mkdir -p /var/cache/nginx/tmp
-    chown -R www-data:root /var/cache/nginx
+    chown -R $WEB_SERVER_USER:$WEB_SERVER_GROUP /var/cache/nginx
     echo -e "XXX\n93\n\nNginx cache directories created...\nXXX"
     sleep .75
     fi
-    echo -e "XXX\n95\n\nCleanup - Remove Nginx signing key...\nXXX"
-    sleep .75
-    rm -rf $CURDIR/nginx_signing.key
     echo -e "XXX\n98\n\nRestarting Nginx service... Done.\nXXX"
-    sleep 1
+    sleep 1.50
     $NGINX_INIT 2> /dev/null
     if [ $? -eq 0 ]; then
+    ngxstart=$(systemctl status nginx.service 2>&1)
+    echo -e "Build date: $DATE_TIME\n\n$ngxstart" > $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
     echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
     sleep 1
     else
-    echo -e "XXX\n100\n\nNginx failed, check nginx_binary.log...\nXXX"
+    ngxfail=$(systemctl status nginx.service 2>&1)
+    echo "Build date: $DATE_TIME\n\n$ngxfail" > $CURDIR/$NGINX_LOG/error-$CURDAY.log
+    echo -e "XXX\n99\n\nNginx failed, check $CURDIR/$NGINX_LOG...\nXXX"
     sleep 3
     exit 1
     fi
     sleep 1
   } | whiptail --title "Nginx Setup" --gauge "\nNginx directory and configuration" 10 70 0
+}
+
+nginxCleanup() {
+{
+    echo -e "XXX\n10\n\nRemoving Nginx signing key...\nXXX"
+    rm -rf $CURDIR/nginx_signing.key
+    sleep .75
+    echo -e "XXX\n30\n\nRemoving source directory... \nXXX"
+    cd $CURDIR
+    rm -rf source
+    sleep .75
+    echo -e "XXX\n50\n\nSource removed... Done.\nXXX"
+    rm -rf source
+    sleep .75
+    echo -e "XXX\n80\n\nCreate .build file... \nXXX"
+     if [ ! -f /etc/nginx/.build-$CURDAY ]
+      then
+       touch /etc/nginx/.build-$CURDAY
+     fi
+    sleep .75
+    nginxbuild=$(nginx -V 2>&1)
+    echo -e "Build date: $DATE_TIME\n$nginxbuild" > /etc/nginx/.build-$CURDAY
+    sleep .75
+    echo -e "XXX\n100\n\nWriting to .build file... Done.\nXXX"
+    sleep .75
+  } | whiptail --title "Nginx Cleanup" --gauge "\nStarting Nginx cleanup" 10 70 0
 }
 
 wgetFiles() {
