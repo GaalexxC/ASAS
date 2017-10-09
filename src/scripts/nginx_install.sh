@@ -135,7 +135,7 @@ case $SELECTNGINX in
        package() {
          printf "apt --yes --force-yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi sudo"
        }
-        systemInstaller
+       systemInstaller
        mkdir $CURDIR/source/
        cd $CURDIR/source
        wgetURL() {
@@ -146,9 +146,8 @@ case $SELECTNGINX in
           printf "wget http://nginx.org/download/$NGINX_SOURCE"
         }
        wgetFiles
-       tar -zxvf $OPENSSL_SOURCE
-       tar -zxvf $NGINX_SOURCE
-       cd $CURDIR/source/nginx-1.13.5/
+       extractArchive
+       cd $CURDIR/source/$(basename $NGINX_SOURCE .tar.gz)/
        echo -e "Build date: $DATE_TIME\n\n" > $CURDIR/$NGINX_LOG/install-$CURDAY.log
        ./configure --prefix=/etc/nginx \
              --sbin-path=/usr/sbin/nginx \
@@ -191,11 +190,9 @@ case $SELECTNGINX in
              --with-mail_ssl_module \
              --with-file-aio \
              --with-http_v2_module \
-             --with-openssl=$CURDIR/source/openssl-1.1.0f \
+             --with-openssl=$CURDIR/source/$(basename $OPENSSL_SOURCE .tar.gz) \
              --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
              --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation
-       #sudo make &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation && \
-       #sudo make install &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation
        nginxCommand() {
          printf "sudo make"
        }

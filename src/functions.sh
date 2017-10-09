@@ -428,7 +428,7 @@ nginxRepoAdd() {
     sleep .75
     echo -e "XXX\n100\n\nFetch Nginx signing key... Done.\nXXX"
     sleep .75
-  } | whiptail --title "Nginx Setup" --gauge "\nAdd Nginx repos" 10 70 0
+  } | whiptail --title "Nginx Repo Setup" --gauge "\nAdding Nginx repos" 10 70 0
 }
 
 nginxRemove() {
@@ -529,6 +529,34 @@ cleanBuild() {
   } | whiptail --title "Nginx Clean Build" --gauge "\nWiping traces of Nginx" 10 70 0
 }
 
+extractArchive() {
+{
+    sleep 1
+    tar -zxvf $OPENSSL_SOURCE 2> /dev/null
+    echo -e "XXX\n10\n\nExtracting OpenSSL source... \nXXX"
+    sleep 3
+    echo -e "XXX\n20\n\nExtracting OpenSSL source... \nXXX"
+    sleep 3
+    echo -e "XXX\n30\n\nExtracting OpenSSL source... \nXXX"
+    sleep 3
+    echo -e "XXX\n40\n\nExtracting OpenSSL source... \nXXX"
+    sleep 3
+    echo -e "XXX\n50\n\nExtracting OpenSSL source... \nXXX"
+    sleep 2
+    echo -e "XXX\n60\n\nExtracting OpenSSL source... \nXXX"
+    sleep 2
+    echo -e "XXX\n70\n\nExtracted OpenSSL source... Done.\nXXX"
+    sleep 2
+    echo -e "XXX\n80\n\nExtracting Nginx source... \nXXX"
+    tar -zxvf $NGINX_SOURCE 2> /dev/null
+    sleep 2
+    echo -e "XXX\n90\n\nExtracting Nginx source... Done.\nXXX"
+    sleep 2
+    echo -e "XXX\n100\n\nArchive extraction... Done.\nXXX"
+    sleep 1.50
+  } | whiptail --title "ASAS Archiver" --gauge "\nPreparing to extract sources" 10 70 0
+}
+
 nginxMake() {
 {
         i="0"
@@ -554,7 +582,7 @@ nginxMake() {
             then
                 i="93"
             fi
-            sleep 2.35
+            sleep 2.30
             i=$(expr $i + 1)
             printf "XXX\n$i\n\nCompiling Nginx [Running make]...\nBuild Log:$CURDIR/$NGINX_LOG/install-$CURDAY.log \nXXX\n$i\n"
         done
