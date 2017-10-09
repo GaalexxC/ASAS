@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/08/2017 16:00 EDT                                       #
+#        &Updated:   10/09/2017 11:44 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -56,7 +56,7 @@ whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\n\nPress [E
 }
 
 errorOperation() {
-whiptail --title "Operation Error" --msgbox "Operation Failed\nCheck logs/error.log to debug\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+whiptail --title "Operation Error" --msgbox "Operation Failed\nCheck $CURDIR/$NGINX_LOG/error-$CURDAY.log\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
 exit 1
 }
 
@@ -488,6 +488,7 @@ cleanBuild() {
     sleep .75
     echo -e "XXX\n51\n\nRemoving Nginx services... \nXXX"
     update-rc.d -f /etc/init.d/nginx remove
+    rm -rf /etc/logrotate.d/nginx
     rm -rf /etc/init.d/nginx
     rm -rf /etc/rc0.d/K01nginx
     rm -rf /etc/rc1.d/K01nginx
@@ -531,37 +532,73 @@ cleanBuild() {
 
 extractArchive() {
 {
-    sleep 1
     tar -zxvf $OPENSSL_SOURCE 2> /dev/null
-    echo -e "XXX\n10\n\nExtracting OpenSSL source... \nXXX"
-    sleep 3
-    echo -e "XXX\n20\n\nExtracting OpenSSL source... \nXXX"
-    sleep 3
-    echo -e "XXX\n30\n\nExtracting OpenSSL source... \nXXX"
-    sleep 3
-    echo -e "XXX\n40\n\nExtracting OpenSSL source... \nXXX"
-    sleep 3
-    echo -e "XXX\n50\n\nExtracting OpenSSL source... \nXXX"
-    sleep 2
-    echo -e "XXX\n60\n\nExtracting OpenSSL source... \nXXX"
-    sleep 2
-    echo -e "XXX\n70\n\nExtracted OpenSSL source... Done.\nXXX"
-    sleep 2
-    echo -e "XXX\n80\n\nExtracting Nginx source... \nXXX"
     tar -zxvf $NGINX_SOURCE 2> /dev/null
-    sleep 2
-    echo -e "XXX\n90\n\nExtracting Nginx source... Done.\nXXX"
-    sleep 2
-    echo -e "XXX\n100\n\nArchive extraction... Done.\nXXX"
-    sleep 1.50
-  } | whiptail --title "ASAS Archiver" --gauge "\nPreparing to extract sources" 10 70 0
+    for ((i = 0 ; i <= 100 ; i+=1)); do
+        sleep .02
+        echo $i
+    done
+  } | whiptail --title "ASAS Archiver" --gauge "\nExtract archived sources" 10 70 0
+}
+
+nginxSourceConfigure() {
+{
+       ./configure --prefix=/etc/nginx \
+             --sbin-path=/usr/sbin/nginx \
+             --modules-path=/usr/lib/nginx/modules \
+             --conf-path=/etc/nginx/nginx.conf \
+             --error-log-path=/var/log/nginx/error.log \
+             --http-log-path=/var/log/nginx/access.log \
+             --pid-path=/var/run/nginx.pid \
+             --lock-path=/var/run/nginx.lock \
+             --http-client-body-temp-path=/var/cache/nginx/client_temp \
+             --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+             --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+             --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+             --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+             --user=$WEB_SERVER_USER \
+             --group=$WEB_SERVER_GROUP \
+             --with-http_ssl_module \
+             --with-http_realip_module \
+             --with-http_addition_module \
+             --with-http_sub_module \
+             --with-http_dav_module \
+             --with-http_flv_module \
+             --with-http_mp4_module \
+             --with-http_gunzip_module \
+             --with-http_gzip_static_module \
+             --with-http_random_index_module \
+             --with-http_secure_link_module \
+             --with-http_stub_status_module \
+             --with-http_auth_request_module \
+             --with-http_xslt_module=dynamic \
+             --with-http_image_filter_module=dynamic \
+             --with-http_geoip_module=dynamic \
+             --with-http_perl_module=dynamic \
+             --with-threads \
+             --with-stream \
+             --with-stream_ssl_module \
+             --with-stream_geoip_module=dynamic \
+             --with-http_slice_module \
+             --with-mail \
+             --with-mail_ssl_module \
+             --with-file-aio \
+             --with-http_v2_module \
+             --with-openssl=$CURDIR/source/$(basename $OPENSSL_SOURCE .tar.gz) \
+             --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
+             --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation
+    for ((i = 0 ; i <= 100 ; i+=1)); do
+        sleep .03
+        echo $i
+    done
+  } | whiptail --title "ASAS Configure" --gauge "\nRunning configuration [./configure]" 10 70 0
 }
 
 nginxMake() {
 {
         i="0"
-            $(nginxCommand) &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation &
-            sleep 2
+            sudo make &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation &
+            sleep 1
             while (true)
             do
             proc=$(ps aux | grep -v grep | grep -e "make")
@@ -584,17 +621,17 @@ nginxMake() {
             fi
             sleep 2.30
             i=$(expr $i + 1)
-            printf "XXX\n$i\n\nCompiling Nginx [Running make]...\nBuild Log:$CURDIR/$NGINX_LOG/install-$CURDAY.log \nXXX\n$i\n"
+            printf "XXX\n$i\n\nCompiling Nginx [make]...\nBuild Log:$CURDIR/$NGINX_LOG/install-$CURDAY.log \nXXX\n$i\n"
         done
   } | whiptail --title "ASAS Compiler"  --gauge "\nReady to build Nginx w/ OpenSSL from source\n\nThis is going to take a few minutes" 10 70 0
 }
 
 nginxMakeInstall() {
 {
-       $(nginxCommand) &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation &
+       sudo make install &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation &
      for ((i = 0 ; i <= 100 ; i+=25)); do
         sleep 1
-        printf "XXX\n$i\n\nInstalling Nginx [Running make install]... \nXXX\n$i\n"
+        printf "XXX\n$i\n\nInstalling Nginx [make install]... \nXXX\n$i\n"
         done
   } | whiptail --title "ASAS Compiler"  --gauge "\nInstalling Nginx build" 10 70 0
 }
@@ -616,22 +653,28 @@ nginxService() {
     echo -e "XXX\n50\n\nNginx service file enabled... Done.\nXXX"
     fi
     sleep .75
-    echo -e "XXX\n55\n\nChecking for Nginx init.d file...\nXXX"
+    echo -e "XXX\n45\n\nChecking for Nginx init.d file...\nXXX"
     if [ -f /etc/init.d/nginx ]
     then
-    echo -e "XXX\n75\n\nNginx init.d already exists, skipping...\nXXX"
+    echo -e "XXX\n60\n\nNginx init.d already exists, skipping...\nXXX"
     sleep .75
     else
-    echo -e "XXX\n80\n\nCreate Nginx init.d service... \nXXX"
+    echo -e "XXX\n60\n\nCreate Nginx init.d service... \nXXX"
     CONFIGINITD='/etc/init.d/'
     cp $CURDIR/config/nginx/nginx $CONFIGINITD 2> /dev/null
     chmod 755 /etc/init.d/nginx
-    echo -e "XXX\n90\n\nNginx init.d file installed... Done.\nXXX"
+    echo -e "XXX\n70\n\nNginx init.d file installed... Done.\nXXX"
     sleep .75
     update-rc.d nginx defaults 2> /dev/null
-    echo -e "XXX\n100\n\nNginx init.d file enabled... Done.\nXXX"
+    echo -e "XXX\n80\n\nNginx init.d file enabled... Done.\nXXX"
     fi
-    sleep 1
+    sleep .75
+    echo -e "XXX\n90\n\nCreate Nginx logrotate file... \nXXX"
+    CONFIGLOGROT='/etc/logrotate.d/'
+    cp $CURDIR/bin/logrotate/nginx $CONFIGLOGROT 2> /dev/null
+    chown root:root /etc/logrotate.d/nginx
+    echo -e "XXX\n100\n\nNginx logrotate file installed... Done.\nXXX"
+    sleep .75
   } | whiptail --title "Nginx Services" --gauge "\nCreating service files for Nginx" 10 70 0
 }
 
