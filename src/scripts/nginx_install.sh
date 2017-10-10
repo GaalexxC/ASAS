@@ -152,7 +152,7 @@ case $SELECTNGINX in
        nginxSourceConfigure
        nginxMake
        nginxMakeInstall
-       nginxService
+       nginxServices
        nginxConfigure
        nginxCleanup
        whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < /etc/nginx/.build-$CURDAY)"
