@@ -3,12 +3,12 @@
 #                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
 #        @author: GCornell for devCU Software Open Source Projects              #
 #        @contact: gacornell@devcu.com                                          #
-#        $OS: Debian Core (Tested on Ubuntu 14x -> 17x / Debian 8.x -> 9.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 16x -> 17x / Debian 8.x -> 9.x)     #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/09/2017 11:44 EDT                                       #
+#        &Updated:   10/10/2017 19:20 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -101,7 +101,7 @@ systemDetect()
         KERNEL=`uname -r`
         ARCH=`uname -m`
         declare -a osdist=( Debian Ubuntu )
-        declare -a osrev=( 8 9 14.04 15.10 16.04 16.10 17.04 17.10 )
+        declare -a osrev=( 8 9 16.04 17.04 17.10 )
 
         if [ "${OS}" = "linux" ] ; then
                 if [ -f /etc/debian_version ]; then
@@ -187,7 +187,7 @@ systemUpgrades() {
     totalupgrade=$((upsecurity + upnonsecurity))
     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$upsecurity are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
-         echo "apt --yes --force-yes upgrade"
+         echo "apt --yes upgrade"
        }
       systemInstaller
       rebootRequired
@@ -199,7 +199,7 @@ systemUpgrades() {
    if [ "$DISTRO" = "Debian" ]; then
     if (whiptail --title "System Check" --yesno "$UPGRADECHECK Updates are available\n\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
       package() {
-         printf "apt --yes --force-yes upgrade"
+         printf "apt --yes upgrade"
        }
      systemInstaller
      rebootRequired
@@ -636,40 +636,40 @@ nginxMakeInstall() {
   } | whiptail --title "ASAS Compiler"  --gauge "\nInstalling Nginx build" 10 70 0
 }
 
-nginxService() {
+nginxServices() {
 {
     echo -e "XXX\n5\n\nChecking for Nginx service file...\nXXX"
     if [ -f /lib/systemd/system/nginx.service ]
     then
-    echo -e "XXX\n50\n\nNginx.service already exists, skipping...\nXXX"
+    echo -e "XXX\n45\n\nNginx.service already exists, skipping...\nXXX"
     sleep .75
     else
-    echo -e "XXX\n25\n\nCreate Nginx systemd service... \nXXX"
+    echo -e "XXX\n35\n\nCreate Nginx systemd service... \nXXX"
     CONFIGSERVICE='/lib/systemd/system/'
     cp $CURDIR/config/nginx/nginx.service $CONFIGSERVICE 2> /dev/null
     chmod 0644 /lib/systemd/system/nginx.service
     sleep .75
     systemctl enable nginx.service 2> /dev/null
-    echo -e "XXX\n50\n\nNginx service file enabled... Done.\nXXX"
+    echo -e "XXX\n45\n\nNginx service file enabled... Done.\nXXX"
     fi
     sleep .75
-    echo -e "XXX\n45\n\nChecking for Nginx init.d file...\nXXX"
+    echo -e "XXX\n50\n\nChecking for Nginx init.d file...\nXXX"
     if [ -f /etc/init.d/nginx ]
     then
-    echo -e "XXX\n60\n\nNginx init.d already exists, skipping...\nXXX"
+    echo -e "XXX\n85\n\nNginx init.d already exists, skipping...\nXXX"
     sleep .75
     else
-    echo -e "XXX\n60\n\nCreate Nginx init.d service... \nXXX"
+    echo -e "XXX\n75\n\nCreate Nginx init.d service... \nXXX"
     CONFIGINITD='/etc/init.d/'
     cp $CURDIR/config/nginx/nginx $CONFIGINITD 2> /dev/null
     chmod 755 /etc/init.d/nginx
-    echo -e "XXX\n70\n\nNginx init.d file installed... Done.\nXXX"
+    echo -e "XXX\n80\n\nNginx init.d file installed... Done.\nXXX"
     sleep .75
     update-rc.d nginx defaults 2> /dev/null
-    echo -e "XXX\n80\n\nNginx init.d file enabled... Done.\nXXX"
+    echo -e "XXX\n\n85\nNginx init.d file enabled... Done.\nXXX"
     fi
-    sleep .75
     echo -e "XXX\n90\n\nCreate Nginx logrotate file... \nXXX"
+    sleep .75
     CONFIGLOGROT='/etc/logrotate.d/'
     cp $CURDIR/bin/logrotate/nginx $CONFIGLOGROT 2> /dev/null
     chown root:root /etc/logrotate.d/nginx

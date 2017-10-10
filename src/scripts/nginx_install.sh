@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/09/2017 14:25 EDT                                       #
+#        &Updated:   10/10/2017 19:21 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -62,7 +62,7 @@ case $SELECTNGINX in
        }
        updateSources
        package() {
-         printf "apt --yes --force-yes install nginx fcgiwrap spawn-fcgi"
+         printf "apt --yes install nginx fcgiwrap spawn-fcgi"
        }
        systemInstaller
        sleep .50
@@ -97,7 +97,7 @@ case $SELECTNGINX in
        }
       updateSources
       package() {
-         printf "apt --yes --force-yes install nginx fcgiwrap spawn-fcgi"
+         printf "apt --yes install nginx fcgiwrap spawn-fcgi"
        }
       systemInstaller
       sleep 1
@@ -135,7 +135,7 @@ case $SELECTNGINX in
        touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
       fi
        package() {
-         printf "apt --yes --force-yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi sudo"
+         printf "apt --yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi sudo"
        }
        systemInstaller
        wgetURL() {
@@ -170,12 +170,12 @@ case $SELECTNGINX in
     if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
 
        package() {
-         printf "apt --yes --force-yes remove nginx fcgiwrap spawn-fcgi"
+         printf "apt --yes remove nginx fcgiwrap spawn-fcgi"
        }
        systemInstaller
        sleep 1
        pkgcache() {
-          printf "apt-get --yes --force-yes autoremove"
+          printf "apt-get --yes autoremove"
        }
        updateSources
        sleep 1
@@ -203,12 +203,12 @@ case $SELECTNGINX in
      if type nginx > /dev/null 2>&1 && [ ! -f /etc/nginx/.build-$CURDAY ]; then
       if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
        package() {
-         printf "apt --yes --force-yes purge nginx fcgiwrap spawn-fcgi"
+         printf "apt --yes purge nginx fcgiwrap spawn-fcgi"
        }
        systemInstaller
        sleep 1
        pkgcache() {
-          printf "apt-get --yes --force-yes autoremove"
+          printf "apt-get --yes  autoremove"
        }
        updateSources
        sleep 1
@@ -238,12 +238,12 @@ case $SELECTNGINX in
      elif type nginx > /dev/null 2>&1 && [ -f /etc/nginx/.build-$CURDAY ]; then
       if (whiptail --title "Nginx Uninstall" --yesno "Warning! This tool will wipe Nginx source build from your system\nConfigurations will be archived to $CURDIR/backups folder\n\nWould you like to uninstall Nginx?" --yes-button "Uninstall" --no-button "Cancel" 10 70) then
        package() {
-         printf "apt --yes --force-yes purge fcgiwrap spawn-fcgi"
+         printf "apt --yes purge fcgiwrap spawn-fcgi"
        }
        systemInstaller
        sleep 1
        pkgcache() {
-          printf "apt-get --yes --force-yes autoremove"
+          printf "apt-get --yes autoremove"
        }
        updateSources
        sleep .50
