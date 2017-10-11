@@ -433,6 +433,9 @@ nginxRepoAdd() {
 
 nginxRemove() {
 {
+    echo -e "XXX\n10\n\nRemoving Nginx signing key...\nXXX"
+    rm -rf $CURDIR/nginx_signing.key
+    sleep .75
     echo -e "XXX\n25\n\nRemoving Nginx logs... Done.\nXXX"
     rm -rf /var/log/nginx
     sleep .75
@@ -450,6 +453,9 @@ nginxRemove() {
 
 nginxPurge() {
 {
+    echo -e "XXX\n10\n\nRemoving Nginx signing key...\nXXX"
+    rm -rf $CURDIR/nginx_signing.key
+    sleep .75
     echo -e "XXX\n20\n\nRemoving Nginx configurations... \nXXX"
     rm -rf /etc/nginx
     sleep .75

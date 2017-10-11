@@ -24,7 +24,23 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/         #
 #                                                                               #
 #################################################################################
-#clear
+      if [ ! -d $CURDIR/$NGINX_LOG/ ]
+       then
+       mkdir -p $CURDIR/$NGINX_LOG/
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/install-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/install-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/error-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/error-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/nginx-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
+      fi
+clear
 
 while [ 3 ]
 do
@@ -52,6 +68,10 @@ case $SELECTNGINX in
       elif [ "$DISTRO" = "Debian" ]; then
        echo "deb http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
        echo "deb-src http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
+       package() {
+         printf "apt --yes install curl"
+       }
+       systemInstaller
       else
        whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
       exit 1
@@ -87,6 +107,10 @@ case $SELECTNGINX in
       elif [ "$DISTRO" = "Debian" ]; then
        echo "deb http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
        echo "deb-src http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
+       package() {
+         printf "apt --yes install curl"
+       }
+       systemInstaller
       else
       whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
       exit 1
@@ -118,24 +142,8 @@ case $SELECTNGINX in
     if (whiptail --title "Nginx Compiler" --yesno "Nginx-OpenSSL source build\nYou can compile new, recompile, or upgrade compile\nDo you want to run source build?" --yes-button "Build" --no-button "Cancel" 10 70) then
        mkdir $CURDIR/source/
        cd $CURDIR/source
-      if [ ! -d $CURDIR/$NGINX_LOG/ ]
-       then
-       mkdir -p $CURDIR/$NGINX_LOG/
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/install-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/install-$CURDAY.log
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/error-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/error-$CURDAY.log
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/nginx-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
-      fi
        package() {
-         printf "apt --yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi sudo"
+         printf "apt --yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi sudo curl"
        }
        systemInstaller
        wgetURL() {
