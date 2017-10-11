@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/11/2017 00:01 EDT                                       #
+#        &Updated:   10/11/2017 03:18 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -487,20 +487,27 @@ cleanBuild() {
     fi
     mv /nginxconf_backup.tar.gz $CURDIR/backups
     rm -rf /etc/nginx
+    rm -rf /etc/default/nginx
+    rm -rf /etc/default/nginx-debug
     sleep .75
     echo -e "XXX\n25\n\nStopping Nginx webserver... Done.\nXXX"
     /etc/init.d/nginx stop 2> /dev/null
     sleep .75
     echo -e "XXX\n37\n\nRemoving Nginx cache... Done.\nXXX"
     rm -rf /var/cache/nginx
+    rm -rf /etc/logrotate.d/nginx
     sleep .75
     echo -e "XXX\n51\n\nRemoving Nginx services... \nXXX"
     update-rc.d -f nginx remove
+    if [ "$ENABLEDEBUG" -eq "1" ]; then
+    update-rc.d -f nginx-debug remove
+    rm -rf /etc/systemd/system/multi-user.target.wants/nginx-debug.service
+    fi
     rm -rf /etc/init.d/nginx
-    rm -rf /etc/logrotate.d/nginx
-    rm -rf /etc/init.d/nginx
+    rm -rf /etc/init.d/nginx-debug
     rm -rf /etc/systemd/system/multi-user.target.wants/nginx.service
     rm -rf /lib/systemd/system/nginx.service
+    rm -rf /lib/systemd/system/nginx-debug.service
     sleep .75
     echo -e "XXX\n65\n\nRemoving Nginx logs... \nXXX"
     rm -rf /var/log/nginx
@@ -573,6 +580,7 @@ nginxSourceConfigure() {
              --with-http_image_filter_module=dynamic \
              --with-http_geoip_module=dynamic \
              --with-http_perl_module=dynamic \
+             --with-debug \
              --with-threads \
              --with-stream \
              --with-stream_ssl_module \
@@ -639,39 +647,91 @@ nginxServices() {
     echo -e "XXX\n5\n\nChecking for Nginx service file...\nXXX"
     if [ -f /lib/systemd/system/nginx.service ]
     then
-    echo -e "XXX\n45\n\nNginx.service already exists, skipping...\nXXX"
+    echo -e "XXX\n25\n\nNginx service already exists, skipping...\nXXX"
     sleep .75
     else
-    echo -e "XXX\n35\n\nCreate Nginx systemd service... \nXXX"
+    echo -e "XXX\n15\n\nCreate Nginx service... \nXXX"
     CONFIGSERVICE='/lib/systemd/system/'
-    cp $CURDIR/config/nginx/nginx.service $CONFIGSERVICE 2> /dev/null
+    cp $CURDIR/config/nginx/services/nginx.service $CONFIGSERVICE 2> /dev/null
     chmod 0644 /lib/systemd/system/nginx.service
     sleep .75
     systemctl enable nginx.service 2> /dev/null
-    echo -e "XXX\n45\n\nNginx service file enabled... Done.\nXXX"
-    fi
+    echo -e "XXX\n25\n\nNginx service file enabled... Done.\nXXX"
     sleep .75
+    fi
+
+    echo -e "XXX\n30\n\nChecking for Nginx debug service file...\nXXX"
+    if [ -f /lib/systemd/system/nginx-debug.service ]
+    then
+    echo -e "XXX\n45\n\nNginx debug service already exists, skipping...\nXXX"
+    sleep .75
+    else
+    echo -e "XXX\n35\n\nCreate Nginx debug service... \nXXX"
+    CONFIGSERVICEDEBUG='/lib/systemd/system/'
+    cp $CURDIR/config/nginx/services/nginx-debug.service $CONFIGSERVICEDEBUG 2> /dev/null
+    chmod 0644 /lib/systemd/system/nginx-debug.service
+    sleep .75
+    fi
+    if [ "$ENABLEDEBUG" -eq "1" ]; then
+    systemctl enable nginx-debug.service 2> /dev/null
+    echo -e "XXX\n45\n\nNginx debug service file enabled... Done.\nXXX"
+    sleep .75
+    else
+    echo -e "XXX\n45\n\nNginx debug service file not enabled... Done.\nXXX"
+    sleep .75
+    fi
+
     echo -e "XXX\n50\n\nChecking for Nginx init.d file...\nXXX"
     if [ -f /etc/init.d/nginx ]
     then
-    echo -e "XXX\n85\n\nNginx init.d already exists, skipping...\nXXX"
+    echo -e "XXX\n65\n\nNginx init.d already exists, skipping...\nXXX"
     sleep .75
     else
-    echo -e "XXX\n75\n\nCreate Nginx init.d service... \nXXX"
+    echo -e "XXX\n55\n\nCreate Nginx init.d service... \nXXX"
     CONFIGINITD='/etc/init.d/'
-    cp $CURDIR/config/nginx/nginx $CONFIGINITD 2> /dev/null
+    cp $CURDIR/config/nginx/init.d/nginx $CONFIGINITD 2> /dev/null
     chmod 755 /etc/init.d/nginx
-    echo -e "XXX\n80\n\nNginx init.d file installed... Done.\nXXX"
+    echo -e "XXX\n60\n\nNginx init.d file installed... Done.\nXXX"
     sleep .75
     update-rc.d nginx defaults 2> /dev/null
-    echo -e "XXX\n\n85\nNginx init.d file enabled... Done.\nXXX"
-    fi
-    echo -e "XXX\n90\n\nCreate Nginx logrotate file... \nXXX"
+    echo -e "XXX\n65\n\nNginx init.d file enabled... Done.\nXXX"
     sleep .75
+    fi
+
+    echo -e "XXX\n70\n\nChecking for Nginx init.d debug file...\nXXX"
+    if [ -f /etc/init.d/nginx-debug ]
+    then
+    echo -e "XXX\n80\n\nNginx init.d debug already exists, skipping...\nXXX"
+    sleep .75
+    else
+    echo -e "XXX\n75\n\nCreate Nginx init.d debug file... \nXXX"
+    CONFIGINITDDEBUG='/etc/init.d/'
+    cp $CURDIR/config/nginx/init.d/nginx-debug $CONFIGINITDDEBUG 2> /dev/null
+    chmod 755 /etc/init.d/nginx-debug
+    echo -e "XXX\n80\n\nNginx init.d debug file installed... Done.\nXXX"
+    sleep .75
+    fi
+    if [ "$ENABLEDEBUG" -eq "1" ]; then
+    update-rc.d nginx-debug defaults 2> /dev/null
+    echo -e "XXX\n85\n\nNginx init.d debug file enabled... Done.\nXXX"
+    sleep .75
+    else
+    echo -e "XXX\n85\n\nNginx init.d debug file not enabled... Done.\nXXX"
+    sleep .75
+    fi
+
+    echo -e "XXX\n90\n\nCreate Nginx logrotate.d service... \nXXX"
     CONFIGLOGROT='/etc/logrotate.d/'
-    cp $CURDIR/bin/logrotate/nginx $CONFIGLOGROT 2> /dev/null
+    cp $CURDIR/config/nginx/logrotate.d/nginx $CONFIGLOGROT 2> /dev/null
     chown root:root /etc/logrotate.d/nginx
-    echo -e "XXX\n100\n\nNginx logrotate file installed... Done.\nXXX"
+    sleep .75
+    echo -e "XXX\n95\n\nCreate Nginx defaults... \nXXX"
+    CONFIGDEFAULT='/etc/default/'
+    cp $CURDIR/config/nginx/default/nginx $CONFIGDEFAULT 2> /dev/null
+    cp $CURDIR/config/nginx/default/nginx-debug $CONFIGDEFAULT 2> /dev/null
+    chown root:root /etc/default/nginx*
+    sleep .75
+    echo -e "XXX\n100\n\nNginx services installed... Done.\nXXX"
     sleep .75
   } | whiptail --title "Nginx Services" --gauge "\nCreating service files for Nginx" 10 70 0
 }
@@ -689,7 +749,7 @@ nginxConfigure() {
     echo -e "XXX\n13\n\nInstalling optimized nginx.conf...\nXXX"
     sleep .75
     CONFIGCONF='/etc/nginx/'
-    cp $CURDIR/config/nginx/nginx.conf $CONFIGCONF 2>/dev/null
+    cp $CURDIR/config/nginx/nginx/nginx.conf $CONFIGCONF 2>/dev/null
     echo -e "XXX\n15\n\nInstalled optimized nginx.conf...\nXXX"
     sleep .75
     fi
@@ -740,15 +800,19 @@ nginxConfigure() {
     fi
     echo -e "XXX\n91\n\nCreate nginx cache/gzip directories if doesnt exist...\nXXX"
     sleep .75
-    if [ -d /var/cache/nginx/fcgi ] || [ -d /var/cache/nginx/tmp ];
+    if [ -d /var/cache/nginx/ ]
     then
     echo -e "XXX\n93\n\nGreat! Cache directories exist...\nXXX"
     sleep .75
     else
     mkdir -p /var/cache/nginx
+    mkdir -p /var/cache/nginx/client_temp
     mkdir -p /var/cache/nginx/fcgi
+    mkdir -p /var/cache/nginx/proxy_temp
+    mkdir -p /var/cache/nginx/scgi_temp
     mkdir -p /var/cache/nginx/tmp
-    chown -R $WEB_SERVER_USER:$WEB_SERVER_GROUP /var/cache/nginx
+    mkdir -p /var/cache/nginx/uwsgi_temp
+    chown -R $WEB_SERVER_USER:$WEB_SERVER_GROUP /var/cache/nginx/
     echo -e "XXX\n93\n\nNginx cache directories created...\nXXX"
     sleep .75
     fi
