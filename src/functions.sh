@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/10/2017 19:20 EDT                                       #
+#        &Updated:   10/11/2017 00:01 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -444,6 +444,8 @@ nginxRemove() {
     sleep .75
     echo -e "XXX\n75\n\nRemoving Nginx repos... \nXXX"
     rm -rf /var/lib/apt/lists/nginx*
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/*/nginx.pm
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/*/auto/nginx
     sed -i.bak '/nginx/d' $APT_SOURCES
     sleep .75
     echo -e "XXX\n100\n\nConfiguration preserved @ /etc/nginx... Done.\nXXX"
@@ -467,8 +469,8 @@ nginxPurge() {
     sleep .75
     echo -e "XXX\n80\n\nRemoving Nginx repos... \nXXX"
     rm -rf /var/lib/apt/lists/nginx*
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/nginx.pm
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/auto/nginx
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/*/nginx.pm
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/*/auto/nginx
     sed -i.bak '/nginx/d' $APT_SOURCES
     sleep .75
     echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
@@ -493,16 +495,10 @@ cleanBuild() {
     rm -rf /var/cache/nginx
     sleep .75
     echo -e "XXX\n51\n\nRemoving Nginx services... \nXXX"
-    update-rc.d -f /etc/init.d/nginx remove
+    update-rc.d -f nginx remove
+    rm -rf /etc/init.d/nginx
     rm -rf /etc/logrotate.d/nginx
     rm -rf /etc/init.d/nginx
-    rm -rf /etc/rc0.d/K01nginx
-    rm -rf /etc/rc1.d/K01nginx
-    rm -rf /etc/rc2.d/S01nginx
-    rm -rf /etc/rc3.d/S01nginx
-    rm -rf /etc/rc4.d/S01nginx
-    rm -rf /etc/rc5.d/S01nginx
-    rm -rf /etc/rc6.d/K01nginx
     rm -rf /etc/systemd/system/multi-user.target.wants/nginx.service
     rm -rf /lib/systemd/system/nginx.service
     sleep .75
@@ -511,10 +507,8 @@ cleanBuild() {
     sleep .75
     echo -e "XXX\n78\n\nRemoving Nginx modules... \nXXX"
     rm -rf /usr/lib/nginx
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/nginx.pm
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/.packlist
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.24.1/auto/nginx/nginx.so
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/*/nginx.pm
+    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/*/auto/nginx
     rm -rf /usr/local/share/man/man3/nginx.3pm
     rm -rf /usr/sbin/nginx
     rm -rf /usr/sbin/nginx.old
@@ -528,8 +522,6 @@ cleanBuild() {
     sleep .75
     echo -e "XXX\n90\n\nRemoving temporary files... \nXXX"
     rm -rf /var/tmp/systemd-private-*-nginx.service-*
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/nginx.pm
-    rm -rf /usr/local/lib/x86_64-linux-gnu/perl/5.20.2/auto/nginx
     sleep .75
     echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
     sleep 1
