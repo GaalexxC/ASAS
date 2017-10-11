@@ -614,18 +614,18 @@ nginxMake() {
             elif [[ "$proc" == "" ]] && [[ "$i" -gt "0" ]];
             then
                 sleep .5
-                echo 95
+                echo 98
                 sleep 1.5
                 echo 99
                 sleep 1.5
                 echo 100
                 sleep 2
                 break;
-            elif [[ "94" -eq "$i" ]]
+            elif [[ "97" -eq "$i" ]]
             then
-                i="93"
+                i="97"
             fi
-            sleep 2.30
+            sleep 2.28
             i=$(expr $i + 1)
             printf "XXX\n$i\n\nCompiling Nginx [make]...\nBuild Log:$CURDIR/$NGINX_LOG/install-$CURDAY.log \nXXX\n$i\n"
         done
@@ -781,17 +781,15 @@ nginxConfigure() {
 
 nginxCleanup() {
 {
-    echo -e "XXX\n10\n\nRemoving Nginx signing key...\nXXX"
-    rm -rf $CURDIR/nginx_signing.key
-    sleep .75
-    echo -e "XXX\n30\n\nRemoving source directory... \nXXX"
+    sleep .50
+    echo -e "XXX\n25\n\nRemoving source directory... \nXXX"
     cd $CURDIR
     rm -rf source
     sleep .75
     echo -e "XXX\n50\n\nSource removed... Done.\nXXX"
     rm -rf source
     sleep .75
-    echo -e "XXX\n80\n\nCreate .build file... \nXXX"
+    echo -e "XXX\n75\n\nCreate .build file... \nXXX"
      if [ ! -f /etc/nginx/.build-$CURDAY ]
       then
        touch /etc/nginx/.build-$CURDAY
@@ -800,7 +798,7 @@ nginxCleanup() {
     nginxbuild=$(nginx -V 2>&1)
     echo -e "Build date: $DATE_TIME\n$nginxbuild" > /etc/nginx/.build-$CURDAY
     sleep .75
-    echo -e "XXX\n100\n\nWriting to .build file... Done.\nXXX"
+    echo -e "XXX\n100\n\n.build file written... Done.\nXXX"
     sleep .75
   } | whiptail --title "Nginx Cleanup" --gauge "\nStarting Nginx cleanup" 10 70 0
 }

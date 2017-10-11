@@ -40,7 +40,7 @@
        then
        touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
       fi
-clear
+#clear
 
 while [ 3 ]
 do
@@ -63,38 +63,40 @@ case $SELECTNGINX in
    if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Mainline version\n\nWould you like to install Nginx mainline" --yes-button "Install" --no-button "Cancel" 10 70) then
      if [ "$DISTRO" = "Ubuntu" ]; then
-       echo "deb http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-       echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-      elif [ "$DISTRO" = "Debian" ]; then
-       echo "deb http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
-       echo "deb-src http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
-       package() {
+        echo "deb http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+        echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+       elif [ "$DISTRO" = "Debian" ]; then
+        echo "deb http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
+        echo "deb-src http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
+      if ! type curl > /dev/null 2>&1; then
+        package() {
          printf "apt --yes install curl"
-       }
-       systemInstaller
-      else
-       whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
-      exit 1
+        }
+        systemInstaller
+      fi
+       else
+        whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
+       exit 1
      fi
-       nginxRepoAdd
-       pkgcache() {
+        nginxRepoAdd
+        pkgcache() {
          printf "apt update"
        }
-       updateSources
-       package() {
+        updateSources
+        package() {
          printf "apt --yes install nginx fcgiwrap spawn-fcgi"
        }
-       systemInstaller
-       sleep .50
-       nginxConfigure
-       ngxver=$(nginx -v 2>&1)
-       whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-      else
-       cancelOperation
+        systemInstaller
+        sleep .50
+        nginxConfigure
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+       else
+        cancelOperation
     fi
-      else
-       ngxver=$(nginx -v 2>&1)
-       whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+       else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
    fi
         ;;
 
@@ -102,38 +104,40 @@ case $SELECTNGINX in
    if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Stable version\n\nWould you like to install Nginx stable" --yes-button "Install" --no-button "Cancel" 10 70) then
      if [ "$DISTRO" = "Ubuntu" ]; then
-       echo "deb http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-       echo "deb-src http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
-      elif [ "$DISTRO" = "Debian" ]; then
-       echo "deb http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
-       echo "deb-src http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
-       package() {
+        echo "deb http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+        echo "deb-src http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+       elif [ "$DISTRO" = "Debian" ]; then
+        echo "deb http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
+        echo "deb-src http://nginx.org/packages/debian/ $CODENAME nginx" >> $APT_SOURCES
+      if ! type curl > /dev/null 2>&1; then
+        package() {
          printf "apt --yes install curl"
-       }
-       systemInstaller
-      else
-      whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
-      exit 1
-    fi
-      nginxRepoAdd
-      pkgcache() {
+        }
+        systemInstaller
+      fi
+       else
+        whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
+       exit 1
+     fi
+        nginxRepoAdd
+        pkgcache() {
          printf "apt update"
        }
-      updateSources
-      package() {
+        updateSources
+        package() {
          printf "apt --yes install nginx fcgiwrap spawn-fcgi"
        }
-      systemInstaller
-      sleep 1
-      nginxConfigure
-      ngxver=$(nginx -v 2>&1)
-      whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
-      else
-      cancelOperation
+        systemInstaller
+        sleep 1
+        nginxConfigure
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+       else
+        cancelOperation
     fi
-      else
-       ngxver=$(nginx -v 2>&1)
-       whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+       else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check" --msgbox "$ngxver is already installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
    fi
         ;;
 
@@ -143,7 +147,7 @@ case $SELECTNGINX in
        mkdir $CURDIR/source/
        cd $CURDIR/source
        package() {
-         printf "apt --yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi sudo curl"
+         printf "apt --yes install build-essential libpcre3 libpcre3-dev zlib1g-dev libxslt1-dev libgd-dev libgeoip-dev libperl-dev libssl-dev fcgiwrap spawn-fcgi sudo"
        }
        systemInstaller
        wgetURL() {
