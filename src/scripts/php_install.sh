@@ -3,12 +3,12 @@
 #                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
 #        @author: GCornell for devCU Software Open Source Projects              #
 #        @contact: gacornell@devcu.com                                          #
-#        $OS: Debian Core (Tested on Ubuntu 14x -> 17x / Debian 8.x -> 9.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 16x -> 17x / Debian 8.x -> 9.x)     #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/03/2017 08:50 EDT                                       #
+#        &Updated:   10/12/2017 03:30 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -43,6 +43,7 @@ whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to se
 
 case $SELECTPHP in
         "1)")
+      phpDependencies
       package() {
          printf "apt install $PHP71_PACKAGES"
        }
@@ -52,6 +53,7 @@ case $SELECTPHP in
         ;;
 
         "2)")
+      phpDependencies
       package() {
          printf "apt install $PHP70_PACKAGES"
        }
@@ -61,6 +63,7 @@ case $SELECTPHP in
         ;;
 
         "3)")
+      phpDependencies
       package() {
          printf "apt install $PHP56_PACKAGES"
        }
