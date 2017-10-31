@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/12/2017 02:30 EDT                                       #
+#        &Updated:   10/31/2017 00:30 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -69,7 +69,7 @@ rebootRequired() {
 
 # Work In Progress for bug patch
 phpDependencies() {
-apt install -y language-pack-en-base &&
+apt --yes install language-pack-en-base &&
 export LC_ALL=en_US.UTF-8 &&
 export LANG=en_US.UTF-8 &&
 apt install -y software-properties-common &&
