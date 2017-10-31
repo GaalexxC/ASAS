@@ -25,7 +25,6 @@
 #                                                                               #
 #################################################################################
 # Install vsFTPd
-     apt -qq update
      apt install vsftpd -y
      echo -e "\nConfigure vsFTPd -  We will use IPv6 enabled"
      echo -n "Enter Port - Something high like 23450 > "
