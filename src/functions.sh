@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/06/2017 00:01 EDT                                       #
+#        &Updated:   11/06/2017 04:11 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -900,16 +900,22 @@ nginxCleanup() {
 #****************************
 vsftpdConfFile() {
 {
-    echo -e "XXX\n40\n\nBackup vsftpd.conf file... \nXXX"
+    echo -e "XXX\n20\n\nBackup vsftpd.conf file... \nXXX"
     sleep .95
     mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
-    echo -e "XXX\n80\n\nInstall new vsftpd.conf... \nXXX"
+    echo -e "XXX\n40\n\nInstall new vsftpd.conf... \nXXX"
     sleep .95
     CONFIG=/etc/vsftpd.conf
     cp config/vsftpd/vsftpd.conf $CONFIG 2>/dev/null
-    echo -e "XXX\n100\n\nvsftpd.conf ready for configuration... Done.\nXXX"
+    echo -e "XXX\n60\n\nSet permissions on vsftpd.conf file... \nXXX"
     sleep .95
-  } | whiptail --title "vsFTPd Installer" --gauge "\nvsFTPd Configuration File" 10 70 0
+    chmod 644 /etc/vsftpd.conf
+    echo -e "XXX\n80\n\nSet ownership on vsftpd.conf file... \nXXX"
+    sleep .95
+    chown root:root /etc/vsftpd.conf
+    echo -e "XXX\n100\n\nDefault Configuration Complete... Done.\nXXX"
+    sleep .95
+  } | whiptail --title "vsFTPd Installer" --gauge "\nConfiguring vsFTPd" 10 70 0
 }
 vport() {
     if (whiptail --title "Port Check" --yesno "\nYou Entered: $FTPPORT" --yes-button "Update" --no-button "Change" 10 70) then
