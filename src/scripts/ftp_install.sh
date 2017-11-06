@@ -47,7 +47,7 @@ case $SELECTFTP in
           systemInstaller
           vsftpdConfFile
           ftpver=$(vsftpd -v 0>&1)
-          whiptail --title "vsFTPd Installed" --msgbox "$ftpver installed\nDefault port is 23452 (Run configure vsFTPd to edit)\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
+          whiptail --title "vsFTPd Installed" --msgbox "$ftpver installed\nvsFTPd has been configured on port 23452\nYou can edit this setting using Configure vsFTPd in menu\nEnable TLS/SSL edit vsftpd.conf manually and uncomment\nSSL options. Set proper cert/key path if using custom SSL cert" --ok-button "OK" 14 78 10
        else
           ftpver=$(vsftpd -v 0>&1)
           whiptail --title "vsFTPd Check" --msgbox "$ftpver is already installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
@@ -96,36 +96,3 @@ case $SELECTFTP in
  done
 
 exit
-
-
-
-
-     echo -e "\nConfigure vsFTPd -  We will use IPv6 enabled"
-     echo -n "Enter Port - Something high like 23450 > "
-     read VPORT
-     echo "You Entered: $VPORT"
-     echo -n "Optional: Enter IPv4 IP listen address - leave blank for none"
-     read VIPADD
-     echo "You Entered: $VIPADD"
-     echo -n "Optional: Enter IPv6 IP listen address - leave blank for none"
-     read VIPADD6
-     echo "You Entered: $VIPADD6"
-     sleep 1
-     echo -e "\nMaking backup of original vsftpd.conf"
-     sudo mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
-     CONFIG=/etc/vsftpd.conf
-     cp config/vsftpd/vsftpd.conf $CONFIG
-
-     $SED -i "s/@@VPORT@@/$VPORT/g" $CONFIG
-     $SED -i "s/@@VIPADD@@/$VIPADD/g" $CONFIG
-     $SED -i "s/@@VIPADD6@@/$VIPADD6/g" $CONFIG
-
-     chmod 644 /etc/vsftpd.conf
-     chown root:root /etc/vsftpd.conf
-     echo -e "Restarting FTP Server\n"
-     $VSFTPD_INIT
-     echo -e "\nvsFTPd  has been configured on port $VPORT."
-     echo -e "\nTo enable TLS/SSL please edit the vsftpd.conf manually and uncomment"
-     echo -e "\nSSL options setting proper cert/key paths as well if using custom SSL\n"
-     read -p "Press [Enter] key to return to main menu..."
-     return
