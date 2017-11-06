@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/31/2017 01:37 EDT                                       #
+#        &Updated:   11/06/2017 00:01 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -65,6 +65,13 @@ rebootRequired() {
     whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
     reboot
   fi
+}
+
+wgetFiles() {
+{
+  wget $(wgetURL) 2>&1 | \
+  stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }'
+  } | whiptail --title "ASAS Downloader" --gauge "\nFetching application source" 10 70 0
 }
 
 # Work In Progress for bug patch
@@ -315,7 +322,7 @@ phpCheckInstall() {
    fi
 }
 
-vsftpdCheckInstall() {
+7vsftpdCheckInstall() {
    if ! type vsftpd > /dev/null 2>&1; then
      if (whiptail --title "vsFTPd Check" --yesno "vsFTPd not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
          source scripts/ftp_install.sh
@@ -326,6 +333,17 @@ vsftpdCheckInstall() {
         ftpver=$(vsftpd -v 0>&1)
         whiptail --title "vsFTPd Check" --msgbox "$ftpver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
+   fi
+}
+
+vsftpdCheckInstall() {
+   if ! type vsftpd > /dev/null 2>&1; then
+        whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        source scripts/ftp_install.sh
+   else
+        ftpver=$(vsftpd -v 0>&1)
+        whiptail --title "vsFTPd Check-Install" --msgbox "$ftpver is currently installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        source scripts/ftp_install.sh
    fi
 }
 
@@ -835,6 +853,22 @@ nginxConfigure() {
   } | whiptail --title "Nginx Setup" --gauge "\nNginx directory and configuration" 10 70 0
 }
 
+nginxRestart() {
+{
+    $VSFTPD_INIT 2> /dev/null
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+    echo -e "XXX\n100\n\nSuccessfully restarted vsFTPd... Done.\nXXX"
+    sleep 1
+    else
+    echo -e "XXX\n100\n\nvsFTPd failed, check /var/log/vsftpd.log\nScript exiting in 3 seconds...\nXXX"
+    sleep 3
+    exit 1
+    fi
+    sleep 1
+  } | whiptail --title "Restart vsFTPd" --gauge "\nRestarting the vsFTPd service" 10 70 0
+}
+
 nginxCleanup() {
 {
     sleep .50
@@ -859,11 +893,80 @@ nginxCleanup() {
   } | whiptail --title "Nginx Cleanup" --gauge "\nStarting Nginx cleanup" 10 70 0
 }
 
-wgetFiles() {
+#*****************************
+#
+# vsFTPd Functions
+#
+#****************************
+vsftpdConfFile() {
 {
-  wget $(wgetURL) 2>&1 | \
-  stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }'
-  } | whiptail --title "ASAS Downloader" --gauge "\nFetching build sources" 10 70 0
+    echo -e "XXX\n40\n\nBackup vsftpd.conf file... \nXXX"
+    sleep .95
+    mv /etc/vsftpd.conf /etc/vsftpd.conf.bak
+    echo -e "XXX\n80\n\nInstall new vsftpd.conf... \nXXX"
+    sleep .95
+    CONFIG=/etc/vsftpd.conf
+    cp config/vsftpd/vsftpd.conf $CONFIG 2>/dev/null
+    echo -e "XXX\n100\n\nvsftpd.conf ready for configuration... Done.\nXXX"
+    sleep .95
+  } | whiptail --title "vsFTPd Installer" --gauge "\nvsFTPd Configuration File" 10 70 0
+}
+vport() {
+    if (whiptail --title "Port Check" --yesno "\nYou Entered: $FTPPORT" --yes-button "Update" --no-button "Change" 10 70) then
+     CONFIG=/etc/vsftpd.conf
+     $SED -i "s/listen_port=.*/listen_port=$FTPPORT/g" $CONFIG
+     whiptail --title "Port Added" --msgbox "\nPort $FTPPORT successfully updated" --ok-button "OK" 10 70
+    else
+     vsftpdport
+    fi
+}
+
+vsftpdport() {
+FTPPORT=$(whiptail --inputbox "\nEnter Port - Something high like 23452" 10 70 23452 --title "Configure vsFTPd" 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+vport
+else
+cancelOperation
+fi
+}
+
+vipadd6() {
+    if (whiptail --title "IP Address Check" --yesno "\nYou Entered: $FTPIPADD6" --yes-button "Update" --no-button "Change" 10 70) then
+     CONFIG=/etc/vsftpd.conf
+     $SED -i "s/listen_address6=.*/listen_address6=$FTPIPADD6/g" $CONFIG
+     whiptail --title "IP Address Modified" --msgbox "\nIP Address $FTPIPADD6 successfully updated" --ok-button "OK" 10 70
+    else
+     vsftpdipadd6
+    fi
+}
+
+vsftpdipadd6() {
+FTPIPADD6=$(whiptail --inputbox "\nEnter IP v6 Address(optional)\nLeave Blank for none" 10 70 --title "Configure IP v6 Address" 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+vipadd6
+else
+cancelOperation
+fi
+}
+
+vsftpdRestart() {
+{
+    $VSFTPD_INIT 2> /dev/null
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+    echo -e "XXX\n50\n\nStopping vsFTPd Service... Done.\nXXX"
+    sleep 1
+    echo -e "XXX\n100\n\nSuccessfully restarted vsFTPd... Done.\nXXX"
+    sleep 1
+    else
+    echo -e "XXX\n0\n\nvsFTPd failed, check /var/log/vsftpd.log\nScript exiting in 3 seconds...\nXXX"
+    sleep 3
+    exit 1
+    fi
+    sleep .80
+  } | whiptail --title "Restart vsFTPd" --gauge "\nRestarting the vsFTPd service" 10 70 0
 }
 
 #*****************************
