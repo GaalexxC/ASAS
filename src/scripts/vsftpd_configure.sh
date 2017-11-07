@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 00:01 EDT                                       #
+#        &Updated:   11/07/2017 00:30 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -31,14 +31,14 @@ do
 FTPSETTINGS=$(
 whiptail --title "vsFTPd Configuration" --menu "\nConfigure most common settings below\nEdit /etc/vsftpd.conf manually for extended options" 24 78 14 \
         "1)" "Server Listening Port (Default:23452)"   \
-        "2)" "Enable/Disable IPv6 (Default:Disabled)"  \
-        "3)" "Add IPv4 Address (Default:Blank)" \
-        "4)" "Add IPv6 Address (Default:Blank)" \
+        "2)" "IPv4 Listen Address (Default:None)" \
+        "3)" "Enable IPv6 Listen (Default:Disabled)"  \
+        "4)" "IPv6 Listen Address (Default:None)" \
         "5)" "Show/Hide dot(.) Files (Default:Hidden)" \
-        "6)" "Allow anonymous FTP? (Default:Disabled)" \
+        "6)" "Enable Anonymous FTP (Default:Disabled)" \
         "7)" "Enable SSL (Default:Disabled)" \
-        "8)" "Set SSL cert path" \
-        "9)" "Set SSL key path" \
+        "8)" "Set SSL Cert path" \
+        "9)" "Set SSL Key path" \
        "10)" "Return to vsFTPd Menu" \
        "11)" "Return to Main Menu" \
        "12)" "Exit"  3>&2 2>&1 1>&3
@@ -50,11 +50,11 @@ case $FTPSETTINGS in
         ;;
 
         "2)")
-                vsftpdip6enable
+                vsftpdip4add
         ;;
 
         "3)")
-                vsftpdip4add
+                vsftpdip6enable
         ;;
 
         "4)")
@@ -70,15 +70,15 @@ case $FTPSETTINGS in
         ;;
 
         "7)")
-                #clientCheckInstall
+                vsftpdsslenable
         ;;
 
         "8)")
-                #securityCheckInstall
+                vsftpdsslcert
         ;;
 
         "9)")
-                #systemCheckInstall
+                vsftpdsslkey
         ;;
 
         "10)")
