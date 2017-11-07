@@ -27,9 +27,9 @@
 # --------------START SOURCES
 CURDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 set -o allexport
-source config/user_vars.conf
-source config/server_vars.conf
-source functions/functions.sh
+source $CURDIR/config/user_vars.conf
+source $CURDIR/config/server_vars.conf
+source $CURDIR/functions/functions.sh
 # --------------END SOURCES
 asd() {
 cat <<"EOT"
