@@ -27,7 +27,7 @@
 # --------------START SOURCES
 set -o allexport
 source variables.conf
-source functions.sh
+source functions/functions.sh
 # --------------END SOURCES
 asd() {
 cat <<"EOT"
