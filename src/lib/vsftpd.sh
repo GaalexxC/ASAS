@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 00:01 EDT                                       #
+#        &Updated:   11/07/2017 03:27 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -81,7 +81,7 @@ vport() {
     fi
 }
 vsftpdport() {
-FTPPORT=$(whiptail --inputbox "\nEnter Port - Something high like 23452" 10 70 23452 --title "Configure vsFTPd" 3>&1 1>&2 2>&3)
+FTPPORT=$(whiptail --inputbox "\nEnter Port - Something high, Default:23452" 10 70 --title "Configure vsFTPd" 3>&1 1>&2 2>&3)
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 vport
