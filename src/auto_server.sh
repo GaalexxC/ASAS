@@ -25,8 +25,10 @@
 #                                                                               #
 #################################################################################
 # --------------START SOURCES
+CURDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 set -o allexport
-source variables.conf
+source config/user_vars.conf
+source config/server_vars.conf
 source functions/functions.sh
 # --------------END SOURCES
 asd() {
