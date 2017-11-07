@@ -26,7 +26,7 @@
 #################################################################################
 #*****************************
 #
-# vsFTPd Functions
+# vsFTPd System Functions
 #
 #****************************
 vsftpdConfFile() {
@@ -65,6 +65,11 @@ vsftpdRestart() {
     sleep .80
   } | whiptail --title "Restart vsFTPd" --gauge "\nRestarting the vsFTPd service" 10 70 0
 }
+#*****************************
+#
+# vsFTPd Network Functions
+#
+#*****************************
 vport() {
     if (whiptail --title "Port Config" --yesno "You Entered: $FTPPORT" --yes-button "Update" --no-button "Change" 10 70) then
      local CONFIG=/etc/vsftpd.conf
@@ -84,6 +89,11 @@ else
 cancelOperation
 fi
 }
+#*****************************
+#
+# vsFTPd IP Functions
+#
+#*****************************
 vip6add() {
     if (whiptail --title "IPv6 Address Config" --yesno "You Entered: $FTPIP6ADD" --yes-button "Update" --no-button "Change" 10 70) then
      local CONFIG=/etc/vsftpd.conf
@@ -137,6 +147,11 @@ vsftpdip6enable() {
      whiptail --title "IPv6 Config" --msgbox "IPv6 has been disabled" --ok-button "OK" 10 70
     fi
 }
+#*****************************
+#
+# vsFTPd Security Functions
+#
+#*****************************
 vsftpdhidedot() {
     if (whiptail --title "Hide(.) Config" --yesno "Do you want to show/hide dot(.) files from users?\nDefault is to hide these files" --yes-button "Show" --no-button "Hide" 10 70) then
      local CONFIG=/etc/vsftpd.conf
@@ -162,4 +177,60 @@ vsftpdanonymous() {
      vsftpdRestart
      whiptail --title "Anonymous Config" --msgbox "Anonymous logins disabled" --ok-button "OK" 10 70
     fi
+}
+#*****************************
+#
+# vsFTPd SSL Functions
+#
+#*****************************
+vsftpdsslenable() {
+    if (whiptail --title "SSL Configuration" --yesno "Do you want to enable/disable SSL?\nDefault is disabled"  --yes-button "Enable" --no-button "Disable" 10 70) then
+     local CONFIG=/etc/vsftpd.conf
+     $SED -i "s/ssl_enable=.*/ssl_enable=YES/g" $CONFIG
+     vsftpdRestart
+     whiptail --title "SSL Configuration" --msgbox "SSL is enabled\nPlease add cert/key paths in configuration menu" --ok-button "OK" 10 70
+    else
+     local CONFIG=/etc/vsftpd.conf
+     $SED -i "s/ssl_enable=.*/ssl_enable=NO/g" $CONFIG
+     vsftpdRestart
+     whiptail --title "SSL Configuration" --msgbox "SSL is disabled" --ok-button "OK" 10 70
+    fi
+}
+vsslcert() {
+    if (whiptail --title "SSL Configuration" --yesno "You Entered:\n$SSLCERT" --yes-button "Update" --no-button "Change" 10 70) then
+     local CONFIG=/etc/vsftpd.conf
+     $SED -i "s@rsa_cert_file=.*@rsa_cert_file=$SSLCERT@g" $CONFIG
+     vsftpdRestart
+     whiptail --title "SSL Configuration" --msgbox "Path $SSLCERT updated" --ok-button "OK" 10 70
+    else
+     vsftpdsslcert
+    fi
+}
+vsftpdsslcert() {
+SSLCERT=$(whiptail --inputbox "\nEnter full path to SSL cert\nIE: /etc/ssl/certs/vsftpd.pem" 10 70 --title "SSL Configuration" 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+vsslcert
+else
+cancelOperation
+fi
+}
+vsslkey() {
+    if (whiptail --title "SSL Configuration" --yesno "You Entered:\n$SSLKEY" --yes-button "Update" --no-button "Change" 10 70) then
+     local CONFIG=/etc/vsftpd.conf
+     $SED -i "s@rsa_private_key_file=.*@rsa_private_key_file=$SSLKEY@g" $CONFIG
+     vsftpdRestart
+     whiptail --title "SSL Configuration" --msgbox "Path $SSLKEY updated" --ok-button "OK" 10 70
+    else
+     vsftpdsslkey
+    fi
+}
+vsftpdsslkey() {
+SSLKEY=$(whiptail --inputbox "\nEnter full path to SSL key\nIE: /etc/ssl/private/vsftpd.key" 10 70 --title "SSL Configuration" 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+vsslkey
+else
+cancelOperation
+fi
 }
