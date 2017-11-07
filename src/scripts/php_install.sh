@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/31/2017 01:37 EDT                                       #
+#        &Updated:   11/07/2017 01:03 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -80,9 +80,9 @@ case $SELECTPHP in
       sudo mv /etc/php/7.0/fpm/php.ini /etc/php/7.0/fpm/php.ini.bak
       sudo mv /etc/php/7.0/cli/php.ini /etc/php/7.0/cli/php.ini.bak
       echo -e "\nUpdating fpm and cli php.ini with secure rules"
-      CONFIGFPM=$PHP7_FPM_INI
+      CONFIGFPM=$PHP70_FPM_INI
       cp config/phpini/php.ini $CONFIGFPM 2>/dev/null
-      CONFIGCLI=$PHP7_CLI_INI
+      CONFIGCLI=$PHP70_CLI_INI
       cp config/phpini/php.ini $CONFIGCLI 2>/dev/null
       echo -e "\nphp.ini fpm and cli secured\n"
    else
