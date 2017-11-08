@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 03:04 EDT                                       #
+#        &Updated:   11/08/2017 17:56 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -167,7 +167,7 @@ case $SELECTNGINX in
        nginxServices
        nginxConfigure
        nginxCleanup
-       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-$CURDAY)"
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-*)"
       else
        cancelOperation
     fi
@@ -178,7 +178,7 @@ case $SELECTNGINX in
         ;;
 
         "4)")
-   if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-$CURDAY ]; then
+   if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-* ]; then
     if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
 
        package() {
@@ -202,9 +202,9 @@ case $SELECTNGINX in
       else
        cancelOperation
     fi
-      elif [ -f $NGINXCONFDIR/.build-$CURDAY ]
+      elif [ -f $NGINXCONFDIR/.build-* ]
       then
-       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-$CURDAY)"
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-*)"
        whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
       else
        whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
@@ -212,7 +212,7 @@ case $SELECTNGINX in
         ;;
 
         "5)")
-     if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-$CURDAY ]; then
+     if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-* ]; then
       if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
        package() {
          printf "apt --yes purge nginx fcgiwrap spawn-fcgi"
@@ -235,9 +235,9 @@ case $SELECTNGINX in
       else
        cancelOperation
      fi
-      elif [ -f $NGINXCONFDIR/.build-$CURDAY ]
+      elif [ -f $NGINXCONFDIR/.build-* ]
       then
-       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-$CURDAY)"
+       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-*)"
        whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
       else
          whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
@@ -247,7 +247,7 @@ case $SELECTNGINX in
         "6)")
     if ! type nginx > /dev/null 2>&1; then
          whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
-     elif type nginx > /dev/null 2>&1 && [ -f $NGINXCONFDIR/.build-$CURDAY ]; then
+     elif type nginx > /dev/null 2>&1 && [ -f $NGINXCONFDIR/.build-* ]; then
       if (whiptail --title "Nginx Uninstall" --yesno "Warning! This tool will wipe Nginx source build from your system\nConfigurations will be archived to $CURDIR/backups folder\n\nWould you like to uninstall Nginx?" --yes-button "Uninstall" --no-button "Cancel" 10 70) then
        package() {
          printf "apt --yes purge fcgiwrap spawn-fcgi"
