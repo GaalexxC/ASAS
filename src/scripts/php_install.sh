@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 01:03 EDT                                       #
+#        &Updated:   11/08/2017 00:44 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -30,48 +30,85 @@ while [ 4 ]
 do
 
 SELECTPHP=$(
-whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and tab to select a PHP version\nUpon selection operation will begin without prompts" 20 78 8 \
-        "1)" "PHP 7.1" OFF \
-        "2)" "PHP 7.0 (Recommended)" ON \
-        "3)" "PHP 5.6" OFF \
-        "4)" "Configure and Secure PHP.ini (Recommended)" OFF \
-        "5)" "Remove PHP (Preserves Configurations)" OFF \
-        "6)" "Purge PHP (Warning! Removes Everything!)" OFF \
-        "7)" "Return to Main Menu" OFF \
-        "8)" "Exit" OFF 3>&1 1>&2 2>&3
+whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to select an operation\nUpon selection operation will begin without prompts" 18 78 10 \
+        "1)" "Install PHP 7.2" OFF \
+        "2)" "Install PHP 7.1 (Recommended)" ON \
+        "3)" "Install PHP 7.0" OFF \
+        "4)" "Install PHP 5.6" OFF \
+        "5)" "Configure PHP Settings" OFF \
+        "6)" "Backup Config (php.ini)" OFF \
+        "7)" "Remove PHP (Config Saved)" OFF \
+        "8)" "Purge PHP (Wipe Clean)" OFF \
+        "9)" "Return to Main Menu" OFF \
+        "10)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTPHP in
         "1)")
-      phpDependencies
+
+    if ! type php > /dev/null 2>&1; then
+      phpDependencyCheck
       package() {
-         printf "apt install $PHP71_PACKAGES"
+         printf "apt --yes install $PHP72_PACKAGES"
        }
       systemInstaller
       completeOperation
-      return
+       else
+      phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+      whiptail --title "PHP Check" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+   fi
         ;;
 
         "2)")
-      phpDependencies
+
+    if ! type php > /dev/null 2>&1; then
+      phpDependencyCheck
       package() {
-         printf "apt install $PHP70_PACKAGES"
+         printf "apt --yes install $PHP71_PACKAGES"
        }
       systemInstaller
       completeOperation
-      return
+       else
+      phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+      whiptail --title "PHP Check-Install" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+   fi
         ;;
 
         "3)")
-      phpDependencies
+
+    if ! type php > /dev/null 2>&1; then
+      phpDependencyCheck
       package() {
-         printf "apt install $PHP56_PACKAGES"
+         printf "apt --yes install $PHP70_PACKAGES"
        }
       systemInstaller
       completeOperation
+       else
+      phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+      whiptail --title "PHP Check-Install" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+   fi
         ;;
 
         "4)")
+
+    if ! type php > /dev/null 2>&1; then
+      phpDependencyCheck
+      package() {
+         printf "apt --yes install $PHP56_PACKAGES"
+       }
+      systemInstaller
+      completeOperation
+       else
+      phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+      whiptail --title "PHP Check-Install" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+   fi
+        ;;
+
+        "5)")
+
+   if ! type php > /dev/null 2>&1; then
+        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+   else
       echo -e "\nSecure PHP INI for FPM/CLI - \nThis will secure the following:\ncgi.fix_pathinfo=0\nexposephp=off\ndisable_functions = disable dangerous functions"
       echo -e "\nSecurity Check - Do you want to secure your php.ini? (y/n)"
       read MODIFYPHPINI
@@ -88,31 +125,53 @@ case $SELECTPHP in
    else
      echo -e "\nSkipping php.ini fpm and cli security\n"
    fi
-      return
+   fi
         ;;
 
-        "5)")
+        "6)")
+
+   if ! type php > /dev/null 2>&1; then
+        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+   else
+        phpBackupConf
+   fi
+        ;;
+
+
+        "7)")
+
+   if ! type php > /dev/null 2>&1; then
+        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+   else
          sudo apt remove `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
          sudo apt autoremove
          rm -rf /etc/php
          read -p "PHP has been removed, configurations preserved, Press [Enter] to return to main menu"
-      return
+   fi
         ;;
 
-        "6)")
+        "8)")
+
+   if ! type php > /dev/null 2>&1; then
+        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+   else
          sudo apt purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
          sudo apt autoremove
          rm -rf /etc/php
          read -p "PHP has been removed from the system, Press [Enter] to return to main menu"
-      return
+   fi
         ;;
 
-        "7)")
+        "9)")
+
       return
+
         ;;
 
-        "8)")
+        "10)")
+
       exit 1
+
         ;;
   esac
 
