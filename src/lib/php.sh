@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 02:34 EDT                                       #
+#        &Updated:   11/08/2017 16:54 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -34,13 +34,9 @@ phpVersion() {
       then
       PHP_INIT=$PHP71_FPM_INIT
       PHP_INI=$PHP71_FPM_INI/$PHPCONFIG
-   elif [ -f $PHP70_FPM_INI/$PHPCONFIG ]
-      then
+   else
       PHP_INIT=$PHP70_FPM_INIT
       PHP_INI=$PHP70_FPM_INI/$PHPCONFIG
-   else
-      PHP_INIT=$PHP56_FPM_INIT
-      PHP_INI=$PHP56_FPM_INI/$PHPCONFIG
    fi
 }
 
@@ -74,28 +70,21 @@ phpBackupConf() {
      tar cvpfz /php72ini_backup_$CURDAY.tar.gz $PHP72_FPM_INI/$PHPCONFIG 2> /dev/null
      mv /php72ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
-    echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
-    sleep 1.5
+     echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
+     sleep 1.5
    elif [ -f $PHP71_FPM_INI/$PHPCONFIG ]
       then
      tar cvpfz /php71ini_backup_$CURDAY.tar.gz $PHP71_FPM_INI/$PHPCONFIG 2> /dev/null
      mv /php71ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
-    echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
-    sleep 1.5
-   elif [ -f $PHP70_FPM_INI/$PHPCONFIG ]
-      then
+     echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
+     sleep 1.5
+   else
      tar cvpfz /php70ini_backup_$CURDAY.tar.gz $PHP70_FPM_INI/$PHPCONFIG 2> /dev/null
      mv /php70ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
-    echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
-    sleep 1.5
-   else
-     tar cvpfz /php56ini_backup_$CURDAY.tar.gz $PHP56_FPM_INI/$PHPCONFIG 2> /dev/null
-     mv /php56ini_backup_$CURDAY.tar.gz $CURDIR/backups
-     sleep 1
-    echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
-    sleep 1.5
+     echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
+     sleep 1.5
    fi
   } | whiptail --title "PHP Backup" --gauge "\nBacking up php.ini configuration" 10 70 0
 }

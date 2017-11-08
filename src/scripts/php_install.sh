@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 00:44 EDT                                       #
+#        &Updated:   11/08/2017 16:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -34,13 +34,12 @@ whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to 
         "1)" "Install PHP 7.2" OFF \
         "2)" "Install PHP 7.1 (Recommended)" ON \
         "3)" "Install PHP 7.0" OFF \
-        "4)" "Install PHP 5.6 (Deprecated)" OFF \
-        "5)" "Configure PHP Settings" OFF \
-        "6)" "Backup Config (php.ini)" OFF \
-        "7)" "Remove PHP (Config Saved)" OFF \
-        "8)" "Purge PHP (Wipe Clean)" OFF \
-        "9)" "Return to Main Menu" OFF \
-        "10)" "Exit" OFF 3>&1 1>&2 2>&3
+        "4)" "Configure PHP Settings" OFF \
+        "5)" "Backup Config (php.ini)" OFF \
+        "6)" "Remove PHP (Config Saved)" OFF \
+        "7)" "Purge PHP (Wipe Clean)" OFF \
+        "8)" "Return to Main Menu" OFF \
+        "9)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTPHP in
@@ -92,28 +91,13 @@ case $SELECTPHP in
         "4)")
 
      if ! type php > /dev/null 2>&1; then
-       phpDependencyCheck
-       package() {
-         printf "apt --yes install $PHP56_PACKAGES"
-       }
-       systemInstaller
-       completeOperation
-     else
-       phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-       whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
-     fi
-        ;;
-
-        "5)")
-
-     if ! type php > /dev/null 2>&1; then
        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      else
        source scripts/php_configure.sh
      fi
         ;;
 
-        "6)")
+        "5)")
 
      if ! type php > /dev/null 2>&1; then
        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
@@ -123,7 +107,7 @@ case $SELECTPHP in
         ;;
 
 
-        "7)")
+        "6)")
 
    if type php > /dev/null 2>&1; then
     if (whiptail --title "Remove PHP" --yesno "Warning! Removes PHP (Preserves Configurations)\n\nWould you like to remove PHP" --yes-button "Remove" --no-button "Cancel" 10 70) then
@@ -153,7 +137,7 @@ case $SELECTPHP in
    fi
         ;;
 
-        "8)")
+        "7)")
 
    if type php > /dev/null 2>&1; then
     if (whiptail --title "Purge PHP" --yesno "Warning! Wipes all traces of PHP from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge PHP?" --yes-button "Purge" --no-button "Cancel" 10 70) then
@@ -183,13 +167,13 @@ case $SELECTPHP in
    fi
         ;;
 
-        "9)")
+        "8)")
 
      return
 
         ;;
 
-        "10)")
+        "9)")
 
      exit 1
 
