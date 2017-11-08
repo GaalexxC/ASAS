@@ -39,7 +39,16 @@ phpVersion() {
       PHP_INI=$PHP70_FPM_INI/$PHPCONFIG
    fi
 }
-
+phpaddrepo() {
+{
+     echo -e "XXX\n50\n\nFetching repository ppa:ondrej/php... \nXXX"
+     sleep 1
+     local DEBIAN_FRONTEND="noninteractive"
+     add-apt-repository ppa:ondrej/php 2> /dev/null
+     echo -e "XXX\n100\n\nRepository ppa:ondrej/php installed... Done.\nXXX"
+     sleep 1.5
+  } | whiptail --title "PHP Add Repo" --gauge "\nChecking for repository ppa:ondrej/php" 10 70 0
+}
 phpDependencyCheck() {
   if [ -f /etc/apt/sources.list.d/ondrej-*.list ]
     then
@@ -49,9 +58,7 @@ phpDependencyCheck() {
        printf "apt --yes install language-pack-en-base software-properties-common"
      }
     systemInstaller
-
-    add-apt-repository ppa:ondrej/php
-
+    phpaddrepo
     pkgcache() {
        printf "apt update"
     }
@@ -66,14 +73,14 @@ phpBackupConf() {
    if [ ! -d  $CURDIR/backups ]; then
     mkdir $CURDIR/backups
    fi
-   if [ -f $PHP_INI ]
-       then
+   if [ -f $PHP72_FPM_INI/$PHPCONFIG ]
+      then
      tar cvpfz /php72ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
      mv /php72ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
      echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
      sleep 1.5
-   elif [ -f $PHP_INI ]
+   elif [ -f $PHP71_FPM_INI/$PHPCONFIG ]
       then
      tar cvpfz /php71ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
      mv /php71ini_backup_$CURDAY.tar.gz $CURDIR/backups
