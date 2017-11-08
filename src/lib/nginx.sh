@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 00:01 EDT                                       #
+#        &Updated:   11/07/2017 18:26 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -50,10 +50,10 @@ nginxRemove() {
     rm -rf $CURDIR/nginx_signing.key
     sleep .75
     echo -e "XXX\n25\n\nRemoving Nginx logs... Done.\nXXX"
-    rm -rf /var/log/nginx
+    rm -rf $NGINXLOGDIR
     sleep .75
     echo -e "XXX\n50\n\nRemoving Nginx cache... Done.\nXXX"
-    rm -rf /var/cache/nginx
+    rm -rf $NGINXCACHEDIR
     sleep .75
     echo -e "XXX\n75\n\nRemoving Nginx repos... \nXXX"
     rm -rf /var/lib/apt/lists/nginx*
@@ -72,13 +72,13 @@ nginxPurge() {
     rm -rf $CURDIR/nginx_signing.key
     sleep .75
     echo -e "XXX\n20\n\nRemoving Nginx configurations... \nXXX"
-    rm -rf /etc/nginx
+    rm -rf $NGINXCONFDIR
     sleep .75
     echo -e "XXX\n40\n\nRemoving Nginx logs... Done.\nXXX"
-    rm -rf /var/log/nginx
+    rm -rf $NGINXLOGDIR
     sleep .75
     echo -e "XXX\n60\n\nRemoving Nginx cache... Done.\nXXX"
-    rm -rf /var/cache/nginx
+    rm -rf $NGINXCACHEDIR
     sleep .75
     echo -e "XXX\n80\n\nRemoving Nginx repos... \nXXX"
     rm -rf /var/lib/apt/lists/nginx*
@@ -99,7 +99,7 @@ cleanBuild() {
     mkdir $CURDIR/backups
     fi
     mv /nginxconf_backup.tar.gz $CURDIR/backups
-    rm -rf /etc/nginx
+    rm -rf $NGINXCONFDIR
     rm -rf /etc/default/nginx
     rm -rf /etc/default/nginx-debug
     sleep .75
@@ -107,7 +107,7 @@ cleanBuild() {
     /etc/init.d/nginx stop 2> /dev/null
     sleep .75
     echo -e "XXX\n37\n\nRemoving Nginx cache... Done.\nXXX"
-    rm -rf /var/cache/nginx
+    rm -rf $NGINXCACHEDIR
     rm -rf /etc/logrotate.d/nginx
     sleep .75
     echo -e "XXX\n51\n\nRemoving Nginx services... \nXXX"
@@ -123,7 +123,7 @@ cleanBuild() {
     rm -rf /lib/systemd/system/nginx-debug.service
     sleep .75
     echo -e "XXX\n65\n\nRemoving Nginx logs... \nXXX"
-    rm -rf /var/log/nginx
+    rm -rf $NGINXLOGDIR
     sleep .75
     echo -e "XXX\n78\n\nRemoving Nginx modules... \nXXX"
     rm -rf /usr/lib/nginx
@@ -161,19 +161,19 @@ extractArchive() {
 
 nginxSourceConfigure() {
 {
-       ./configure --prefix=/etc/nginx \
+       ./configure --prefix=$NGINXCONFDIR \
              --sbin-path=/usr/sbin/nginx \
              --modules-path=/usr/lib/nginx/modules \
-             --conf-path=/etc/nginx/nginx.conf \
+             --conf-path=$NGINXCONFIG \
              --error-log-path=/var/log/nginx/error.log \
              --http-log-path=/var/log/nginx/access.log \
              --pid-path=/var/run/nginx.pid \
              --lock-path=/var/run/nginx.lock \
-             --http-client-body-temp-path=/var/cache/nginx/client_temp \
-             --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
-             --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
-             --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
-             --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+             --http-client-body-temp-path=$NGINXCACHEDIR/client_temp \
+             --http-proxy-temp-path=$NGINXCACHEDIR/proxy_temp \
+             --http-fastcgi-temp-path=$NGINXCACHEDIR/fastcgi_temp \
+             --http-uwsgi-temp-path=$NGINXCACHEDIR/uwsgi_temp \
+             --http-scgi-temp-path=$NGINXCACHEDIR/scgi_temp \
              --user=$WEB_SERVER_USER \
              --group=$WEB_SERVER_GROUP \
              --with-http_ssl_module \
@@ -258,15 +258,14 @@ nginxMakeInstall() {
 nginxServices() {
 {
     echo -e "XXX\n5\n\nChecking for Nginx service file...\nXXX"
-    if [ -f /lib/systemd/system/nginx.service ]
+    if [ -f $NGINXCONFIGSERVICE/nginx.service ]
     then
     echo -e "XXX\n25\n\nNginx service already exists, skipping...\nXXX"
     sleep .75
     else
     echo -e "XXX\n15\n\nCreate Nginx service... \nXXX"
-    CONFIGSERVICE='/lib/systemd/system/'
-    cp $CURDIR/config/nginx/services/nginx.service $CONFIGSERVICE 2> /dev/null
-    chmod 0644 /lib/systemd/system/nginx.service
+    cp $CURDIR/config/nginx/services/nginx.service $NGINXCONFIGSERVICE 2> /dev/null
+    chmod 0644 $NGINXCONFIGSERVICE/nginx.service
     sleep .75
     systemctl enable nginx.service 2> /dev/null
     echo -e "XXX\n25\n\nNginx service file enabled... Done.\nXXX"
@@ -274,15 +273,14 @@ nginxServices() {
     fi
 
     echo -e "XXX\n30\n\nChecking for Nginx debug service file...\nXXX"
-    if [ -f /lib/systemd/system/nginx-debug.service ]
+    if [ -f $NGINXCONFIGSERVICE/nginx-debug.service ]
     then
     echo -e "XXX\n45\n\nNginx debug service already exists, skipping...\nXXX"
     sleep .75
     else
     echo -e "XXX\n35\n\nCreate Nginx debug service... \nXXX"
-    CONFIGSERVICEDEBUG='/lib/systemd/system/'
-    cp $CURDIR/config/nginx/services/nginx-debug.service $CONFIGSERVICEDEBUG 2> /dev/null
-    chmod 0644 /lib/systemd/system/nginx-debug.service
+    cp $CURDIR/config/nginx/services/nginx-debug.service $NGINXCONFIGSERVICE 2> /dev/null
+    chmod 0644 $NGINXCONFIGSERVICE/nginx-debug.service
     sleep .75
     fi
     if [ "$ENABLEDEBUG" -eq "1" ]; then
@@ -295,15 +293,14 @@ nginxServices() {
     fi
 
     echo -e "XXX\n50\n\nChecking for Nginx init.d file...\nXXX"
-    if [ -f /etc/init.d/nginx ]
+    if [ -f $NGINX_INIT ]
     then
     echo -e "XXX\n65\n\nNginx init.d already exists, skipping...\nXXX"
     sleep .75
     else
     echo -e "XXX\n55\n\nCreate Nginx init.d service... \nXXX"
-    CONFIGINITD='/etc/init.d/'
-    cp $CURDIR/config/nginx/init.d/nginx $CONFIGINITD 2> /dev/null
-    chmod 755 /etc/init.d/nginx
+    cp $CURDIR/config/nginx/init.d/nginx $CONFIGINITDDIR 2> /dev/null
+    chmod 755 $NGINX_INIT
     echo -e "XXX\n60\n\nNginx init.d file installed... Done.\nXXX"
     sleep .75
     update-rc.d nginx defaults 2> /dev/null
@@ -312,15 +309,14 @@ nginxServices() {
     fi
 
     echo -e "XXX\n70\n\nChecking for Nginx init.d debug file...\nXXX"
-    if [ -f /etc/init.d/nginx-debug ]
+    if [ -f $NGINX_INIT-debug ]
     then
     echo -e "XXX\n80\n\nNginx init.d debug already exists, skipping...\nXXX"
     sleep .75
     else
     echo -e "XXX\n75\n\nCreate Nginx init.d debug file... \nXXX"
-    CONFIGINITDDEBUG='/etc/init.d/'
-    cp $CURDIR/config/nginx/init.d/nginx-debug $CONFIGINITDDEBUG 2> /dev/null
-    chmod 755 /etc/init.d/nginx-debug
+    cp $CURDIR/config/nginx/init.d/nginx-debug $CONFIGINITDDIR 2> /dev/null
+    chmod 755 $NGINX_INIT-debug
     echo -e "XXX\n80\n\nNginx init.d debug file installed... Done.\nXXX"
     sleep .75
     fi
@@ -334,15 +330,13 @@ nginxServices() {
     fi
 
     echo -e "XXX\n90\n\nCreate Nginx logrotate.d service... \nXXX"
-    CONFIGLOGROT='/etc/logrotate.d/'
-    cp $CURDIR/config/nginx/logrotate.d/nginx $CONFIGLOGROT 2> /dev/null
-    chown root:root /etc/logrotate.d/nginx
+    cp $CURDIR/config/nginx/logrotate.d/nginx $CONFIGLOGROTDIR 2> /dev/null
+    chown root:root $CONFIGLOGROTDIR/nginx
     sleep .75
     echo -e "XXX\n95\n\nCreate Nginx defaults... \nXXX"
-    CONFIGDEFAULT='/etc/default/'
-    cp $CURDIR/config/nginx/default/nginx $CONFIGDEFAULT 2> /dev/null
-    cp $CURDIR/config/nginx/default/nginx-debug $CONFIGDEFAULT 2> /dev/null
-    chown root:root /etc/default/nginx*
+    cp $CURDIR/config/nginx/default/nginx $NGINXDEFAULTDIR 2> /dev/null
+    cp $CURDIR/config/nginx/default/nginx-debug $NGINXDEFAULTDIR 2> /dev/null
+    chown root:root $NGINXDEFAULTDIR/nginx*
     sleep .75
     echo -e "XXX\n100\n\nNginx services installed... Done.\nXXX"
     sleep .75
@@ -353,16 +347,15 @@ nginxConfigure() {
 {
     echo -e "XXX\n7\n\nMaking backup of default nginx.conf...\nXXX"
     sleep .75
-    if [ -f /etc/nginx/nginx.conf.bak ]
+    if [ -f $NGINXCONFIG.bak ]
     then
     echo -e "XXX\n7\n\nBackup already exists, skipping nginx.conf...\nXXX"
     sleep .75
     else
-    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+    mv $NGINXCONFIG $NGINXCONFIG.bak
     echo -e "XXX\n13\n\nInstalling optimized nginx.conf...\nXXX"
     sleep .75
-    CONFIGCONF='/etc/nginx/'
-    cp $CURDIR/config/nginx/nginx/nginx.conf $CONFIGCONF 2>/dev/null
+    cp $CURDIR/config/nginx/nginx/nginx.conf $NGINXCONFDIR 2>/dev/null
     echo -e "XXX\n15\n\nInstalled optimized nginx.conf...\nXXX"
     sleep .75
     fi
@@ -388,50 +381,49 @@ nginxConfigure() {
     echo -e "XXX\n43\n\nDirectory $NGINX_SITES_ENABLED created...\nXXX"
     sleep .75
     fi
-    echo -e "XXX\n56\n\nCreate nginx $NGINX_CONFD if doesnt exist...\nXXX"
+    echo -e "XXX\n56\n\nCreate nginx $NGINX_CONFDDIR if doesnt exist...\nXXX"
     sleep .75
-    if [ -d "$NGINX_CONFD" ]
+    if [ -d "$NGINX_CONFDDIR" ]
     then
-    echo -e "XXX\n65\n\nDirectory $NGINX_CONFD exists...\nXXX"
+    echo -e "XXX\n65\n\nDirectory $NGINX_CONFDDIR exists...\nXXX"
     sleep .75
     else
-    mkdir -p $NGINX_CONFD
-    echo -e "XXX\n65\n\nDirectory $NGINX_CONFD created...\nXXX"
+    mkdir -p $NGINX_CONFDDIR
+    echo -e "XXX\n65\n\nDirectory $NGINX_CONFDDIR created...\nXXX"
     sleep .75
     fi
     echo -e "XXX\n73\n\nCreate nginx vhosts.conf if doesnt exist...\nXXX"
     sleep .75
-    if [ -f /etc/nginx/conf.d/vhosts.conf ]
+    if [ -f $NGINXVHOSTCONF ]
     then
     echo -e "XXX\n82\n\nGreat! vhosts.conf file exists...\nXXX"
     sleep .75
     else
-    touch /etc/nginx/conf.d/vhosts.conf
-    echo "include /etc/nginx/sites-enabled/*.vhost;" >>/etc/nginx/conf.d/vhosts.conf
+    touch $NGINXVHOSTCONF
+    echo "include $NGINX_SITES_ENABLED/*.vhost;" >>$NGINXVHOSTCONF
     echo -e "XXX\n82\n\nFile vhosts.conf created...\nXXX"
     sleep .75
     fi
     echo -e "XXX\n91\n\nCreate nginx cache/gzip directories if doesnt exist...\nXXX"
     sleep .75
-    if [ -d /var/cache/nginx/ ]
+    if [ -d $NGINXCACHEDIR ]
     then
     echo -e "XXX\n93\n\nGreat! Cache directories exist...\nXXX"
     sleep .75
     else
-    mkdir -p /var/cache/nginx
-    mkdir -p /var/cache/nginx/client_temp
-    mkdir -p /var/cache/nginx/fcgi
-    mkdir -p /var/cache/nginx/proxy_temp
-    mkdir -p /var/cache/nginx/scgi_temp
-    mkdir -p /var/cache/nginx/tmp
-    mkdir -p /var/cache/nginx/uwsgi_temp
-    chown -R $WEB_SERVER_USER:$WEB_SERVER_GROUP /var/cache/nginx/
+    mkdir -p $NGINXCACHEDIR
+    mkdir -p $NGINXCACHEDIR/client_temp
+    mkdir -p $NGINXCACHEDIR/fastcgi_temp
+    mkdir -p $NGINXCACHEDIR/proxy_temp
+    mkdir -p $NGINXCACHEDIR/scgi_temp
+    mkdir -p $NGINXCACHEDIR/uwsgi_temp
+    chown -R $WEB_SERVER_USER:$WEB_SERVER_GROUP $NGINXCACHEDIR
     echo -e "XXX\n93\n\nNginx cache directories created...\nXXX"
     sleep .75
     fi
     echo -e "XXX\n98\n\nRestarting Nginx service... Done.\nXXX"
     sleep 1.50
-    $NGINX_INIT 2> /dev/null
+    $NGINX_INIT restart 2> /dev/null
     if [ $? -eq 0 ]; then
     ngxstart=$(systemctl status nginx.service 2>&1)
     echo -e "Build date: $DATE_TIME\n\n$ngxstart" > $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
@@ -450,18 +442,18 @@ nginxConfigure() {
 
 nginxRestart() {
 {
-    $VSFTPD_INIT 2> /dev/null
+    $NGINX_INIT restart 2> /dev/null
     exitstatus=$?
     if [ $exitstatus = 0 ]; then
-    echo -e "XXX\n100\n\nSuccessfully restarted vsFTPd... Done.\nXXX"
+    echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
     sleep 1
     else
-    echo -e "XXX\n100\n\nvsFTPd failed, check /var/log/vsftpd.log\nScript exiting in 3 seconds...\nXXX"
+    echo -e "XXX\n100\n\nNginx failed, check $NGINXLOGDIR/error.log\nScript exiting in 3 seconds...\nXXX"
     sleep 3
     exit 1
     fi
     sleep 1
-  } | whiptail --title "Restart vsFTPd" --gauge "\nRestarting the vsFTPd service" 10 70 0
+  } | whiptail --title "Restart Nginx" --gauge "\nRestarting the Nginx service" 10 70 0
 }
 
 nginxCleanup() {
@@ -475,13 +467,13 @@ nginxCleanup() {
     rm -rf source
     sleep .75
     echo -e "XXX\n75\n\nCreate .build file... \nXXX"
-     if [ ! -f /etc/nginx/.build-$CURDAY ]
+     if [ ! -f $NGINXCONFDIR/.build-$CURDAY ]
       then
-       touch /etc/nginx/.build-$CURDAY
+       touch $NGINXCONFDIR/.build-$CURDAY
      fi
     sleep .75
     nginxbuild=$(nginx -V 2>&1)
-    echo -e "Build date: $DATE_TIME\n$nginxbuild" > /etc/nginx/.build-$CURDAY
+    echo -e "Build date: $DATE_TIME\n$nginxbuild" > $NGINXCONFDIR/.build-$CURDAY
     sleep .75
     echo -e "XXX\n100\n\n.build file written... Done.\nXXX"
     sleep .75
