@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/06/2017 17:46 EDT                                       #
+#        &Updated:   11/07/2017 18:08 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -33,10 +33,11 @@ SELECTFTP=$(
 whiptail --title "vsFTPd Installer" --radiolist "\nUse up/down arrows and tab to select a operation\nUpon selection operation will begin without prompts" 20 78 8 \
         "1)" "Install vsFTPd" ON \
         "2)" "Configure vsFTPd Settings" OFF \
-        "3)" "Remove vsFTPd (Config Saved)" OFF \
-        "4)" "Purge vsFTPd (Wipe Clean)" OFF \
-        "5)" "Return to Main Menu" OFF \
-        "6)" "Exit" OFF 3>&1 1>&2 2>&3
+        "3)" "Backup Config (vsftpd.conf)" OFF \
+        "4)" "Remove vsFTPd (Config Saved)" OFF \
+        "5)" "Purge vsFTPd (Wipe Clean)" OFF \
+        "6)" "Return to Main Menu" OFF \
+        "7)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTFTP in
@@ -47,8 +48,9 @@ case $SELECTFTP in
          }
           systemInstaller
           vsftpdConfFile
+          vsftpdRestart
           ftpver=$(vsftpd -v 0>&1)
-          whiptail --title "vsFTPd Installed" --msgbox "$ftpver installed\nvsFTPd has been configured on port 23452\nYou can edit this setting using Configure vsFTPd in menu\nEnable TLS/SSL edit vsftpd.conf manually and uncomment\nSSL options. Set proper cert/key path if using custom SSL cert" --ok-button "OK" 14 78 10
+          whiptail --title "vsFTPd Installed" --msgbox "$ftpver installed\nvsFTPd has been configured on default port 23452\nYou can change this and other settings from menu" --ok-button "OK" 12 70
        else
           ftpver=$(vsftpd -v 0>&1)
           whiptail --title "vsFTPd Check" --msgbox "$ftpver is already installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
@@ -66,6 +68,14 @@ case $SELECTFTP in
 
         "3)")
       if type vsftpd > /dev/null 2>&1; then
+         vsftpdbackupconf
+       else
+         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
+      fi
+       ;;
+
+        "4)")
+      if type vsftpd > /dev/null 2>&1; then
         package() {
           printf "apt --yes remove vsftpd"
         }
@@ -81,7 +91,7 @@ case $SELECTFTP in
       fi
         ;;
 
-        "4)")
+        "5)")
       if type vsftpd > /dev/null 2>&1; then
         package() {
           printf "apt --yes purge vsftpd"
@@ -98,12 +108,12 @@ case $SELECTFTP in
          whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
       fi
         ;;
-        "5)")
+        "6)")
 
        return
         ;;
 
-        "6)")
+        "7)")
 
        exit 1
         ;;

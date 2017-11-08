@@ -169,6 +169,19 @@ vsftpdanonymous() {
      whiptail --title "Anonymous FTP Config" --msgbox "Anonymous FTP logins disabled" --ok-button "OK" 10 70
     fi
 }
+vsftpdbackupconf() {
+{
+    echo -e "XXX\n50\n\nBacking up vsFTPd configuration... \nXXX"
+    tar cvpfz /vsftpdconf_backup_$CURDAY.tar.gz $VSFTPDCONFIG 2> /dev/null
+    if [ ! -d  $CURDIR/backups ]; then
+    mkdir $CURDIR/backups
+    fi
+    mv /vsftpdconf_backup_$CURDAY.tar.gz $CURDIR/backups
+    sleep 1
+    echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
+    sleep 1.5
+  } | whiptail --title "vsFTPd Backup" --gauge "\nBacking up vsFTPd configuration" 10 70 0
+}
 #*****************************
 #
 # vsFTPd SSL Functions
