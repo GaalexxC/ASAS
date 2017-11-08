@@ -220,7 +220,7 @@ case $SELECTNGINX in
        systemInstaller
        sleep 1
        pkgcache() {
-          printf "apt-get --yes  autoremove"
+          printf "apt-get --yes autoremove"
        }
        updateSources
        sleep 1
