@@ -47,11 +47,18 @@ phpDependencyCheck() {
 phpBackupConf() {
 {
     echo -e "XXX\n50\n\nBacking up php.ini configuration... \nXXX"
-    if [ ! -d  $CURDIR/backups ]; then
+   if [ ! -d  $CURDIR/backups ]; then
     mkdir $CURDIR/backups
-    fi
-      if [ -f $PHP71_FPM_INI/$PHPCONFIG ]
+   fi
+   if [ -f $PHP72_FPM_INI/$PHPCONFIG ]
        then
+     tar cvpfz /php72ini_backup_$CURDAY.tar.gz $PHP72_FPM_INI/$PHPCONFIG 2> /dev/null
+     mv /php72ini_backup_$CURDAY.tar.gz $CURDIR/backups
+     sleep 1
+    echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
+    sleep 1.5
+   elif [ -f $PHP71_FPM_INI/$PHPCONFIG ]
+      then
      tar cvpfz /php71ini_backup_$CURDAY.tar.gz $PHP71_FPM_INI/$PHPCONFIG 2> /dev/null
      mv /php71ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
