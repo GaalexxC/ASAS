@@ -25,6 +25,25 @@
 #                                                                               #
 #################################################################################
 
+phpVersion() {
+   if [ -f $PHP72_FPM_INI/$PHPCONFIG ]
+       then
+      PHP_INIT=$PHP72_FPM_INIT
+      PHP_INI=$PHP72_FPM_INI/$PHPCONFIG
+   elif [ -f $PHP71_FPM_INI/$PHPCONFIG ]
+      then
+      PHP_INIT=$PHP71_FPM_INIT
+      PHP_INI=$PHP71_FPM_INI/$PHPCONFIG
+   elif [ -f $PHP70_FPM_INI/$PHPCONFIG ]
+      then
+      PHP_INIT=$PHP70_FPM_INIT
+      PHP_INI=$PHP70_FPM_INI/$PHPCONFIG
+   else
+      PHP_INIT=$PHP56_FPM_INIT
+      PHP_INI=$PHP56_FPM_INI/$PHPCONFIG
+   fi
+}
+
 phpDependencyCheck() {
   if [ -f /etc/apt/sources.list.d/ondrej-ubuntu-php-artful.list ]
     then
@@ -99,4 +118,33 @@ phpPurge() {
     echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
     sleep 1
   } | whiptail --title "PHP Purge" --gauge "\nWiping traces of PHP" 10 70 0
+}
+phpfpmRestart() {
+{
+    $PHP_INIT restart 2> /dev/null
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+    echo -e "XXX\n50\n\nStopping PHP-FPM Service... Done.\nXXX"
+    sleep 1
+    echo -e "XXX\n100\n\nSuccessfully restarted PHP-FPM... Done.\nXXX"
+    sleep 1
+    else
+    echo -e "XXX\n0\n\nPHP-FPM failed, check /var/log/php-fpm.log\nScript exiting in 3 seconds...\nXXX"
+    sleep 3
+    exit 1
+    fi
+    sleep .80
+  } | whiptail --title "Restart PHP-FPM" --gauge "\nRestarting the PHP-FPM service" 10 70 0
+}
+phpengineenable() {
+    phpVersion
+    if (whiptail --title "PHP Engine Config" --yesno "Do you want to enable/disable PHP engine?\nDefault is enabled (On)" --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/engine = .*/engine = On/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Engine Config" --msgbox "PHP engine enabled" --ok-button "OK" 10 70
+    else
+     $SED -i "s/engine = .*/engine = Off/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Engine Config" --msgbox "PHP engine disabled" --ok-button "OK" 10 70
+    fi
 }
