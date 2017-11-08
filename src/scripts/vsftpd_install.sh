@@ -53,7 +53,7 @@ case $SELECTFTP in
           whiptail --title "vsFTPd Installed" --msgbox "$ftpver installed\nvsFTPd has been configured on default port 23452\nYou can change this and other settings from menu" --ok-button "OK" 12 70
        else
           ftpver=$(vsftpd -v 0>&1)
-          whiptail --title "vsFTPd Check" --msgbox "$ftpver is already installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
+          whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd Installed!\n\n$ftpver" --ok-button "OK" 10 70
       fi
         ;;
 
