@@ -43,8 +43,7 @@ phpaddrepo() {
 {
      echo -e "XXX\n50\n\nFetching repository ppa:ondrej/php... \nXXX"
      sleep 1
-     local DEBIAN_FRONTEND="noninteractive"
-     add-apt-repository ppa:ondrej/php 2> /dev/null
+     add-apt-repository ppa:ondrej/php -y 2> /dev/null
      echo -e "XXX\n100\n\nRepository ppa:ondrej/php installed... Done.\nXXX"
      sleep 1.5
   } | whiptail --title "PHP Add Repo" --gauge "\nChecking for repository ppa:ondrej/php" 10 70 0
