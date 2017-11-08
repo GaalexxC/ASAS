@@ -468,8 +468,11 @@ nginxCleanup() {
     rm -rf source
     sleep .75
     echo -e "XXX\n75\n\nCreate .build file... \nXXX"
-     if [ ! -f $NGINXCONFDIR/.build-$CURDAY ]
+     if [ -f $NGINXCONFDIR/.build-* ]
       then
+     rm -rf $NGINXCONFDIR/.build-*
+     touch $NGINXCONFDIR/.build-$CURDAY
+    else
        touch $NGINXCONFDIR/.build-$CURDAY
      fi
     sleep .75
