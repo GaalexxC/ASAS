@@ -30,7 +30,7 @@ while [ 5 ]
 do
 
 SELECTFTP=$(
-whiptail --title "vsFTPd Installer" --radiolist "\nUse up/down arrows and tab to select a operation\nUpon selection operation will begin without prompts" 20 78 8 \
+whiptail --title "vsFTPd Installer" --radiolist "\nUse up/down arrows and space to select an operation\nUpon selection operation will begin without prompts" 18 78 10 \
         "1)" "Install vsFTPd" ON \
         "2)" "Configure vsFTPd Settings" OFF \
         "3)" "Backup Config (vsftpd.conf)" OFF \

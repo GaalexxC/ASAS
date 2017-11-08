@@ -46,7 +46,7 @@ while [ 3 ]
 do
 
 SELECTNGINX=$(
-whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and space to select operation\n" 20 78 9 \
+whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and space to select an operation\n" 18 78 10 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
