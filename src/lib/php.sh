@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 23:13 EDT                                       #
+#        &Updated:   11/08/2017 02:34 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -79,4 +79,24 @@ phpBackupConf() {
     sleep 1.5
    fi
   } | whiptail --title "PHP Backup" --gauge "\nBacking up php.ini configuration" 10 70 0
+}
+phpPurge() {
+{
+    echo -e "XXX\n20\n\nRemoving ppa:ondrej/php repo...\nXXX"
+    rm -rf /etc/apt/sources.list.d/ondrej-*
+    rm -rf /etc/apt/trusted.gpg.d/ondrej_*
+    rm -rf /var/lib/apt/lists/ppa.launchpad.net_ondrej_*
+    sleep .75
+    echo -e "XXX\n40\n\nRemoving PHP configurations... \nXXX"
+    rm -rf /etc/php
+    sleep .75
+    echo -e "XXX\n60\n\nRemoving PHP modules... \nXXX"
+    rm -rf /var/lib/php
+    sleep .75
+    echo -e "XXX\n80\n\nRemoving PHP logs... Done.\nXXX"
+    rm -rf /var/log/php*-fpm.log
+    sleep .75
+    echo -e "XXX\n100\n\nAll traces cleaned... Done.\nXXX"
+    sleep 1
+  } | whiptail --title "PHP Purge" --gauge "\nWiping traces of PHP" 10 70 0
 }
