@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 00:01 EDT                                       #
+#        &Updated:   11/08/2017 02:49 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -311,90 +311,69 @@ whiptailInstallCheck() {
 
 emailCheckInstall() {
    if ! type postfix > /dev/null 2>&1; then
-     if (whiptail --title "Postfix Check" --yesno "Postfix not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+     if (whiptail --title "Postfix Check-Install" --yesno "Postfix not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
         source scripts/mail_server.sh
     else
          return
      fi
    else
         postver=$(postfix -v)
-        whiptail --title "Postfix Check" --msgbox "$postver is already installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
+        whiptail --title "Postfix Check-Install" --msgbox "$postver is already installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
         return
    fi
 }
 
 bindCheckInstall() {
    if ! type named > /dev/null 2>&1; then
-     if (whiptail --title "Bind9 Check" --yesno "Bind9 not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
         source scripts/bind9_install.sh
     else
-         return
-     fi
-   else
         bindver=$(named -v)
-        whiptail --title "Bind9 Check" --msgbox "$bindver is already installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
-        return
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 70
+        source scripts/bind9_install.sh
    fi
 }
 
 mysqlCheckInstall() {
    if ! type mysql > /dev/null 2>&1; then
-     if (whiptail --title "MySQL Check" --yesno "MySQL not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 70
         source scripts/mysql_install.sh
     else
-	 return
-     fi
-    else
         dbver=$(mysql -V 2>&1)
-        whiptail --title "MySQL Check" --msgbox "$dbver is currently installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
-        return
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 70
+        source scripts/mysql_install.sh
    fi
 }
 
 nginxCheckInstall() {
    if ! type nginx > /dev/null 2>&1; then
-        whiptail --title "Nginx Check-Install" --msgbox "Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        whiptail --title "Nginx Check-Install" --msgbox "Nginx not installed" --ok-button "OK" 10 70
         source scripts/nginx_install.sh
    else
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        whiptail --title "Nginx Check-Install" --msgbox "Nginx Installed!\n\n$ngxver" --ok-button "OK" 10 70
         source scripts/nginx_install.sh
-   fi
-}
-
-nginxCheckCompile() {
-   if ! type nginx > /dev/null 2>&1; then
-     if (whiptail --title "Nginx Check" --yesno "Nginx not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-        source scripts/nginx_compile.sh &&
-        source scripts/nginx_configure.sh | grep -v 'omitting directory'
-    else
-         return
-     fi
-   else
-        ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver is currently installed\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
-        return
    fi
 }
 
 phpCheckInstall() {
    if ! type php > /dev/null 2>&1; then
-        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        whiptail --title "PHP Check-Install" --msgbox "PHP not installed" --ok-button "OK" 10 70
         source scripts/php_install.sh
    else
         phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-        whiptail --title "PHP Check-Install" --msgbox "$phpver is currently installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
         source scripts/php_install.sh
    fi
 }
 
 vsftpdCheckInstall() {
    if ! type vsftpd > /dev/null 2>&1; then
-        whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd not installed" --ok-button "OK" 10 70
         source scripts/vsftpd_install.sh
    else
         ftpver=$(vsftpd -v 0>&1)
-        whiptail --title "vsFTPd Check-Install" --msgbox "$ftpver is currently installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+        whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd Installed!\n\n$ftpver" --ok-button "OK" 10 70
         source scripts/vsftpd_install.sh
    fi
 }
