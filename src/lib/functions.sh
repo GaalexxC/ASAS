@@ -26,6 +26,7 @@
 #################################################################################
 source $CURDIR/lib/global.sh
 source $CURDIR/lib/nginx.sh
+source $CURDIR/lib/php.sh
 source $CURDIR/lib/vsftpd.sh
 #*****************************
 #
