@@ -55,7 +55,7 @@ case $SELECTPHP in
        completeOperation
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-       whiptail --title "PHP Check" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+       whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
      fi
         ;;
 
@@ -70,7 +70,7 @@ case $SELECTPHP in
        completeOperation
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-       whiptail --title "PHP Check-Install" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+       whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
      fi
         ;;
 
@@ -85,7 +85,7 @@ case $SELECTPHP in
        completeOperation
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-       whiptail --title "PHP Check-Install" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+       whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
      fi
         ;;
 
@@ -100,7 +100,7 @@ case $SELECTPHP in
        completeOperation
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
-       whiptail --title "PHP Check-Install" --msgbox "$phpver is already installed\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+       whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
      fi
         ;;
 
