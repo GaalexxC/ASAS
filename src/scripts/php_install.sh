@@ -106,26 +106,11 @@ case $SELECTPHP in
 
         "5)")
 
-   if ! type php > /dev/null 2>&1; then
-        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
-   else
-      echo -e "\nSecure PHP INI for FPM/CLI - \nThis will secure the following:\ncgi.fix_pathinfo=0\nexposephp=off\ndisable_functions = disable dangerous functions"
-      echo -e "\nSecurity Check - Do you want to secure your php.ini? (y/n)"
-      read MODIFYPHPINI
-   if [ $MODIFYPHPINI == "y" ]; then
-      echo -e "\nMaking backup ups of original fpm and cli php.ini"
-      sudo mv /etc/php/7.0/fpm/php.ini /etc/php/7.0/fpm/php.ini.bak
-      sudo mv /etc/php/7.0/cli/php.ini /etc/php/7.0/cli/php.ini.bak
-      echo -e "\nUpdating fpm and cli php.ini with secure rules"
-      CONFIGFPM=$PHP70_FPM_INI
-      cp config/phpini/php.ini $CONFIGFPM 2>/dev/null
-      CONFIGCLI=$PHP70_CLI_INI
-      cp config/phpini/php.ini $CONFIGCLI 2>/dev/null
-      echo -e "\nphp.ini fpm and cli secured\n"
-   else
-     echo -e "\nSkipping php.ini fpm and cli security\n"
-   fi
-   fi
+     if ! type php > /dev/null 2>&1; then
+       whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+     else
+       source scripts/php_configure.sh
+     fi
         ;;
 
         "6)")
@@ -159,12 +144,12 @@ case $SELECTPHP in
        }
        updateSources
        sleep 1
-         whiptail --title "Purge PHP" --msgbox "PHP has been wiped from system\n\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+         whiptail --title "Remove PHP" --msgbox "PHP has been removed from system" --ok-button "OK" 10 70
       else
        cancelOperation
     fi
       else
-       whiptail --title "Purge PHP" --msgbox "Nothing to do PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+       whiptail --title "Remove PHP" --msgbox "Nothing to do PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
    fi
         ;;
 
