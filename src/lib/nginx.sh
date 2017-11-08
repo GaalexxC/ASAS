@@ -414,6 +414,7 @@ nginxConfigure() {
     mkdir -p $NGINXCACHEDIR
     mkdir -p $NGINXCACHEDIR/client_temp
     mkdir -p $NGINXCACHEDIR/fastcgi_temp
+    mkdir -p $NGINXCACHEDIR/fastcgi_cache
     mkdir -p $NGINXCACHEDIR/proxy_temp
     mkdir -p $NGINXCACHEDIR/scgi_temp
     mkdir -p $NGINXCACHEDIR/uwsgi_temp
