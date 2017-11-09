@@ -76,7 +76,7 @@ case $SELECTNGINX in
         systemInstaller
       fi
        else
-        whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
+        whiptail --title "System Check" --msgbox "System OS is not recognized" --ok-button "OK" 10 70
        exit 1
      fi
         nginxRepoAdd
@@ -91,7 +91,7 @@ case $SELECTNGINX in
         sleep .50
         nginxConfigure
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Nginx Check" --msgbox "Successfully Installed!\n\n$ngxver" --ok-button "OK" 10 70
        else
         cancelOperation
     fi
@@ -117,7 +117,7 @@ case $SELECTNGINX in
         systemInstaller
       fi
        else
-        whiptail --title "System Check" --msgbox "System OS is not recognized\nPress [Enter] to exit..." --ok-button "OK" 10 70
+        whiptail --title "System Check" --msgbox "System OS is not recognized" --ok-button "OK" 10 70
        exit 1
      fi
         nginxRepoAdd
@@ -132,7 +132,7 @@ case $SELECTNGINX in
         sleep 1
         nginxConfigure
         ngxver=$(nginx -v 2>&1)
-        whiptail --title "Nginx Check" --msgbox "$ngxver successfully installed\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Nginx Check" --msgbox "Successfully Installed!\n\n$ngxver" --ok-button "OK" 10 70
        else
         cancelOperation
     fi
@@ -207,7 +207,7 @@ case $SELECTNGINX in
        }
        updateSources
        sleep 1
-       whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+       whiptail --title "Nginx Uninstall" --msgbox "Nginx has been removed from system" --ok-button "OK" 10 70
       else
        cancelOperation
     fi
@@ -216,7 +216,7 @@ case $SELECTNGINX in
        whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-*)"
        whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
       else
-       whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+       whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed" --ok-button "OK" 10 70
    fi
         ;;
 
@@ -240,7 +240,7 @@ case $SELECTNGINX in
        }
        updateSources
        sleep 1
-         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+         whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system" --ok-button "OK" 10 70
       else
        cancelOperation
      fi
@@ -249,13 +249,13 @@ case $SELECTNGINX in
        whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-*)"
        whiptail --title "Nginx Check-Install" --msgbox "Nginx source build detected\nYou cannot use tool this to uninstall source build\nPlease use Clean Source Build" --ok-button "OK" 10 70
       else
-         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed" --ok-button "OK" 10 70
     fi
         ;;
 
         "7)")
     if ! type nginx > /dev/null 2>&1; then
-         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+         whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed" --ok-button "OK" 10 70
      elif type nginx > /dev/null 2>&1 && [ -f $NGINXCONFDIR/.build-* ]; then
       if (whiptail --title "Nginx Uninstall" --yesno "Warning! This tool will wipe Nginx source build from your system\nConfigurations will be archived to $CURDIR/backups folder\n\nWould you like to uninstall Nginx?" --yes-button "Uninstall" --no-button "Cancel" 10 70) then
        package() {
@@ -270,7 +270,7 @@ case $SELECTNGINX in
        sleep .50
        cleanBuild
        sleep .50
-        whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\nConfiguration backup @ $CURDIR/backups/nginxconf_backup.tar.gz\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Nginx Uninstall" --msgbox "Nginx has been wiped from system\nConfiguration backup @ $CURDIR/backups/nginxconf_backup.tar.gz" --ok-button "OK" 10 70
       else
        cancelOperation
       fi
@@ -282,7 +282,7 @@ case $SELECTNGINX in
         "8)")
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
-        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
       else
       secureCommand() {
          output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
@@ -292,7 +292,7 @@ case $SELECTNGINX in
          printf "openssl"
        }
         secureCheckModify
-        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
       fi
         ;;
 

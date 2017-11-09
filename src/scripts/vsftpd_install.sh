@@ -62,7 +62,7 @@ case $SELECTFTP in
       if type vsftpd > /dev/null 2>&1; then
          source $CURDIR/scripts/vsftpd_configure.sh
        else
-         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
+         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed" --ok-button "OK" 10 70
       fi
        ;;
 
@@ -70,7 +70,7 @@ case $SELECTFTP in
       if type vsftpd > /dev/null 2>&1; then
          vsftpdbackupconf
        else
-         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
+         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed" --ok-button "OK" 10 70
       fi
        ;;
 
@@ -87,7 +87,7 @@ case $SELECTFTP in
         updateSources
         sleep 1
        else
-         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
+         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed" --ok-button "OK" 10 70
       fi
         ;;
 
@@ -105,7 +105,7 @@ case $SELECTFTP in
         rm -rf /var/log/vsftpd.log
         sleep 1
        else
-         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed\nPress [Enter] to return to vsFTPd menu" --ok-button "OK" 10 70
+         whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed" --ok-button "OK" 10 70
       fi
         ;;
         "6)")

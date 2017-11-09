@@ -91,7 +91,7 @@ case $SELECTPHP in
         "4)")
 
      if ! type php > /dev/null 2>&1; then
-       whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+       whiptail --title "PHP Check-Install" --msgbox "PHP not installed" --ok-button "OK" 10 70
      else
        source $CURDIR/scripts/php_configure.sh
      fi
@@ -100,7 +100,7 @@ case $SELECTPHP in
         "5)")
 
      if ! type php > /dev/null 2>&1; then
-       whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+       whiptail --title "PHP Check-Install" --msgbox "PHP not installed" --ok-button "OK" 10 70
      else
        phpBackupConf
      fi
@@ -133,7 +133,7 @@ case $SELECTPHP in
        cancelOperation
     fi
       else
-       whiptail --title "Remove PHP" --msgbox "Nothing to do PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+       whiptail --title "Remove PHP" --msgbox "Nothing to do PHP not installed" --ok-button "OK" 10 70
    fi
         ;;
 
@@ -158,12 +158,12 @@ case $SELECTPHP in
        }
        updateSources
        sleep 1
-         whiptail --title "Purge PHP" --msgbox "PHP has been wiped from system\n\nPress [Enter] to return to PHP menu" --ok-button "OK" 10 70
+         whiptail --title "Purge PHP" --msgbox "PHP has been wiped from system" --ok-button "OK" 10 70
     else
        cancelOperation
     fi
    else
-         whiptail --title "Purge PHP" --msgbox "Nothing to do PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
+         whiptail --title "Purge PHP" --msgbox "Nothing to do PHP not installed" --ok-button "OK" 10 70
    fi
         ;;
 
