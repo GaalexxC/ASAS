@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/31/2017 01:37 EDT                                       #
+#        &Updated:   11/09/2017 13:45 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -24,35 +24,63 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/         #
 #                                                                               #
 #################################################################################
+clear
 
-rebootRequired
+while [ 2 ]
+do
 
-echo -e "\nChecking for old kernels\n"
+SELECTSYSTEM=$(
+whiptail --title "System Tools" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
+        "1)" "ASAS Backups" ON \
+        "2)" "Test" OFF \
+        "3)" "Test" OFF \
+        "4)" "Test" OFF \
+        "5)" "Test" OFF \
+        "6)" "Return to Main Menu" OFF \
+        "7)" "Exit"  OFF 3>&1 1>&2 2>&3
+)
 
-update-grub
 
-echo -e "\nCleaning old kernels\n"
+case $SELECTSYSTEM in
+        "1)")
 
-dpkg -l 'linux-*' | sed '/^ii/!d;/'"$(uname -r | sed "s/\(.*\)-\([^0-9]\+\)/\1/")"'/d;s/^[^ ]* [^ ]* \([^ ]*\).*/\1/;/[0-9]/!d' | xargs sudo apt-get -y purge
+        return
+        ;;
 
-echo -e "\nCleaning old packages\n"
+        "2)")
 
-apt-get autoremove
+        return
+        ;;
 
-apt-get autoclean
+        "3)")
 
-echo -e "\nUpdate kernel\n"
+        return
+        ;;
 
-update-grub
 
-echo -e "\nCleaning archived logs\n"
+        "4)")
 
-rm -rf /var/log/*.tar.gz
-rm -rf /var/log/nginx/*.tar.gz
-rm -rf /var/log/mysql/*.tar.gz
+        return
+        ;;
 
-echo -e "\nCleanup Complete\n"
-sleep 1
 
-rebootRequired
-completeOperation
+        "5)")
+
+        return
+        ;;
+
+
+        "6)")
+
+        return
+        ;;
+
+        "7)")
+
+        exit 1
+        ;;
+  esac
+
+ done
+
+exit
