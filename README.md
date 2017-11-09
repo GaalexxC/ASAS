@@ -3,6 +3,8 @@
 ```diff
 - THIS IS AN INCOMPLETE DEVELOPMENT VERSION AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
 ```
+More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-State)
+
 # Auto Server Admin Script [ASAS] 2.10
 
 <pre>
