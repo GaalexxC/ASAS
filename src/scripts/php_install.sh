@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 16:50 EDT                                       #
+#        &Updated:   11/08/2017 19:13 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -30,7 +30,7 @@ while [ 4 ]
 do
 
 SELECTPHP=$(
-whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to select an operation\nUpon selection operation will begin without prompts" 18 78 10 \
+whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
         "1)" "Install PHP 7.2" OFF \
         "2)" "Install PHP 7.1 (Recommended)" ON \
         "3)" "Install PHP 7.0" OFF \
@@ -93,7 +93,7 @@ case $SELECTPHP in
      if ! type php > /dev/null 2>&1; then
        whiptail --title "PHP Check-Install" --msgbox "PHP not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      else
-       source scripts/php_configure.sh
+       source $CURDIR/scripts/php_configure.sh
      fi
         ;;
 
