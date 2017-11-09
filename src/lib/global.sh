@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 02:49 EDT                                       #
+#        &Updated:   11/08/2017 18:57 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -45,7 +45,7 @@ do
 MAINNU=$(
 whiptail --title "ASAS 2.10" --menu "\nSelect operation from the menu" 20 78 10 \
         "1)" "Nginx Installer (Stable/Mainline/Compiled)"   \
-        "2)" "PHP Installer (PHP5 - PHP7)"  \
+        "2)" "PHP Installer (PHP 7.x)"  \
         "3)" "MySQL Installer (Percona-MariaDB-Oracle)" \
         "4)" "Bind9 DNS Installer (Configure-Secure)" \
         "5)" "vsFTPd Installer (Configure-Secure)" \
