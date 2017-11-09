@@ -29,7 +29,7 @@
 # Global Functions
 #
 #*****************************
-bindCheckInstall() {
+bind9CheckInstall() {
    if ! type named > /dev/null 2>&1; then
         whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
         source scripts/bind9_install.sh
