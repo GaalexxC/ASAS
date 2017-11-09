@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 18:57 EDT                                       #
+#        &Updated:   11/09/2017 12:57 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -30,8 +30,8 @@
 #
 #*****************************
 ## NEWT Color palette for ASAS whiptail GUI ##
-readarray -t newtcolor < bin/palette
-NEWT_COLORS="${newtcolor[@]}"
+     readarray -t newtcolor < bin/palette
+     NEWT_COLORS="${newtcolor[@]}"
 
 # if [ ! -f $CURDIR/$CURDAY.$ERROR_LOG ]
 #    then
@@ -40,8 +40,8 @@ NEWT_COLORS="${newtcolor[@]}"
 
 asasMainMenu() {
 clear
-while [ 1 ]
-do
+   while [ 1 ]
+    do
 MAINNU=$(
 whiptail --title "ASAS 2.10" --menu "\nSelect operation from the menu" 20 78 10 \
         "1)" "Nginx Installer (Stable/Mainline/Compiled)"   \
@@ -104,64 +104,43 @@ case $MAINNU in
 
  done
 }
-
 validateRoot() {
-  if [ "$(id -u)" != "0" ]; then
-      whiptail --title "System Check" --msgbox "\nYou need to be root to run this script.\n\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
-      exit 1
-    else
-       whiptail --title "System Check" --msgbox "Root User Confirmed\n\nPress [Enter] to continue" --ok-button "Continue" 10 70
-  fi
+   if [ "$(id -u)" != "0" ]; then
+     whiptail --title "System Check" --msgbox "\nYou need to be root to run this script.\n\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
+    exit 1
+   else
+     whiptail --title "System Check" --msgbox "Root User Confirmed\n\nPress [Enter] to continue" --ok-button "Continue" 10 70
+   fi
 }
-
 completeOperation() {
-whiptail --title "Operation Complete" --msgbox "Operation Complete\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+     whiptail --title "Operation Complete" --msgbox "Operation Complete\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
 }
-
 cancelOperation() {
-whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+     whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
 }
-
 errorOperation() {
-whiptail --title "Operation Error" --msgbox "Operation Failed\nCheck $CURDIR/$NGINX_LOG/error-$CURDAY.log\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
-exit 1
+     whiptail --title "Operation Error" --msgbox "Operation Failed\nCheck $CURDIR/$NGINX_LOG/error-$CURDAY.log\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+    exit 1
 }
-
 rebootRequired() {
-  if [ -f /var/run/reboot-required ]; then
-    whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
-    reboot
-  fi
+   if [ -f /var/run/reboot-required ]; then
+     whiptail --title "Reboot Required" --msgbox "Your Kernel was modified a reboot is required\nPress [Enter] to reboot" --ok-button "Reboot" 10 70
+     reboot
+   fi
 }
-
 wgetFiles() {
 {
-  wget $(wgetURL) 2>&1 | \
-  stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }'
+    wget $(wgetURL) 2>&1 | \
+    stdbuf -o0 awk '/[.] +[0-9][0-9]?[0-9]?%/ { print substr($0,63,3) }'
   } | whiptail --title "ASAS Downloader" --gauge "\nFetching application source" 10 70 0
 }
-
-# Work In Progress for bug patch
-phpDependencies() {
-apt --yes install language-pack-en-base &&
-export LC_ALL=en_US.UTF-8 &&
-export LANG=en_US.UTF-8 &&
-apt install -y software-properties-common &&
-add-apt-repository ppa:ondrej/php &&
-apt update
-}
-
-#LicenseView() {
-#}
-
 lowercase() {
-        echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
+    echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
 }
-
 clean_string() {
-        clean=$1
-        clean=${clean//\"/}
-        echo $clean
+    clean=$1
+    clean=${clean//\"/}
+    echo $clean
 }
 #*****************************
 #
@@ -251,42 +230,41 @@ done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages...
 # ** Maybe code something more efficient and elegant if possible in future. Looks like **
 # ** a bird sanctuary with all the nesting going on. elif may be more friendly??? **
 systemUpgrades() {
-    UPGRADECHECK=$(apt-get -s upgrade | grep -Po "^\d+ (?=upgraded)" 2>&1)
-  if [ "$UPGRADECHECK" -gt 0 ]; then
-   if [ "$DISTRO" = "Ubuntu" ]; then
-    UPGRADES=$(/usr/lib/update-notifier/apt-check 2>&1)
-    upsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 2)
-    upnonsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 1)
-    totalupgrade=$((upsecurity + upnonsecurity))
+     UPGRADECHECK=$(apt-get -s upgrade | grep -Po "^\d+ (?=upgraded)" 2>&1)
+   if [ "$UPGRADECHECK" -gt 0 ]; then
+    if [ "$DISTRO" = "Ubuntu" ]; then
+     UPGRADES=$(/usr/lib/update-notifier/apt-check 2>&1)
+     upsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 2)
+     upnonsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 1)
+     totalupgrade=$((upsecurity + upnonsecurity))
     if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$upsecurity are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
-      package() {
-         echo "apt --yes upgrade"
-       }
-      systemInstaller
-      rebootRequired
-      completeOperation
-   else
-      return
-    fi
-   fi
-   if [ "$DISTRO" = "Debian" ]; then
-    if (whiptail --title "System Check" --yesno "$UPGRADECHECK Updates are available\n\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
-      package() {
-         printf "apt --yes upgrade"
-       }
+     package() {
+       echo "apt --yes upgrade"
+      }
      systemInstaller
      rebootRequired
      completeOperation
    else
-      return
-    fi
+    return
    fi
+  fi
+   if [ "$DISTRO" = "Debian" ]; then
+    if (whiptail --title "System Check" --yesno "$UPGRADECHECK Updates are available\n\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
+     package() {
+       printf "apt --yes upgrade"
+      }
+     systemInstaller
+     rebootRequired
+     completeOperation
+   else
+     return
+   fi
+  fi
    else
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
-     return
+    return
   fi
 }
-
 #*****************************
 #
 # Check Install
@@ -294,21 +272,20 @@ systemUpgrades() {
 #*****************************
 whiptailInstallCheck() {
    if ! type whiptail > /dev/null 2>&1; then
-      echo -e "\n\nDependency Check...${RED}Whiptail not installed${NOCOL}"
-      sleep 1.5
-      echo -e "\nInstalling Whiptail - required by this script"
-      apt install whiptail -y
-      echo -e "\n${GREEN}Whiptail successfully installed${NOCOL}\n\n"
-      sleep 2
+     echo -e "\n\nDependency Check...${RED}Whiptail not installed${NOCOL}"
+     sleep 1.5
+     echo -e "\nInstalling Whiptail - required by this script"
+     apt install whiptail -y
+     echo -e "\n${GREEN}Whiptail successfully installed${NOCOL}\n\n"
+     sleep 2
    else
-       whipver=$(whiptail -v 2>&1)
-       echo -e "\n\nDependency Check..."
-       sleep 1
-       echo -e "\n${GREEN}Great! $whipver is installed${NOCOL}\n\n"
-       sleep 1.5
+     whipver=$(whiptail -v 2>&1)
+     echo -e "\n\nDependency Check..."
+    sleep 1
+     echo -e "\n${GREEN}Great! $whipver is installed${NOCOL}\n\n"
+     sleep 1.5
    fi
 }
-
 #*****************************
 #
 # Security Functions
@@ -346,7 +323,6 @@ secureCheckModify() {
         done
   } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 10 70 0
 }
-
 #*****************************
 #
 # Update Source List Functions

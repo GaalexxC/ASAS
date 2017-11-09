@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 12:50 EDT                                       #
+#        &Updated:   11/09/2017 13:02 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -26,17 +26,6 @@
 #################################################################################
 #*****************************
 #
-# Mail System Functions
+# Global Functions
 #
 #*****************************
-mailCheckInstall() {
-   if ! type postfix > /dev/null 2>&1; then
-     whiptail --title "Mail Check-Install" --msgbox "Mail not installed" --ok-button "OK" 10 70
-     source $CURDIR/scripts/mail_install.sh
-   else
-     postfixver=$(postfix -v)
-     whiptail --title "Mail Check-Install" --msgbox "Mail Installed!\n\n$postfixver" --ok-button "OK" 10 70
-     source $CURDIR/scripts/mail_install.sh
-   fi
-}
-

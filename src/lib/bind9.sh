@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 18:57 EDT                                       #
+#        &Updated:   11/09/2017 13:02 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -31,11 +31,11 @@
 #*****************************
 bind9CheckInstall() {
    if ! type named > /dev/null 2>&1; then
-        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
-        source scripts/bind9_install.sh
-    else
-        bindver=$(named -v)
-        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 70
-        source scripts/bind9_install.sh
+     whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     source scripts/bind9_install.sh
+   else
+     bindver=$(named -v)
+     whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 70
+     source scripts/bind9_install.sh
    fi
 }
