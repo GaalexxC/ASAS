@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 03:01 EDT                                       #
+#        &Updated:   11/09/2017 14:01 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -31,34 +31,15 @@ source $CURDIR/lib/mysql.sh
 source $CURDIR/lib/vsftpd.sh
 source $CURDIR/lib/bind9.sh
 source $CURDIR/lib/mail.sh
+source $CURDIR/lib/userdomain.sh
+source $CURDIR/lib/security.sh
+source $CURDIR/lib/system.sh
 #*****************************
 #
 # Testing Ground
 #
 #*****************************
-secureCheckModify2() {
-            i=0
-            $(secureCommand) 2> /dev/null | \
-            while read x; do
-            case $x in
-        *+*)
-            count=20
-            i=0
-        ;;
-           +*\ ...)
-            proc=$(ps aux | grep -v grep | grep -e "$(secureApp)")
-            if [[ "$proc" == "" ]] && [[ $count -gt 0 ]]; then
-                i=$((i+1))
-                x=${x% (*}
-                x=${x% ...}
-                x=$(echo ${x:1})
-                sleep .50
-                printf "XXX\n$((i*100/count))\n\n${x}\nXXX\n$((i*100/count))\n"
-           fi
-        ;;
-    esac
-done | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 10 70 0
-}
+
 
 ############
 # File End #
