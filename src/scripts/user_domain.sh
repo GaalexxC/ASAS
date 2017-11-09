@@ -43,32 +43,66 @@ whiptail --title "User Domain Installer" --radiolist "\nUse up/down arrows and s
 
 case $SELECTUSERDOMAIN in
         "1)")
+          if ! type nginx > /dev/null 2>&1; then
+           if (whiptail --title "Nginx Check-Install" --yesno "Nginx not installed and is required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+             source scripts/nginx_install.sh
+           else
+            return
+           fi
+          else
+             ngxver=$(nginx -v 2>&1)
+             whiptail --title "Nginx Check-Install" --msgbox "Nginx Installed!\n\n$ngxver" --ok-button "Continue" 10 70
+          fi
 
-        return
+          if ! type php > /dev/null 2>&1; then
+           if (whiptail --title "PHP Check-Install" --yesno "PHP not installed and required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+             source scripts/php_install.sh
+           else
+            return
+           fi
+          else
+             phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+             whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "Continue" 10 70
+          fi
+            return
         ;;
 
         "2)")
+          if ! type nginx > /dev/null 2>&1; then
+           if (whiptail --title "Nginx Check-Install" --yesno "Nginx not installed and is required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+             source scripts/nginx_install.sh
+           else
+            return
+           fi
+          else
+             ngxver=$(nginx -v 2>&1)
+             whiptail --title "Nginx Check-Install" --msgbox "Nginx Installed!\n\n$ngxver" --ok-button "Continue" 10 70
+          fi
 
-        return
+          if ! type php > /dev/null 2>&1; then
+           if (whiptail --title "PHP Check-Install" --yesno "PHP not installed and required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
+             source scripts/php_install.sh
+           else
+            return
+           fi
+          else
+             phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+             whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "Continue" 10 70
+          fi
+            return
         ;;
 
         "3)")
-
-        return
+          listvhostshosts
         ;;
-
 
         "4)")
-
-        return
+          listfpmconfs
         ;;
-
 
         "5)")
-
-        return
+          listavailips
         ;;
-
 
         "6)")
 

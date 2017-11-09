@@ -29,3 +29,32 @@
 # Global Functions
 #
 #*****************************
+listvhostshosts() {
+   if [ ! -f /etc/nginx/sites-available/*.vhost ]; then
+     vhostshosts="There are no vhost files to display"
+   else
+     vhostshosts="$(find /etc/nginx/sites-available/*.vhost  -exec  basename {} .vhost  \;)"
+   fi
+     echo "vhost files currently in use:\n$vhostshosts" > listvhostshosts_display
+     whiptail --textbox listvhostshosts_display 12 80
+}
+listfpmconfs() {
+   if [ ! -f /etc/php/7.0/fpm/pool.d/*.conf ]; then
+     fpmconfs="There are no FPM conf files to display"
+   else
+     fpmconfs="$(find /etc/php/7.0/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
+   fi
+     echo "FPM conf files currently in use:\n$fpmconfs" > listfpmconfs_display
+     whiptail --textbox listfpmconfs_display 12 80
+}
+listavailips() {
+      listips="$(hostname -I)"
+   if [ -z "$listips" ]
+    then
+      availips="There are no available IPs to display"
+   else
+      availips=$listips
+   fi
+     echo "Available IP Addresses:\n$availips" > listavailips_display
+     whiptail --textbox listavailips_display 12 80
+}
