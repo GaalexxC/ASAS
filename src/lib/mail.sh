@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/07/2017 03:01 EDT                                       #
+#        &Updated:   11/08/2017 18:57 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -24,43 +24,19 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/         #
 #                                                                               #
 #################################################################################
-source $CURDIR/lib/global.sh
-source $CURDIR/lib/nginx.sh
-source $CURDIR/lib/php.sh
-source $CURDIR/lib/mysql.sh
-source $CURDIR/lib/vsftpd.sh
-source $CURDIR/lib/bind9.sh
-source $CURDIR/lib/mail.sh
 #*****************************
 #
-# Testing Ground
+# Global Functions
 #
 #*****************************
-secureCheckModify2() {
-            i=0
-            $(secureCommand) 2> /dev/null | \
-            while read x; do
-            case $x in
-        *+*)
-            count=20
-            i=0
-        ;;
-           +*\ ...)
-            proc=$(ps aux | grep -v grep | grep -e "$(secureApp)")
-            if [[ "$proc" == "" ]] && [[ $count -gt 0 ]]; then
-                i=$((i+1))
-                x=${x% (*}
-                x=${x% ...}
-                x=$(echo ${x:1})
-                sleep .50
-                printf "XXX\n$((i*100/count))\n\n${x}\nXXX\n$((i*100/count))\n"
-           fi
-        ;;
-    esac
-done | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 10 70 0
+mailCheckInstall() {
+   if ! type postfix > /dev/null 2>&1; then
+        whiptail --title "Mail Check-Install" --msgbox "Mail not installed" --ok-button "OK" 10 70
+        source $CURDIR/scripts/mail_install.sh
+    else
+        postfixver=$(postfix -v)
+        whiptail --title "Mail Check-Install" --msgbox "Mail Installed!\n\n$postfixver" --ok-button "OK" 10 70
+        source $CURDIR/scripts/mail_install.sh
+   fi
 }
-
-############
-# File End #
-############
 

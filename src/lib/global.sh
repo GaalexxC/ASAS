@@ -78,7 +78,7 @@ case $MAINNU in
         ;;
 
         "6)")
-                emailCheckInstall
+                mailCheckInstall
         ;;
 
         "7)")
@@ -306,20 +306,6 @@ whiptailInstallCheck() {
        sleep 1
        echo -e "\n${GREEN}Great! $whipver is installed${NOCOL}\n\n"
        sleep 1.5
-   fi
-}
-
-emailCheckInstall() {
-   if ! type postfix > /dev/null 2>&1; then
-     if (whiptail --title "Postfix Check-Install" --yesno "Postfix not installed\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-        source scripts/mail_server.sh
-    else
-         return
-     fi
-   else
-        postver=$(postfix -v)
-        whiptail --title "Postfix Check-Install" --msgbox "$postver is already installed\n\nPress [Enter] to return to main menu" --ok-button "OK" 10 70
-        return
    fi
 }
 

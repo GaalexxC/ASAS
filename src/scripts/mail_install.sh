@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 00:30 EDT                                       #
+#        &Updated:   11/09/2017 00:07 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -24,4 +24,90 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/         #
 #                                                                               #
 #################################################################################
-return
+clear
+
+while [ 2 ]
+do
+
+SELECTMAIL=$(
+whiptail --title "Mail Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
+        "1)" "Postfix" ON \
+        "2)" "Dovecot w/Dovecot Sieve" OFF \
+        "3)" "Spamassassin" OFF \
+        "4)" "Clamav" OFF \
+        "5)" "Amavis-new" OFF \
+        "6)" "Postgrey / DCC" OFF \
+        "7)" "Pyzor / Razor" OFF \
+        "8)" "Opendkim" OFF \
+        "9)" "Mail Administration" OFF \
+        "10)" "Return to Main Menu" OFF \
+        "11)" "Exit"  OFF 3>&1 1>&2 2>&3
+)
+
+
+case $SELECTMAIL in
+        "1)")
+
+        return
+        ;;
+
+        "2)")
+
+        return
+        ;;
+
+        "3)")
+
+        return
+        ;;
+
+
+        "4)")
+
+        return
+        ;;
+
+
+        "5)")
+
+        return
+        ;;
+
+        "6)")
+
+        return
+        ;;
+
+
+        "7)")
+
+        return
+        ;;
+
+
+        "8)")
+
+        return
+        ;;
+
+
+        "9)")
+
+        return
+        ;;
+
+
+        "10)")
+
+        return
+        ;;
+
+        "11)")
+
+        exit 1
+        ;;
+  esac
+
+ done
+
+exit
