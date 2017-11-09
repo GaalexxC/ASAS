@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 00:07 EDT                                       #
+#        &Updated:   11/09/2017 13:57 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -31,11 +31,11 @@ do
 
 SELECTUSERDOMAIN=$(
 whiptail --title "User Domain Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
-        "1)" "New User / Domain" ON \
-        "2)" "Test" OFF \
-        "3)" "Test" OFF \
-        "4)" "Test" OFF \
-        "5)" "Test" OFF \
+        "1)" "New User and Domain (Remote Server)" ON \
+        "2)" "New User and localhost (Local Server)" OFF \
+        "3)" "List Active vhosts" OFF \
+        "4)" "List Active FPM confs" OFF \
+        "5)" "Test Available IPs" OFF \
         "6)" "Return to Main Menu" OFF \
         "7)" "Exit"  OFF 3>&1 1>&2 2>&3
 )
