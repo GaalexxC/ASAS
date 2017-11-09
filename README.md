@@ -1,4 +1,4 @@
-![License](https://img.shields.io/badge/License-GNUv3-blue.svg)  ![Version](https://img.shields.io/badge/Version-2.10-blue.svg)  ![Development](https://img.shields.io/badge/Development-Pre-Release-blue.svg)
+![License](https://img.shields.io/badge/License-GNUv3-blue.svg)  ![Version](https://img.shields.io/badge/Version-2.10-blue.svg)  ![Development](https://img.shields.io/badge/Development-PreRelease-blue.svg)
 
 ```diff
 - THIS IS AN INCOMPLETE DEVELOPMENT VERSION AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
