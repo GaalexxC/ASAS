@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 19:14 EDT                                       #
+#        &Updated:   11/09/2017 13:30 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -46,51 +46,51 @@ whiptail --title "PHP Configuration" --menu "\nConfigure most common settings be
 
 case $PHPSETTINGS in
         "1)")
-                phpengineenable
+          phpengineenable
         ;;
 
         "2)")
-                #vsftpdip4add
+          #php
         ;;
 
         "3)")
-                #vsftpdip6enable
+          #php
         ;;
 
         "4)")
-                #vsftpdip6add
+          #php
         ;;
 
         "5)")
-                #vsftpdhidedot
+          #php
         ;;
 
         "6)")
-                #vsftpdanonymous
+          #php
         ;;
 
         "7)")
-                #vsftpdsslenable
+          #php
         ;;
 
         "8)")
-                #vsftpdsslcert
+          #php
         ;;
 
         "9)")
-                #vsftpdsslkey
+          #php
         ;;
 
         "10)")
-               return
+          return
         ;;
 
         "11)")
-               asasMainMenu
+          asasMainMenu
         ;;
 
         "12)")
-               exit 1
+          exit 1
         ;;
    esac
 

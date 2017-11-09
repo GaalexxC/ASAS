@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/31/2017 01:37 EDT                                       #
+#        &Updated:   11/09/2017 13:39 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -23,5 +23,77 @@
 #    You should have received a copy of the GNU General Public License          #
 #    along with this program.  If not, see http://www.gnu.org/licenses/         #
 #                                                                               #
-#################################################################################
-return
+################################################################################
+clear
+
+while [ 1 ]
+do
+POSTFIXSETTINGS=$(
+whiptail --title "Postfix Configuration" --menu "\nConfigure most common settings below\nEdit nginx.conf manually for extended options" 24 78 14 \
+        "1)" "Test (Default:None)"   \
+        "2)" "Test (Default:None)" \
+        "3)" "Test (Default:None)"  \
+        "4)" "Test (Default:None)" \
+        "5)" "Test (Default:None)" \
+        "6)" "Test (Default:None)" \
+        "7)" "Test (Default:None)" \
+        "8)" "Test (Default:None)" \
+        "9)" "Test (Default:None)" \
+       "10)" "Return to Nginx Menu" \
+       "11)" "Return to Main Menu" \
+       "12)" "Exit"  3>&2 2>&1 1>&3
+)
+
+case $POSTFIXSETTINGS in
+        "1)")
+           #postfix
+        ;;
+
+        "2)")
+           #postfix
+        ;;
+
+        "3)")
+          #postfix
+        ;;
+
+        "4)")
+          #postfix
+        ;;
+
+        "5)")
+          #postfix
+        ;;
+
+        "6)")
+          #postfix
+        ;;
+
+        "7)")
+          #postfix
+        ;;
+
+        "8)")
+          #postifx
+        ;;
+
+        "9)")
+          #postfix
+        ;;
+
+        "10)")
+          return
+        ;;
+
+        "11)")
+          asasMainMenu
+        ;;
+
+        "12)")
+          exit 1
+        ;;
+   esac
+
+ done
+
+exit

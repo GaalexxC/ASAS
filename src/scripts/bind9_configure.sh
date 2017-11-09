@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 20:15 EDT                                       #
+#        &Updated:   11/09/2017 13:23 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -46,51 +46,51 @@ whiptail --title "Bind9 Configuration" --menu "\nConfigure most common settings 
 
 case $BIND9SETTINGS in
         "1)")
-                #phpengineenable
+           #bind9
         ;;
 
         "2)")
-                #vsftpdip4add
+           #bind9
         ;;
 
         "3)")
-                #vsftpdip6enable
+          #bind9
         ;;
 
         "4)")
-                #vsftpdip6add
+          #bind9
         ;;
 
         "5)")
-                #vsftpdhidedot
+          #bind9
         ;;
 
         "6)")
-                #vsftpdanonymous
+          #bind9
         ;;
 
         "7)")
-                #vsftpdsslenable
+          #bind9
         ;;
 
         "8)")
-                #vsftpdsslcert
+          #bind9
         ;;
 
         "9)")
-                #vsftpdsslkey
+          #bind9
         ;;
 
         "10)")
-               return
+          return
         ;;
 
         "11)")
-               asasMainMenu
+          asasMainMenu
         ;;
 
         "12)")
-               exit 1
+          exit 1
         ;;
    esac
 
