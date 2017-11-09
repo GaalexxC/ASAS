@@ -29,6 +29,17 @@
 # Nginx Functions
 #
 #*****************************
+nginxCheckInstall() {
+   if ! type nginx > /dev/null 2>&1; then
+        whiptail --title "Nginx Check-Install" --msgbox "Nginx not installed" --ok-button "OK" 10 70
+        source $CURDIR/scripts/nginx_install.sh
+   else
+        ngxver=$(nginx -v 2>&1)
+        whiptail --title "Nginx Check-Install" --msgbox "Nginx Installed!\n\n$ngxver" --ok-button "OK" 10 70
+        source $CURDIR/scripts/nginx_install.sh
+   fi
+}
+
 nginxRepoAdd() {
 {
     echo -e "XXX\n25\n\nAdding Nginx repos... \nXXX"

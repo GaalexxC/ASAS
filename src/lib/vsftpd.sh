@@ -29,6 +29,17 @@
 # vsFTPd System Functions
 #
 #****************************
+vsftpdCheckInstall() {
+   if ! type vsftpd > /dev/null 2>&1; then
+        whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd not installed" --ok-button "OK" 10 70
+        source $CURDIR/scripts/vsftpd_install.sh
+   else
+        ftpver=$(vsftpd -v 0>&1)
+        whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd Installed!\n\n$ftpver" --ok-button "OK" 10 70
+        source $CURDIR/scripts/vsftpd_install.sh
+   fi
+}
+
 vsftpdConfFile() {
 {
     echo -e "XXX\n20\n\nBackup vsftpd.conf file... \nXXX"

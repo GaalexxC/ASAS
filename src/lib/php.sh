@@ -25,6 +25,17 @@
 #                                                                               #
 #################################################################################
 
+phpCheckInstall() {
+   if ! type php > /dev/null 2>&1; then
+        whiptail --title "PHP Check-Install" --msgbox "PHP not installed" --ok-button "OK" 10 70
+        source $CURDIR/scripts/php_install.sh
+   else
+        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
+        whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
+        source $CURDIR/scripts/php_install.sh
+   fi
+}
+
 phpVersion() {
    if [ -f $PHP72_FPM_INI/$PHPCONFIG ]
        then

@@ -29,6 +29,17 @@
 # MySql System Functions
 #
 #****************************
+mysqlCheckInstall() {
+   if ! type mysql > /dev/null 2>&1; then
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 70
+        source $CURDIR/scripts/mysql_install.sh
+    else
+        dbver=$(mysql -V 2>&1)
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 70
+        source $CURDIR/scripts/mysql_install.sh
+   fi
+}
+
 mysqlConfFile() {
 {
     echo -e "XXX\n20\n\nBackup my.cnf file... \nXXX"
