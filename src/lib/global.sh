@@ -70,7 +70,7 @@ case $MAINNU in
         ;;
 
         "4)")
-                bindCheckInstall
+                bind9CheckInstall
         ;;
 
         "5)")
@@ -323,58 +323,58 @@ emailCheckInstall() {
    fi
 }
 
-bindCheckInstall() {
+bind9CheckInstall() {
    if ! type named > /dev/null 2>&1; then
         whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
-        source scripts/bind9_install.sh
+        source $CURDIR/scripts/bind9_install.sh
     else
         bindver=$(named -v)
         whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 70
-        source scripts/bind9_install.sh
+        source $CURDIR/scripts/bind9_install.sh
    fi
 }
 
 mysqlCheckInstall() {
    if ! type mysql > /dev/null 2>&1; then
         whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 70
-        source scripts/mysql_install.sh
+        source $CURDIR/scripts/mysql_install.sh
     else
         dbver=$(mysql -V 2>&1)
         whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 70
-        source scripts/mysql_install.sh
+        source $CURDIR/scripts/mysql_install.sh
    fi
 }
 
 nginxCheckInstall() {
    if ! type nginx > /dev/null 2>&1; then
         whiptail --title "Nginx Check-Install" --msgbox "Nginx not installed" --ok-button "OK" 10 70
-        source scripts/nginx_install.sh
+        source $CURDIR/scripts/nginx_install.sh
    else
         ngxver=$(nginx -v 2>&1)
         whiptail --title "Nginx Check-Install" --msgbox "Nginx Installed!\n\n$ngxver" --ok-button "OK" 10 70
-        source scripts/nginx_install.sh
+        source $CURDIR/scripts/nginx_install.sh
    fi
 }
 
 phpCheckInstall() {
    if ! type php > /dev/null 2>&1; then
         whiptail --title "PHP Check-Install" --msgbox "PHP not installed" --ok-button "OK" 10 70
-        source scripts/php_install.sh
+        source $CURDIR/scripts/php_install.sh
    else
         phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
         whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
-        source scripts/php_install.sh
+        source $CURDIR/scripts/php_install.sh
    fi
 }
 
 vsftpdCheckInstall() {
    if ! type vsftpd > /dev/null 2>&1; then
         whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd not installed" --ok-button "OK" 10 70
-        source scripts/vsftpd_install.sh
+        source $CURDIR/scripts/vsftpd_install.sh
    else
         ftpver=$(vsftpd -v 0>&1)
         whiptail --title "vsFTPd Check-Install" --msgbox "vsFTPd Installed!\n\n$ftpver" --ok-button "OK" 10 70
-        source scripts/vsftpd_install.sh
+        source $CURDIR/scripts/vsftpd_install.sh
    fi
 }
 

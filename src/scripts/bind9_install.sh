@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/31/2017 01:37 EDT                                       #
+#        &Updated:   11/08/2017 20:10 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -24,4 +24,148 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/         #
 #                                                                               #
 #################################################################################
-return
+clear
+
+while [ 4 ]
+do
+
+SELECTBIND9=$(
+whiptail --title "Bind9 Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
+        "1)" "Install Bind9 DNS server" OFF \
+        "2)" "test" ON \
+        "3)" "Test" OFF \
+        "4)" "Configure Bind9 Settings" OFF \
+        "5)" "Backup Config ()" OFF \
+        "6)" "Remove Bind9 (Config Saved)" OFF \
+        "7)" "Purge Bind9 (Wipe Clean)" OFF \
+        "8)" "Return to Main Menu" OFF \
+        "9)" "Exit" OFF 3>&1 1>&2 2>&3
+)
+
+case $SELECTBIND9 in
+        "1)")
+
+     if ! type named > /dev/null 2>&1; then
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
+        bindver=$(named -V 2>&1)
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
+     fi
+        ;;
+
+        "2)")
+
+     if ! type named > /dev/null 2>&1; then
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
+        bindver=$(named -V 2>&1)
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
+     fi
+        ;;
+
+        "3)")
+
+     if ! type named > /dev/null 2>&1; then
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
+        bindver=$(named -V 2>&1)
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
+     fi
+        ;;
+
+        "4)")
+
+     if ! type named > /dev/null 2>&1; then
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
+       source $CURDIR/scripts/bind9_configure.sh
+     fi
+        ;;
+
+        "5)")
+
+     if ! type named > /dev/null 2>&1; then
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
+       #namedBackupConf
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     fi
+        ;;
+
+
+        "6)")
+
+   if type named > /dev/null 2>&1; then
+    if (whiptail --title "Remove Bind9" --yesno "Warning! Removes Bind9 (Preserves Configurations)\n\nWould you like to remove Bind9" --yes-button "Remove" --no-button "Cancel" 10 70) then
+       package() {
+         printf "apt --yes remove bind9"
+       }
+       systemInstaller
+       sleep 1
+       pkgcache() {
+          printf "apt-get --yes autoremove"
+       }
+       updateSources
+       sleep 1
+       phpPurge
+       sleep 1
+       pkgcache() {
+          printf "apt-get autoclean"
+       }
+       updateSources
+       sleep 1
+         whiptail --title "Remove Bind9" --msgbox "Bind9 has been removed from system" --ok-button "OK" 10 70
+      else
+       cancelOperation
+    fi
+      else
+       whiptail --title "Remove Bind9" --msgbox "Nothing to do Bind9 not installed" --ok-button "OK" 10 70
+   fi
+        ;;
+
+        "7)")
+
+   if type named > /dev/null 2>&1; then
+    if (whiptail --title "Purge Bind9" --yesno "Warning! Wipes all traces of Bind9 from your system!\nAll config/.db/logs...etc deleted!\n\nWould you like to purge PHP?" --yes-button "Purge" --no-button "Cancel" 10 70) then
+       package() {
+         printf "apt --yes purge bind9"
+       }
+       systemInstaller
+       sleep 1
+       pkgcache() {
+          printf "apt-get --yes autoremove"
+       }
+       updateSources
+       sleep 1
+       phpPurge
+       sleep 1
+       pkgcache() {
+          printf "apt-get autoclean"
+       }
+       updateSources
+       sleep 1
+         whiptail --title "Purge Bind9" --msgbox "Bind9 has been wiped from system" --ok-button "OK" 10 70
+    else
+       cancelOperation
+    fi
+   else
+         whiptail --title "Purge Bind9" --msgbox "Nothing to do Bind9 not installed" --ok-button "OK" 10 70
+   fi
+        ;;
+
+        "8)")
+
+     return
+
+        ;;
+
+        "9)")
+
+     exit 1
+
+        ;;
+  esac
+
+ done
+
+exit

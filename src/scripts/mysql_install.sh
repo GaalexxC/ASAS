@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/31/2017 01:37 EDT                                       #
+#        &Updated:   11/08/2017 20:10 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -26,130 +26,164 @@
 #################################################################################
 clear
 
-#MySQL Install Menu
-
-while [ 2 ]
+while [ 4 ]
 do
 
 SELECTMYSQL=$(
-whiptail --title "MySQL Server Installer" --radiolist "\nUse up/down arrows and tab to select a MySQL Server" 15 60 4 \
-        "1)" "Percona MySQL Server 5.7 (Recommended)" ON \
-        "2)" "MariaDB MySQL Server 10.2" OFF \
+whiptail --title "MySQL Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
+        "1)" "Percona MySQL Server 5.7 (Recommended)" OFF \
+        "2)" "MariaDB MySQL Server 10.2" ON \
         "3)" "Oracle MySQL Server 5.7" OFF \
-        "4)" "Return to Main Menu"  OFF 3>&1 1>&2 2>&3
+        "4)" "Configure Mysql Settings" OFF \
+        "5)" "Backup Config (my.cnf)" OFF \
+        "6)" "Remove MySQL (Config Saved)" OFF \
+        "7)" "Purge MySQL (Wipe Clean)" OFF \
+        "8)" "Return to Main Menu" OFF \
+        "9)" "Exit" OFF 3>&1 1>&2 2>&3
 )
-
 
 case $SELECTMYSQL in
         "1)")
 
-      echo "Option 1 Selected: Percona MySQL Server 5.7"
-      echo "Are you sure you want to install Percona MySQL Server 5.7 (y/n)"
-      read CHECKPERCONAMYSQL
-   if [ $CHECKPERCONAMYSQL == "y" ]; then
-# Install Percona MySQL
-      mkdir repos/
-      pushd repos/
-      echo -e "\nInstalling Percona MySQL server 5.7"
-      echo -e "\nFetching and installing Percone repo sources list"
-      wget $PERCONA_MYSQL
-      sudo dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb
-      sudo apt -qq update
-      echo -e "\nInstalling Percone Mysql Server 5.7"
-      sudo apt install percona-server-server-5.7 -y
-      echo -e "\nPercone Mysql Server 5.7 Installed\n"
-      popd
-      rm -rf repos
-      $MYSQL_INIT
-# Install Percona MySQL Optimized my.cnf
-      echo "Do you want to install an optimized my.cnf [recommended for Percona MySQL ONLY] (y/n)"
-      read CHECKPERCONAMYSQLCNF
-   if [ $CHECKPERCONAMYSQLCNF == "y" ]; then
-      echo -e "\nMaking backup my.cnf"
-      sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.bak
-      echo -e "\nOptimizing my.cnf"
-      CONFIGMYSQLCNF=$MYSQL_MYCNF
-      cp config/mysql/my.cnf.percona $CONFIGMYSQLCNF
-      #mv /etc/mysql/my.cnf.percona /etc/mysql/my.cnf
-      $MYSQL_INIT
-      echo -e "\nmy.cnf optimized\n"
-      read -p "Press [Enter] key to return to main menu..."
-      return
-   else
-      echo -e "\nSkipping my.cnf Optimization\n"
-      read -p "Press [Enter] key to return to main menu..."
-      return
-   fi
-   else
-      echo -e "\nSkipping Percona MySQL install\n"
-      read -p "Press [Enter] key to return to main menu..."
-      return
-   fi
-
+     if ! type mysql > /dev/null 2>&1; then
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 7
+       #phpDependencyCheck
+       #package() {
+       #  printf "apt --yes install $PHP72_PACKAGES"
+       #}
+       #systemInstaller
+       #completeOperation
+     else
+        dbver=$(mysql -V 2>&1)
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 7
+     fi
         ;;
 
         "2)")
 
-      echo "Option 2 Selected: MariaDB MySQL Server 10.2"
-      echo "Are you sure you want to install MariaDB MySQL Server 10.2 (y/n)"
-      read CHECKMARIADBMYSQL
-   if [ $CHECKMARIADBMYSQL == "y" ]; then
-# Install MariaDB MySQL
-      echo -e "\nFetching and installing MariaDB repo sources list"
-      sudo apt install software-properties-common -y
-      sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
-      sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirrors.syringanetworks.net/mariadb/repo/10.2/ubuntu xenial main'
-      sudo apt -qq update
-      echo -e "\nInstalling MariaDB MySQL Server 10.2"
-      sudo apt install mariadb-server -y
-      echo -e "\nMariaDB MySQL Server 10.2 Installed\n"
-      rm -rf repos
-      $MYSQL_INIT
-      echo
-      read -p "Press [Enter] key to return to main menu..."
-      return
-  else
-      echo -e "\nSkipping MariaDB MySQL install\n"
-      read -p "Press [Enter] key to return to main menu..."
-      return
-  fi
+     if ! type mysql > /dev/null 2>&1; then
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 7
+       #phpDependencyCheck
+       #package() {
+       #  printf "apt --yes install $PHP71_PACKAGES"
+       #}
+       #systemInstaller
+       #completeOperation
+     else
+        dbver=$(mysql -V 2>&1)
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 7
+     fi
         ;;
 
         "3)")
 
-      echo "Option 3 Selected: Oracle MySQL Server 5.7"
-      echo "Are you sure you want to install Oracle MySQL Server 5.7 (y/n)"
-      read CHECKORACLEMYSQL
-   if [ $CHECKORACLEMYSQL == "y" ]; then
-# Install Oracle MySQL
-      mkdir repos/
-      pushd repos/
-      echo -e "\nFetching and installing Percone repo sources list"
-      wget $ORACLE_MYSQL
-      sudo dpkg -i mysql-apt-config_0.8.7-1_all.deb
-      apt -qq update
-      echo -e "\nInstalling Oracle MySQL Server 5.7"
-      apt install mysql-server -y
-      echo -e "\nOracle Mysql Server 5.7 Installed\n"
-      popd
-      rm -rf repos
-      $MYSQL_INIT
-      echo
-      read -p "Press [Enter] key to return to main menu..."
-      return
-  else
-      echo -e "\nSkipping Oracle MySQL install\n"
-      read -p "Press [Enter] key to return to main menu..."
-      return
-  fi
+     if ! type mysql > /dev/null 2>&1; then
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 7
+       #phpDependencyCheck
+       #package() {
+       #  printf "apt --yes install $PHP70_PACKAGES"
+       #}
+       #systemInstaller
+       #completeOperation
+     else
+        dbver=$(mysql -V 2>&1)
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 7
+     fi
         ;;
 
         "4)")
 
-      return
+     if ! type mysql > /dev/null 2>&1; then
+       whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 70
+     else
+       source $CURDIR/scripts/mysql_configure.sh
+     fi
         ;;
 
-esac
+        "5)")
 
-done
+     if ! type mysql > /dev/null 2>&1; then
+       whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 70
+     else
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 7
+       #mysqlBackupConf
+     fi
+        ;;
+
+
+        "6)")
+
+   if type mysql > /dev/null 2>&1; then
+    if (whiptail --title "Remove MySQL" --yesno "Warning! Removes MySQL (Preserves Configurations)\n\nWould you like to remove MySQL" --yes-button "Remove" --no-button "Cancel" 10 70) then
+       package() {
+         printf "apt --yes remove mysql"
+       }
+       systemInstaller
+       sleep 1
+       pkgcache() {
+          printf "apt-get --yes autoremove"
+       }
+       updateSources
+       sleep 1
+       phpPurge
+       sleep 1
+       pkgcache() {
+          printf "apt-get autoclean"
+       }
+       updateSources
+       sleep 1
+         whiptail --title "Remove MySQL" --msgbox "MySQL has been removed from system" --ok-button "OK" 10 70
+      else
+       cancelOperation
+    fi
+      else
+       whiptail --title "Remove MySQL" --msgbox "Nothing to do MySQL not installed" --ok-button "OK" 10 70
+   fi
+        ;;
+
+        "7)")
+
+   if type mysql > /dev/null 2>&1; then
+    if (whiptail --title "Purge MySQL" --yesno "Warning! Wipes all traces of MySQL from your system!\nAll config/databases/logs/repos...etc deleted!\n\nWould you like to purge PHP?" --yes-button "Purge" --no-button "Cancel" 10 70) then
+       package() {
+         printf "apt --yes purge mysql"
+       }
+       systemInstaller
+       sleep 1
+       pkgcache() {
+          printf "apt-get --yes autoremove"
+       }
+       updateSources
+       sleep 1
+       phpPurge
+       sleep 1
+       pkgcache() {
+          printf "apt-get autoclean"
+       }
+       updateSources
+       sleep 1
+         whiptail --title "Purge MySQL" --msgbox "MySQL has been wiped from system" --ok-button "OK" 10 70
+    else
+       cancelOperation
+    fi
+   else
+         whiptail --title "Purge MySQL" --msgbox "Nothing to do MySQL not installed" --ok-button "OK" 10 70
+   fi
+        ;;
+
+        "8)")
+
+     return
+
+        ;;
+
+        "9)")
+
+     exit 1
+
+        ;;
+  esac
+
+ done
+
 exit
