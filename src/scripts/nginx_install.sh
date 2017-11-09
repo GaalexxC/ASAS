@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 17:56 EDT                                       #
+#        &Updated:   11/08/2017 19:12 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -46,16 +46,17 @@ while [ 3 ]
 do
 
 SELECTNGINX=$(
-whiptail --title "Nginx Web Server Installer" --radiolist "\nUse up/down arrows and space to select an operation\n" 18 78 10 \
+whiptail --title "Nginx Installer" --radiolist "\nUse up/down arrows and space to select\n" 18 78 10 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
-        "4)" "Remove Nginx (Preserves Configurations)" OFF \
-        "5)" "Purge Nginx (Wipe Clean)" OFF \
-        "6)" "Clean Source Build (Archives Configurations)" OFF \
-        "7)" "Generate 2048bit Diffie-Hellman (Required for Nginx SSL/TLS)" OFF \
-        "8)" "Return to Main Menu" OFF \
-        "9)" "Exit" OFF 3>&1 1>&2 2>&3
+        "4)" "Configure Nginx Settings (Advanced)" OFF \
+        "5)" "Remove Nginx (Preserves Configurations)" OFF \
+        "6)" "Purge Nginx (Wipe Clean)" OFF \
+        "7)" "Clean Source Build (Archives Configurations)" OFF \
+        "8)" "Generate 2048bit Diffie-Hellman (Required for SSL/TLS)" OFF \
+        "9)" "Return to Main Menu" OFF \
+        "10)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTNGINX in
@@ -178,6 +179,14 @@ case $SELECTNGINX in
         ;;
 
         "4)")
+   if ! type nginx > /dev/null 2>&1; then
+       whiptail --title "Nginx Check-Install" --msgbox "Nothing to do Nginx not installed" --ok-button "OK" 10 70
+    else
+      source $CURDIR/scripts/nginx_configure.sh
+   fi
+        ;;
+
+        "5)")
    if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-* ]; then
     if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
 
@@ -211,7 +220,7 @@ case $SELECTNGINX in
    fi
         ;;
 
-        "5)")
+        "6)")
      if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-* ]; then
       if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
        package() {
@@ -244,7 +253,7 @@ case $SELECTNGINX in
     fi
         ;;
 
-        "6)")
+        "7)")
     if ! type nginx > /dev/null 2>&1; then
          whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed\nPress [Enter] to continue" --ok-button "OK" 10 70
      elif type nginx > /dev/null 2>&1 && [ -f $NGINXCONFDIR/.build-* ]; then
@@ -270,7 +279,7 @@ case $SELECTNGINX in
       fi
         ;;
 
-        "7)")
+        "8)")
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
         whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates\n\nPress [Enter] to return to Nginx menu" --ok-button "OK" 10 70
@@ -287,11 +296,11 @@ case $SELECTNGINX in
       fi
         ;;
 
-        "8)")
+        "9)")
       return
         ;;
 
-        "9)")
+        "10)")
       exit 1
         ;;
     esac
