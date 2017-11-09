@@ -35,7 +35,7 @@ whiptail --title "User Domain Installer" --radiolist "\nUse up/down arrows and s
         "2)" "New User and localhost (Local Server)" OFF \
         "3)" "List Active vhosts" OFF \
         "4)" "List Active FPM confs" OFF \
-        "5)" "Test Available IPs" OFF \
+        "5)" "List Available IPs" OFF \
         "6)" "Return to Main Menu" OFF \
         "7)" "Exit"  OFF 3>&1 1>&2 2>&3
 )
