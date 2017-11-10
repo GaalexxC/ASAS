@@ -26,7 +26,7 @@
 #################################################################################
 #*****************************
 #
-# Global Functions
+# Basic Functions
 #
 #*****************************
 listvhostshosts() {
@@ -58,3 +58,63 @@ listavailips() {
      echo "Available IP Addresses:\n$availips" > listavailips_display
      whiptail --textbox listavailips_display 12 80
 }
+createuserdomain() {
+   if (whiptail --title "Create User-Domain" --yesno "Create a new user with domain\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
+    return
+  else
+   return
+   fi
+}
+createuserlocalhost() {
+   if (whiptail --title "Create User-Localhost" --yesno "Create a new user with localhost\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
+    return
+  else
+   return
+   fi
+}
+#*****************************
+#
+# User / localhost Functions
+#
+#*****************************
+addpass() {
+     #adduser -d /$HOME_PARTITION/$USERNAME $USERNAME 2> /dev/null
+     useradd -d /$HOME_PARTITION/$USERNAME -p $ENCPASSWORD -s /bin/bash $USERNAME  2> /dev/null
+     whiptail --title "New User" --msgbox "User $USERNAME successfully created" --ok-button "OK" 10 70
+}
+addpassword() {
+     PASSWORD=$(whiptail --passwordbox "\nPlease specify a password" 10 70 --title "New User" 3>&1 1>&2 2>&3)
+     PASSWORD2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "New User" 3>&1 1>&2 2>&3)
+   if [ $PASSWORD == $PASSWORD2 ]
+    then
+     ENCPASSWORD="$(openssl passwd -crypt -quiet $PASSWORD)"
+     addpass
+   else
+     whiptail --title "New User" --msgbox "Passwords dont match" --ok-button "OK" 10 70
+     adddpassword
+   fi
+}
+adduser() {
+    if (whiptail --title "New User" --yesno "You Entered: $USERNAME" --yes-button "Continue" --no-button "Change" 10 70) then
+     #adduser --home /$HOME_PARTITION/$USERNAME --disabled-login $USERNAME 2> /dev/null
+     #useradd -d /$HOME_PARTITION/$USERNAME -p $PASSWORD -s /bin/bash $USERNAME
+     addpassword
+     #whiptail --title "New User" --msgbox "User $USERNAME successfully created" --ok-button "OK" 10 70
+    else
+     addusername
+    fi
+}
+addusername() {
+     USERNAME=$(whiptail --inputbox "\nPlease specify a username" 10 70 --title "New User" 3>&1 1>&2 2>&3)
+     exitstatus=$?
+   if [ $exitstatus = 0 ]; then
+     adduser
+   else
+     cancelOperation
+   fi
+}
+#*****************************
+#
+# User / domain Functions
+#
+#*****************************

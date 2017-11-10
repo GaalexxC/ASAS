@@ -36,8 +36,9 @@ whiptail --title "User Domain Installer" --radiolist "\nUse up/down arrows and s
         "3)" "List Active vhosts" OFF \
         "4)" "List Active FPM confs" OFF \
         "5)" "List Available IPs" OFF \
-        "6)" "Return to Main Menu" OFF \
-        "7)" "Exit"  OFF 3>&1 1>&2 2>&3
+        "6)" "Remove User/Web" OFF \
+        "7)" "Return to Main Menu" OFF \
+        "8)" "Exit"  OFF 3>&1 1>&2 2>&3
 )
 
 
@@ -64,7 +65,7 @@ case $SELECTUSERDOMAIN in
              phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
              whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "Continue" 10 70
           fi
-            return
+          addusername
         ;;
 
         "2)")
@@ -89,7 +90,7 @@ case $SELECTUSERDOMAIN in
              phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
              whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "Continue" 10 70
           fi
-            return
+          addusername
         ;;
 
         "3)")
@@ -105,13 +106,18 @@ case $SELECTUSERDOMAIN in
         ;;
 
         "6)")
-
-        return
+          #Remove User
+          return
         ;;
 
         "7)")
 
-        exit 1
+          return
+        ;;
+
+        "8)")
+
+          exit 1
         ;;
   esac
 
