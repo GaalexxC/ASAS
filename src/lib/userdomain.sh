@@ -77,6 +77,23 @@ createuserlocalhost() {
 # User / localhost Functions
 #
 #*****************************
+createlocalhost() {
+   if [ ! -f /etc/nginx/sites-available/*.vhost ]; then
+     vhostshosts="There are no vhost files to display"
+   else
+     vhostshosts="$(find /etc/nginx/sites-available/*.vhost  -exec  basename {} .vhost  \;)"
+   fi
+     LOCALVHOSTNAME=$(whiptail --inputbox "\nCreate Local vhost, name must be unique per user/web\nCurrent vhost files currently in use:\n$vhostshosts" 10 70 --title "Create Web" 3>&1 1>&2 2>&3)
+     hostname="${cat /etc/hostname)"
+     LOCALHOSTNAME=$(whiptail --inputbox "\nHostname of local server, you will access via the web\nIE: $hostname:8080" 10 70 --title "Create Web" 3>&1 1>&2 2>&3)
+     USERNAME=$(whiptail --inputbox "\nEnter Port for localhost ex: 8080, 8081, 8090, etc" 10 70 --title "Create Web" 3>&1 1>&2 2>&3)
+     read PORT
+     echo "You Entered: $PORT"
+   else
+     echo "Invalid Hostname"
+     exit 1
+   fi
+}
 addpass() {
      #adduser -d /$HOME_PARTITION/$USERNAME $USERNAME 2> /dev/null
      useradd -d /$HOME_PARTITION/$USERNAME -p $ENCPASSWORD -s /bin/bash $USERNAME  2> /dev/null
