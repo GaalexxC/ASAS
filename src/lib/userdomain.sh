@@ -35,8 +35,8 @@ listvhostshosts() {
    else
      vhostshosts="$(find /etc/nginx/sites-available/*.vhost  -exec  basename {} .vhost  \;)"
    fi
-     echo "vhost files currently in use:\n$vhostshosts" > listvhostshosts_display
-     whiptail --textbox listvhostshosts_display 12 80
+     echo "vhost files currently in use:\n$vhostshosts" > $CURDIR/tmp/listvhostshosts_display
+     whiptail --textbox $CURDIR/tmp/listvhostshosts_display 12 80
 }
 listfpmconfs() {
    if [ ! -f /etc/php/7.0/fpm/pool.d/*.conf ]; then
@@ -44,8 +44,8 @@ listfpmconfs() {
    else
      fpmconfs="$(find /etc/php/7.0/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
    fi
-     echo "FPM conf files currently in use:\n$fpmconfs" > listfpmconfs_display
-     whiptail --textbox listfpmconfs_display 12 80
+     echo "FPM conf files currently in use:\n$fpmconfs" > $CURDIR/tmp/listfpmconfs_display
+     whiptail --textbox $CURDIR/tmp/listfpmconfs_display 12 80
 }
 listavailips() {
    if [ -z "$HOSTLISTIPS" ]
@@ -54,8 +54,8 @@ listavailips() {
    else
       availips=$HOSTLISTIPS
    fi
-     echo "Available IP Addresses:\n$availips" > listavailips_display
-     whiptail --textbox listavailips_display 12 80
+     echo "Available IP Addresses:\n$availips" > $CURDIR/tmp/listavailips_display
+     whiptail --textbox $CURDIR/tmp/listavailips_display 12 80
 }
 createuserdomain() {
    if (whiptail --title "Create User-Domain" --yesno "Create a new user with domain\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
@@ -69,30 +69,31 @@ createuserdomain() {
 # User / localhost Functions
 #
 #*****************************
+createuserlocalhost() {
+   if (whiptail --title "Web Creator" --yesno "Create a new user with localhost vhost\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
+     addusername
+   else
+    return
+   fi
+}
 addusername() {
-     USERNAME=$(whiptail --inputbox "\nPlease specify a username" 10 70 --title "New User" 3>&1 1>&2 2>&3)
+     USERNAME=$(whiptail --inputbox "\nPlease specify a username" 10 70 --title "Web Creator" 3>&1 1>&2 2>&3)
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
-     PASSWORD=$(whiptail --passwordbox "\nPlease specify a password" 10 70 --title "New User" 3>&1 1>&2 2>&3)
-     PASSWORD2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "New User" 3>&1 1>&2 2>&3)
+     PASSWORD=$(whiptail --passwordbox "\nPlease specify a password\nUse a strong UNIX type pass for security" 10 70 --title "Web Creator" 3>&1 1>&2 2>&3)
+     PASSWORD2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "Web Creator" 3>&1 1>&2 2>&3)
    if [ $PASSWORD == $PASSWORD2 ]
     then
      ENCPASSWORD="$(openssl passwd -crypt -quiet $PASSWORD)"
      useradd -d /$HOME_PARTITION/$USERNAME -p $ENCPASSWORD -s /bin/bash $USERNAME  2> /dev/null
-     whiptail --title "New User" --msgbox "User $USERNAME successfully created" --ok-button "OK" 10 70
+     whiptail --title "Web Creator" --msgbox "User $USERNAME successfully created" --ok-button "OK" 10 70
      createlocalsettings
     else
-     whiptail --title "New User" --msgbox "Passwords dont match" --ok-button "OK" 10 70
+     whiptail --title "Web Creator" --msgbox "Passwords dont match" --ok-button "OK" 10 70
+     createuserlocalhost
    fi
     else
      cancelOperation
-   fi
-}
-createuserlocalhost() {
-   if (whiptail --title "Create User-Localhost" --yesno "Create a new user with localhost vhost\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
-     addusername
-  else
-   return
    fi
 }
 createlocalsettings() {
@@ -123,39 +124,39 @@ createlocalhost() {
      cp $CURDIR/templates/local.vhost.template $VHOSTCONFIG 2> /dev/null
      sleep 1
        echo -e "XXX\n20\n\nInstalling $VHOSTNAMEADD.vhost file...\nXXX"
-    HOME_DIR=$USERNAME
-    PUBLIC_HTML_DIR=/$ROOT_DIRECTORY
-    $SED -i "s/@@HOSTNAME@@/$HOSTNAMEADD/g" $VHOSTCONFIG
-    $SED -i "s/@@PORT@@/$HOSTPORTADD/g" $VHOSTCONFIG
-    $SED -i "s#@@PATH@@#\/$HOME_PARTITION\/"$USERNAME$PUBLIC_HTML_DIR"#g" $VHOSTCONFIG
+     HOME_DIR=$USERNAME
+     PUBLIC_HTML_DIR=/$ROOT_DIRECTORY
+     $SED -i "s/@@HOSTNAME@@/$HOSTNAMEADD/g" $VHOSTCONFIG
+     $SED -i "s/@@PORT@@/$HOSTPORTADD/g" $VHOSTCONFIG
+     $SED -i "s#@@PATH@@#\/$HOME_PARTITION\/"$USERNAME$PUBLIC_HTML_DIR"#g" $VHOSTCONFIG
      sleep 1.25
        echo -e "XXX\n30\n\nInstalling $VHOSTNAMEADD.vhost file...\nXXX"
-    $SED -i "s/@@LOG_PATH@@/\/$HOME_PARTITION\/$USERNAME\/logs/g" $VHOSTCONFIG
-    $SED -i "s/@@SSL_PATH@@/\/$HOME_PARTITION\/$USERNAME\/ssl/g" $VHOSTCONFIG
-    $SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $VHOSTCONFIG
+     $SED -i "s/@@LOG_PATH@@/\/$HOME_PARTITION\/$USERNAME\/logs/g" $VHOSTCONFIG
+     $SED -i "s/@@SSL_PATH@@/\/$HOME_PARTITION\/$USERNAME\/ssl/g" $VHOSTCONFIG
+     $SED -i "s#@@SOCKET@@#/var/run/"$USERNAME"_fpm.sock#g" $VHOSTCONFIG
      sleep 1.25
        echo -e "XXX\n45\n\nCreate FPM $VHOSTNAMEADD.conf file...\nXXX"
-    phpVersion
+     phpVersion
      FPMCONFIG="$PHP_FPMCONF_DIR/$VHOSTNAMEADD.conf"
      cp $CURDIR/templates/conf.template $FPMCONFIG 2> /dev/null
      sleep 1.25
        echo -e "XXX\n55\n\nPopulate $VHOSTNAMEADD.conf file...\nXXX"
-    $SED -i "s/@@USER@@/$USERNAME/g" $FPMCONFIG
-    $SED -i "s/@@GROUP@@/$USERNAME/g" $FPMCONFIG
-    $SED -i "s/@@HOME_DIR@@/\/$HOME_PARTITION\/$USERNAME/g" $FPMCONFIG
-    $SED -i "s/@@MAX_CHILDREN@@/$MAX_CHILDREN/g" $FPMCONFIG
-    $SED -i "s/@@START_SERVERS@@/$FPM_SERVERS/g" $FPMCONFIG
-    $SED -i "s/@@MIN_SERVERS@@/$MIN_SERVERS/g" $FPMCONFIG
-    $SED -i "s/@@MAX_SERVERS@@/$MAX_SERVERS/g" $FPMCONFIG
+     $SED -i "s/@@USER@@/$USERNAME/g" $FPMCONFIG
+     $SED -i "s/@@GROUP@@/$USERNAME/g" $FPMCONFIG
+     $SED -i "s/@@HOME_DIR@@/\/$HOME_PARTITION\/$USERNAME/g" $FPMCONFIG
+     $SED -i "s/@@MAX_CHILDREN@@/$MAX_CHILDREN/g" $FPMCONFIG
+     $SED -i "s/@@START_SERVERS@@/$FPM_SERVERS/g" $FPMCONFIG
+     $SED -i "s/@@MIN_SERVERS@@/$MIN_SERVERS/g" $FPMCONFIG
+     $SED -i "s/@@MAX_SERVERS@@/$MAX_SERVERS/g" $FPMCONFIG
      sleep 1.25
        echo -e "XXX\n65\n\nSet System Permissions...\nXXX"
      usermod -aG $USERNAME $WEB_SERVER_GROUP 2> /dev/null
-     chmod g+rx /$HOME_PARTITION/$HOME_DIR
      chmod 600 $VHOSTCONFIG
      ln -s $NGINX_SITES_AVAILABLE/$VHOSTNAMEADD.vhost $NGINX_SITES_ENABLED/
      sleep 1.25
        echo -e "XXX\n75\n\nInstalling Web Directories...\nXXX"
-     echo -e "\nInstall web directories\n"
+     mkdir -p /$HOME_PARTITION/$HOME_DIR
+     chmod g+rx /$HOME_PARTITION/$HOME_DIR
      mkdir -p /$HOME_PARTITION/$HOME_DIR$PUBLIC_HTML_DIR
      mkdir -p /$HOME_PARTITION/$HOME_DIR/logs
      mkdir -p /$HOME_PARTITION/$HOME_DIR/ssl
@@ -164,9 +165,9 @@ createlocalhost() {
      sleep 1.25
        echo -e "XXX\n85\n\nInstalling index.php placeholder page...\nXXX"
      CONFIGPATH=/$HOME_PARTITION/$HOME_DIR$PUBLIC_HTML_DIR/
-     cp $CURDIR/skel/index.php $CONFIGPATH 2> /dev/null
+     cp -R $CURDIR/skel/* $CONFIGPATH 2> /dev/null
      sleep 1.25
-       echo -e "XXX\n95\n\nSetting Web Directory Permissions...\nXXX"
+       echo -e "XXX\n90\n\nSetting Web Directory Permissions...\nXXX"
      chmod 750 /$HOME_PARTITION/$HOME_DIR -R
      chmod 700 /$HOME_PARTITION/$HOME_DIR/_sessions
      chmod 770 /$HOME_PARTITION/$HOME_DIR/ssl
@@ -178,14 +179,18 @@ createlocalhost() {
      chown root:root /$HOME_PARTITION/$HOME_DIR/ssl -R
      chown root:root /$HOME_PARTITION/$HOME_DIR/backup -R
      sleep 1.25
+       echo -e "XXX\n95\n\nSetup User and Web Complete...\nXXX"
+     sleep 1.25
+       echo -e "XXX\n96\n\nWeb $VHOSTNAMEADD created for $USERNAME & PHP support @ $HOSTNAMEADD:$PORT... \nXXX"
+     sleep 8
        echo -e "XXX\n97\n\nRestart Services...\nXXX"
      $NGINX_INIT restart 2> /dev/null
+     sleep .5
+       echo -e "XXX\n98\n\nRestart Services...\nXXX"
      $PHP_INIT restart 2> /dev/null
-     sleep 1.75
-       echo -e "XXX\n98\n\nSetup User and Web Complete...\nXXX"
-     sleep 1.25
-       echo -e "XXX\n100\n\nWeb $VHOSTNAMEADD created for $USERNAME w/PHP support @ $HOSTNAMEADD:$PORT...\nXXX"
-     sleep 8
+     sleep .5
+       echo -e "XXX\n99\n\nRestart Services...\nXXX"
+     sleep .5
   } | whiptail --title "Web Creator" --gauge "\nCreating User and Web" 10 70 0
 }
 #*****************************
