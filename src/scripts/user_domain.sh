@@ -66,7 +66,7 @@ case $SELECTUSERDOMAIN in
              phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
              whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "Continue" 10 70
           fi
-          addusername
+          #createuserremotehost
         ;;
 
         "2)")
