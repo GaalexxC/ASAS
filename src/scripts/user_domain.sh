@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 13:57 EDT                                       #
+#        &Updated:   11/11/2017 22:23 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -36,9 +36,10 @@ whiptail --title "User Domain Installer" --radiolist "\nUse up/down arrows and s
         "3)" "List Active vhosts" OFF \
         "4)" "List Active FPM confs" OFF \
         "5)" "List Available IPs" OFF \
-        "6)" "Remove User/Web" OFF \
-        "7)" "Return to Main Menu" OFF \
-        "8)" "Exit"  OFF 3>&1 1>&2 2>&3
+        "6)" "Backup Users Root Directory" OFF \
+        "7)" "Remove User/Web" OFF \
+        "8)" "Return to Main Menu" OFF \
+        "9)" "Exit"  OFF 3>&1 1>&2 2>&3
 )
 
 
@@ -90,7 +91,7 @@ case $SELECTUSERDOMAIN in
              phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
              whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "Continue" 10 70
           fi
-          addusername
+          createuserlocalhost
         ;;
 
         "3)")
@@ -106,16 +107,20 @@ case $SELECTUSERDOMAIN in
         ;;
 
         "6)")
-          #Remove User
+          #backupuserroot
           return
         ;;
 
         "7)")
+          removeuserroot
+        ;;
+
+        "8)")
 
           return
         ;;
 
-        "8)")
+        "9)")
 
           exit 1
         ;;
