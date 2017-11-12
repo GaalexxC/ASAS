@@ -165,7 +165,7 @@ createlocalhost() {
      sleep 1.25
        echo -e "XXX\n85\n\nInstalling index.php placeholder page...\nXXX"
      CONFIGPATH=/$HOME_PARTITION/$HOME_DIR$PUBLIC_HTML_DIR/
-     cp -R $CURDIR/skel/* $CONFIGPATH 2> /dev/null
+     cp -rf $CURDIR/skel/* $CONFIGPATH 2> /dev/null
      sleep 1.25
        echo -e "XXX\n90\n\nSetting Web Directory Permissions...\nXXX"
      chmod 750 /$HOME_PARTITION/$HOME_DIR -R
@@ -181,7 +181,7 @@ createlocalhost() {
      sleep 1.25
        echo -e "XXX\n95\n\nSetup User and Web Complete...\nXXX"
      sleep 1.25
-       echo -e "XXX\n96\n\nWeb $VHOSTNAMEADD created for $USERNAME & PHP support @ $HOSTNAMEADD:$PORT... \nXXX"
+       echo -e "XXX\n96\n\n$VHOSTNAMEADD created for $USERNAME + PHP support $HOSTNAMEADD:$HOSTPORTADD... \nXXX"
      sleep 8
        echo -e "XXX\n97\n\nRestart Services...\nXXX"
      $NGINX_INIT restart 2> /dev/null
@@ -201,6 +201,7 @@ createlocalhost() {
 removeuserroot() {
      USERNAMEDEL=$(whiptail --inputbox "\nPlease specify a username to delete\nWARNING! this will remove home root as well\nMake a backup if you need to first" 10 70 --title "Remove User/Root" 3>&1 1>&2 2>&3)
   if (whiptail --title "Remove User/Root" --yesno "You Entered: $USERNAMEDEL\n\nLast chance to abort! Deletes all user content!" --yes-button "Continue" --no-button "Cancel" 10 70) then
+    #$PHP_INIT stop 2> /dev/null
     deluser --remove-home $USERNAMEDEL &>/dev/null
     rm -rf /$HOME_PARTITION/$USERNAMEDEL
      whiptail --title "Remove User/Root" --msgbox "User $USERNAMEDEL successfully removed\n/$HOME_PARTITION/$USERNAMEDEL $USERNAMEDEL successfully removed" --ok-button "OK" 10 70
