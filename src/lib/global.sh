@@ -33,10 +33,10 @@
      readarray -t newtcolor < bin/palette
      NEWT_COLORS="${newtcolor[@]}"
 
-# if [ ! -f $CURDIR/$CURDAY.$ERROR_LOG ]
-#    then
-#     touch $CURDIR/$CURDAY.$ERROR_LOG
-# fi
+   if [ ! -d $CURDIR/tmp ]
+    then
+     mkdir $CURDIR/tmp
+   fi
 
 asasMainMenu() {
 clear
