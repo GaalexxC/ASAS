@@ -29,13 +29,20 @@
 # Basic Functions
 #
 #*****************************
+listvhostsusers() {
+   if [ ! -f $CURDIR/tmp/.user ]; then
+     whiptail --title "User List" --msgbox "There are no users to display" --ok-button "OK" 10 70
+   else
+     whiptail --textbox $CURDIR/tmp/.user 12 80
+   fi
+}
 listvhostshosts() {
    if [ ! -f /etc/nginx/sites-available/*.vhost ]; then
      vhostshosts="There are no vhost files to display"
    else
      vhostshosts="$(find /etc/nginx/sites-available/*.vhost  -exec  basename {} .vhost  \;)"
    fi
-     echo "vhost files currently in use:\n$vhostshosts" > $CURDIR/tmp/listvhostshosts_display
+     echo "vhost files currently in use:\n$vhostshosts" >> $CURDIR/tmp/listvhostshosts_display
      whiptail --textbox $CURDIR/tmp/listvhostshosts_display 12 80
 }
 listfpmconfs() {
@@ -44,7 +51,7 @@ listfpmconfs() {
    else
      fpmconfs="$(find /etc/php/7.0/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
    fi
-     echo "FPM conf files currently in use:\n$fpmconfs" > $CURDIR/tmp/listfpmconfs_display
+     echo "FPM conf files currently in use:\n$fpmconfs" >> $CURDIR/tmp/listfpmconfs_display
      whiptail --textbox $CURDIR/tmp/listfpmconfs_display 12 80
 }
 listavailips() {
@@ -54,7 +61,7 @@ listavailips() {
    else
       availips=$HOSTLISTIPS
    fi
-     echo "Available IP Addresses:\n$availips" > $CURDIR/tmp/listavailips_display
+     echo "Available IP Addresses:\n$availips" >> $CURDIR/tmp/listavailips_display
      whiptail --textbox $CURDIR/tmp/listavailips_display 12 80
 }
 createuserdomain() {
@@ -70,10 +77,11 @@ createuserdomain() {
 #
 #*****************************
 createuserlocalhost() {
-   if (whiptail --title "Web Creator" --yesno "Create a new user with localhost vhost\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
+   if (whiptail --title "Web Creator" --yesno "Create a new user/localhost vhost/PHP_FPM localhost conf\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
      addusername
    else
-    return
+     #addusername
+     return
    fi
 }
 addusername() {
@@ -112,6 +120,7 @@ createlocalsettings() {
      MIN_SERVERS=$(whiptail --inputbox "\nMin # Spare FPM Servers\nDefault: 2" 10 70 2 --title "Web Creator" 3>&1 1>&2 2>&3)
      FPM_SERVERS=$(whiptail --inputbox "\n# start FPM Servers\nMust not be less than min spare servers\nand not greater than max spare servers\nDefault: 4" 10 70 4 --title "Web Creator" 3>&1 1>&2 2>&3)
    if (whiptail --title "Web Creator" --yesno "Your Settings:\nUser: $USERNAME\nPath to Root:/$HOME_PARTITION/$USERNAME/$ROOT_DIRECTORY\nHostname:$HOSTNAMEADD\nPort:$HOSTPORTADD\nIP Address:$HOSTIPADD" --yes-button "Create" --no-button "Cancel" 12 70) then
+     echo "$USERNAME-$VHOSTNAMEADD" >> $CURDIR/tmp/.user
      createlocalhost
     else
    return

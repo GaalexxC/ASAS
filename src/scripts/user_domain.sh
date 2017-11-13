@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/12/2017 05:23 EDT                                       #
+#        &Updated:   11/12/2017 05:59 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -36,10 +36,11 @@ whiptail --title "User Domain Installer" --radiolist "\nUse up/down arrows and s
         "3)" "List Active vhosts" OFF \
         "4)" "List Active FPM confs" OFF \
         "5)" "List Available IPs" OFF \
-        "6)" "Backup Users Root Directory" OFF \
-        "7)" "Remove User/Web" OFF \
-        "8)" "Return to Main Menu" OFF \
-        "9)" "Exit"  OFF 3>&1 1>&2 2>&3
+        "6)" "List Created User-Vhosts" OFF \
+        "7)" "Backup Users Root Directory" OFF \
+        "8)" "Remove User/Web" OFF \
+        "9)" "Return to Main Menu" OFF \
+        "10)" "Exit"  OFF 3>&1 1>&2 2>&3
 )
 
 
@@ -107,20 +108,24 @@ case $SELECTUSERDOMAIN in
         ;;
 
         "6)")
+          listvhostsusers
+        ;;
+
+        "7)")
           #backupuserroot
           return
         ;;
 
-        "7)")
+        "8)")
           removeuserroot
         ;;
 
-        "8)")
+        "9)")
 
           return
         ;;
 
-        "9)")
+        "10)")
 
           exit 1
         ;;
