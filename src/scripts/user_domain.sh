@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/12/2017 05:59 EDT                                       #
+#        &Updated:   11/12/2017 20:27 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -67,7 +67,7 @@ case $SELECTUSERDOMAIN in
              phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
              whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "Continue" 10 70
           fi
-          #createuserremotehost
+          createuserdomainhost
         ;;
 
         "2)")
