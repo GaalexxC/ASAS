@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/12/2017 05:25 EDT                                       #
+#        &Updated:   11/13/2017 00:45 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -37,21 +37,21 @@ listvhostsusers() {
    fi
 }
 listvhostshosts() {
-   if [ ! -f /etc/nginx/sites-available/*.vhost ]; then
+   if [ -z "/etc/nginx/sites-available/*.vhost" ]; then
      vhostshosts="There are no vhost files to display"
    else
      vhostshosts="$(find /etc/nginx/sites-available/*.vhost  -exec  basename {} .vhost  \;)"
    fi
-     echo "vhost files currently in use:\n$vhostshosts" >> $CURDIR/tmp/listvhostshosts_display
+     echo "vhost files currently in use:\n$vhostshosts" > $CURDIR/tmp/listvhostshosts_display
      whiptail --textbox $CURDIR/tmp/listvhostshosts_display 12 80
 }
 listfpmconfs() {
-   if [ ! -f /etc/php/7.0/fpm/pool.d/*.conf ]; then
+   if [ -z "/etc/php/7.0/fpm/pool.d/*.conf" ]; then
      fpmconfs="There are no FPM conf files to display"
    else
      fpmconfs="$(find /etc/php/7.0/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
    fi
-     echo "FPM conf files currently in use:\n$fpmconfs" >> $CURDIR/tmp/listfpmconfs_display
+     echo "FPM conf files currently in use:\n$fpmconfs" > $CURDIR/tmp/listfpmconfs_display
      whiptail --textbox $CURDIR/tmp/listfpmconfs_display 12 80
 }
 listavailips() {
@@ -61,15 +61,8 @@ listavailips() {
    else
       availips=$HOSTLISTIPS
    fi
-     echo "Available IP Addresses:\n$availips" >> $CURDIR/tmp/listavailips_display
+     echo "Available IP Addresses:\n$availips" > $CURDIR/tmp/listavailips_display
      whiptail --textbox $CURDIR/tmp/listavailips_display 12 80
-}
-createuserdomain() {
-   if (whiptail --title "Create User-Domain" --yesno "Create a new user with domain\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
-    return
-  else
-   return
-   fi
 }
 #*****************************
 #
@@ -78,13 +71,13 @@ createuserdomain() {
 #*****************************
 createuserlocalhost() {
    if (whiptail --title "Web Creator" --yesno "Create a new user/localhost vhost/PHP_FPM localhost conf\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
-     addusername
+     addusernamelocal
    else
      #addusername
-     return
+     whiptail --title "Web Creator" --msgbox "Domain Creator not ready yet" --ok-button "OK" 10 70
    fi
 }
-addusername() {
+addusernamelocal() {
      USERNAME=$(whiptail --inputbox "\nPlease specify a username" 10 70 --title "Web Creator" 3>&1 1>&2 2>&3)
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
@@ -93,7 +86,7 @@ addusername() {
    if [ $PASSWORD == $PASSWORD2 ]
     then
      ENCPASSWORD="$(openssl passwd -crypt -quiet $PASSWORD)"
-     useradd -d /$HOME_PARTITION/$USERNAME -p $ENCPASSWORD -s /bin/bash $USERNAME  2> /dev/null
+     useradd -d /$HOME_PARTITION/$USERNAME -p $ENCPASSWORD -s /bin/bash $USERNAME 2> /dev/null
      whiptail --title "Web Creator" --msgbox "User $USERNAME successfully created" --ok-button "OK" 10 70
      createlocalsettings
     else
@@ -190,7 +183,7 @@ createlocalhost() {
      sleep 1.25
        echo -e "XXX\n95\n\nSetup User and Web Complete...\nXXX"
      sleep 1.25
-       echo -e "XXX\n96\n\n$VHOSTNAMEADD created for $USERNAME + PHP support $HOSTNAMEADD:$HOSTPORTADD... \nXXX"
+       echo -e "XXX\n96\n\n$VHOSTNAMEADD created for $USERNAME + PHP support $HOSTNAMEADD on port $HOSTPORTADD... \nXXX"
      sleep 8
        echo -e "XXX\n97\n\nRestart Services...\nXXX"
      $NGINX_INIT restart 2> /dev/null
@@ -207,13 +200,34 @@ createlocalhost() {
 # User / domain Functions
 #
 #*****************************
+createuserdomainhost() {
+   if (whiptail --title "Web Creator" --yesno "Create a new user/domain vhost/PHP_FPM domain conf\n\nDefault uses directory paths from config/user_vars.conf\nIE /$HOME_PARTITION/USERNAME/$ROOT_DIRECTORY\n\nCustom allows you set custom paths for users web directory" --yes-button "Default" --no-button "Custom" 12 70) then
+     #addusername
+     whiptail --title "Web Creator" --msgbox "Domain Creator not ready yet" --ok-button "OK" 10 70
+    else
+     #addusername
+     whiptail --title "Web Creator" --msgbox "Domain Creator not ready yet" --ok-button "OK" 10 70
+   fi
+}
+#*****************************
+#
+# User Remove Functions
+#
+#*****************************
 removeuserroot() {
-     USERNAMEDEL=$(whiptail --inputbox "\nPlease specify a username to delete\nWARNING! this will remove home root as well\nMake a backup if you need to first" 10 70 --title "Remove User/Root" 3>&1 1>&2 2>&3)
-  if (whiptail --title "Remove User/Root" --yesno "You Entered: $USERNAMEDEL\n\nLast chance to abort! Deletes all user content!" --yes-button "Continue" --no-button "Cancel" 10 70) then
-    #$PHP_INIT stop 2> /dev/null
+     USERNAMEDEL=$(whiptail --inputbox "\nSpecify a username to delete\nWARNING! this will remove home root as well\nMake a backup if you need to first" 10 70 --title "Remove User/Root" 3>&1 1>&2 2>&3)
+     USERFILESDEL=$(whiptail --inputbox "\nSpecify users matching vhost to delete\nWARNING! this will remove Nginx vhost and FPM conf\nMake a backup if you need to first" 10 70 --title "Remove User/Root" 3>&1 1>&2 2>&3)
+  if (whiptail --title "Remove User/Root" --yesno "You Entered: $USERNAMEDEL $USERFILESDEL.vhost $USERFILESDEL.conf\n\nLast chance to abort! Deletes all user content!" --yes-button "Continue" --no-button "Cancel" 10 70) then
+     phpVersion
+     FPMCONFIGDEL="$PHP_FPMCONF_DIR/$USERFILESDEL.conf"
+    rm -rf $FPMCONFIGDEL
+    rm -rf $NGINX_SITES_AVAILABLE/$USERFILESDEL.vhost
+    rm -rf $NGINX_SITES_ENABLED/$USERFILESDEL.vhost
+    $PHP_INIT restart &>/dev/null
+    $NGINX_INIT restart &>/dev/null
     deluser --remove-home $USERNAMEDEL &>/dev/null
-    rm -rf /$HOME_PARTITION/$USERNAMEDEL
-     whiptail --title "Remove User/Root" --msgbox "User $USERNAMEDEL successfully removed\n/$HOME_PARTITION/$USERNAMEDEL $USERNAMEDEL successfully removed" --ok-button "OK" 10 70
+    rm -rf /$HOME_PARTITION/$USERNAMEDEL &>/dev/null
+     whiptail --title "Remove User/Root" --msgbox "User $USERNAMEDEL successfully removed\n/\nDeleted $HOME_PARTITION/$USERNAMEDEL / $USERFILESDEL.vhost / $USERFILESDEL.conf" --ok-button "OK" 10 70
    else
      cancelOperation
     return
