@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/12/2017 05:25 EDT                                       #
+#        &Updated:   11/15/2017 07:57 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -230,40 +230,22 @@ done | whiptail --title "ASAS System Installer"  --gauge "\nChecking Packages...
 # ** Maybe code something more efficient and elegant if possible in future. Looks like **
 # ** a bird sanctuary with all the nesting going on. elif may be more friendly??? **
 systemUpgrades() {
-     UPGRADECHECK=$(apt-get -s upgrade | grep -Po "^\d+ (?=upgraded)" 2>&1)
+      UPGRADECHECK=$(LANG=C apt-get dist-upgrade -s |grep -P '^\d+ upgraded'|cut -d" " -f1) 2> /dev/null
    if [ "$UPGRADECHECK" -gt 0 ]; then
-    if [ "$DISTRO" = "Ubuntu" ]; then
-     UPGRADES=$(/usr/lib/update-notifier/apt-check 2>&1)
-     upsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 2)
-     upnonsecurity=$(echo "${UPGRADES}" | cut -d ";" -f 1)
-     totalupgrade=$((upsecurity + upnonsecurity))
-    if (whiptail --title "System Check" --yesno "$totalupgrade Updates are available\n$upsecurity are security updates\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
-     package() {
-       echo "apt --yes upgrade"
-      }
-     systemInstaller
-     rebootRequired
-     completeOperation
-   else
-    return
-   fi
-  fi
-   if [ "$DISTRO" = "Debian" ]; then
     if (whiptail --title "System Check" --yesno "$UPGRADECHECK Updates are available\n\nWould you like to update now (Recommended)" --yes-button "Update" --no-button "Skip" 10 70) then
-     package() {
-       printf "apt --yes upgrade"
-      }
+      package() {
+       echo "apt --yes upgrade"
+       }
      systemInstaller
      rebootRequired
      completeOperation
-   else
+    else
      return
-   fi
-  fi
+    fi
    else
      whiptail --title "System Check" --msgbox "System is up to date\n\nPress [Enter] for main menu..." --ok-button "OK" 10 70
     return
-  fi
+   fi
 }
 #*****************************
 #
