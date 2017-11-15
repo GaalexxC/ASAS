@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/13/2017 04:39 EDT                                       #
+#        &Updated:   11/15/2017 09:14 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -116,7 +116,7 @@ createlocalsettings() {
      echo "$USERNAME-$VHOSTNAMEADD" >> $CURDIR/tmp/.user
      createlocalhost
     else
-   return
+     return
     fi
 }
 createlocalhost() {
@@ -240,7 +240,7 @@ createdomainsettings() {
      echo "$USERNAME-$DOMAINNAMEADD" >> $CURDIR/tmp/.user
      createdomainhost
     else
-   return
+     return
     fi
 }
 createdomainhost() {
@@ -327,19 +327,19 @@ createdomainhost() {
 removeuserroot() {
      USERNAMEDEL=$(whiptail --inputbox "\nSpecify a username to delete\nWARNING! this will remove home root as well\nMake a backup if you need to first" 10 70 --title "Remove User/Root" 3>&1 1>&2 2>&3)
      USERFILESDEL=$(whiptail --inputbox "\nSpecify users matching vhost to delete\nWARNING! this will remove Nginx vhost and FPM conf\nMake a backup if you need to first" 10 70 --title "Remove User/Root" 3>&1 1>&2 2>&3)
-  if (whiptail --title "Remove User/Root" --yesno "You Entered: $USERNAMEDEL $USERFILESDEL.vhost $USERFILESDEL.conf\n\nLast chance to abort! Deletes all user content!" --yes-button "Continue" --no-button "Cancel" 10 70) then
+   if (whiptail --title "Remove User/Root" --yesno "You Entered: $USERNAMEDEL $USERFILESDEL.vhost $USERFILESDEL.conf\n\nLast chance to abort! Deletes all user content!" --yes-button "Continue" --no-button "Cancel" 10 70) then
      phpVersion
      FPMCONFIGDEL="$PHP_FPMCONF_DIR/$USERFILESDEL.conf"
-    rm -rf $FPMCONFIGDEL
-    rm -rf $NGINX_SITES_AVAILABLE/$USERFILESDEL.vhost
-    rm -rf $NGINX_SITES_ENABLED/$USERFILESDEL.vhost
-    $PHP_INIT restart &>/dev/null
-    $NGINX_INIT restart &>/dev/null
-    deluser --remove-home $USERNAMEDEL &>/dev/null
-    rm -rf /$HOME_PARTITION/$USERNAMEDEL &>/dev/null
+     rm -rf $FPMCONFIGDEL
+     rm -rf $NGINX_SITES_AVAILABLE/$USERFILESDEL.vhost
+     rm -rf $NGINX_SITES_ENABLED/$USERFILESDEL.vhost
+     $PHP_INIT restart &>/dev/null
+     $NGINX_INIT restart &>/dev/null
+     deluser --remove-home $USERNAMEDEL &>/dev/null
+     rm -rf /$HOME_PARTITION/$USERNAMEDEL &>/dev/null
      whiptail --title "Remove User/Root" --msgbox "User $USERNAMEDEL successfully removed\n/\nDeleted $HOME_PARTITION/$USERNAMEDEL / $USERFILESDEL.vhost / $USERFILESDEL.conf" --ok-button "OK" 10 70
    else
      cancelOperation
     return
-  fi
+   fi
 }
