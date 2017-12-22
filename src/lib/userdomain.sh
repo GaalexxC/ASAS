@@ -335,7 +335,6 @@ removeuserroot() {
      rm -rf $NGINX_SITES_ENABLED/$USERFILESDEL.vhost
      $PHP_INIT restart &>/dev/null
      $NGINX_INIT restart &>/dev/null
-     deluser --remove-home $USERNAMEDEL &>/dev/null
      rm -rf /$HOME_PARTITION/$USERNAMEDEL &>/dev/null
      whiptail --title "Remove User/Root" --msgbox "User $USERNAMEDEL successfully removed\n/\nDeleted $HOME_PARTITION/$USERNAMEDEL / $USERFILESDEL.vhost / $USERFILESDEL.conf" --ok-button "OK" 10 70
    else
