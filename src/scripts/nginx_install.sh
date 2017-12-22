@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 19:12 EDT                                       #
+#        &Updated:   12/22/2017 03:25 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -24,22 +24,6 @@
 #    along with this program.  If not, see http://www.gnu.org/licenses/         #
 #                                                                               #
 #################################################################################
-      if [ ! -d $CURDIR/$NGINX_LOG/ ]
-       then
-       mkdir -p $CURDIR/$NGINX_LOG/
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/install-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/install-$CURDAY.log
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/error-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/error-$CURDAY.log
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/nginx-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
-      fi
 #clear
 
 while [ 3 ]
@@ -145,6 +129,22 @@ case $SELECTNGINX in
         "3)")
    if ! type nginx > /dev/null 2>&1 || [ -f $NGINXCONFDIR/.build-* ]; then
     if (whiptail --title "Nginx Compiler" --yesno "Nginx-OpenSSL source build\nYou can compile new, recompile, or upgrade compile\nDo you want to run source build?" --yes-button "Build" --no-button "Cancel" 10 70) then
+      if [ ! -d $CURDIR/$NGINX_LOG/ ]
+       then
+       mkdir -p $CURDIR/$NGINX_LOG/
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/install-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/install-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/error-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/error-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/nginx-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
+      fi
        mkdir $CURDIR/source
        cd $CURDIR/source
        package() {
