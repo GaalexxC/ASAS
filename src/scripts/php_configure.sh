@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 13:30 EDT                                       #
+#        &Updated:   12/22/2017 03:42 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -29,16 +29,16 @@ clear
 while [ 1 ]
 do
 PHPSETTINGS=$(
-whiptail --title "PHP Configuration" --menu "\nConfigure most common settings below\nEdit php.ini manually for extended options" 24 78 14 \
+whiptail --title "PHP Configuration" --menu "\nConfigure most common settings below\nFor PHP security go to System Security menu\nEdit php.ini manually for extended options" 24 78 14 \
         "1)" "Enable/Disable PHP Engine (Default:On)"   \
         "2)" "Expose PHP Server (Default:Off)" \
         "3)" "Max Memory Allocation (Default:128M)"  \
-        "4)" "Display Errors (Default:Off)" \
+        "4)" "Display Errors (Default:On)" \
         "5)" "Max POST Size (Default:8M)" \
         "6)" "Enable/Disable File Uploads (Default:On)" \
-        "7)" "Test (Default:None)" \
-        "8)" "Test (Default:None)" \
-        "9)" "Test (Default:None)" \
+        "7)" "Max File Size (Default:2M)" \
+        "8)" "Enable/Disable Zend OPCache (Default off)" \
+        "9)" "Define the default timezone (Default:None)" \
        "10)" "Return to PHP Menu" \
        "11)" "Return to Main Menu" \
        "12)" "Exit"  3>&2 2>&1 1>&3
@@ -46,39 +46,39 @@ whiptail --title "PHP Configuration" --menu "\nConfigure most common settings be
 
 case $PHPSETTINGS in
         "1)")
-          phpengineenable
+          phpengineswitch
         ;;
 
         "2)")
-          #php
+          phpexposeswitch
         ;;
 
         "3)")
-          #php
+          phpmemorysize
         ;;
 
         "4)")
-          #php
+          phperrorswitch
         ;;
 
         "5)")
-          #php
+          phpmaxpostsize
         ;;
 
         "6)")
-          #php
+          phpuploadsswitch
         ;;
 
         "7)")
-          #php
+          phpmaxfilesize
         ;;
 
         "8)")
-          #php
+          phpopcacheswitch
         ;;
 
         "9)")
-          #php
+          phptimezone
         ;;
 
         "10)")

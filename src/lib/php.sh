@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/12/2017 05:26 EDT                                       #
+#        &Updated:   12/22/2017 04:49 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -164,15 +164,91 @@ phpfpmRestart() {
 # PHP Settings Functions
 #
 #****************************
-phpengineenable() {
+phpengineswitch() {
      phpVersion
-   if (whiptail --title "PHP Engine Config" --yesno "Do you want to enable/disable PHP engine?\nDefault is enabled (On)" --yes-button "Enable" --no-button "Disable" 10 70) then
+   if (whiptail --title "PHP Configuration" --yesno "Do you want to enable/disable PHP engine?\nDefault is enabled (On)" --yes-button "Enable" --no-button "Disable" 10 70) then
      $SED -i "s/engine = .*/engine = On/g" $PHP_INI
      phpfpmRestart
-     whiptail --title "PHP Engine Config" --msgbox "PHP engine enabled" --ok-button "OK" 10 70
+     whiptail --title "PHP Configuration" --msgbox "PHP engine enabled" --ok-button "OK" 10 70
    else
      $SED -i "s/engine = .*/engine = Off/g" $PHP_INI
      phpfpmRestart
-     whiptail --title "PHP Engine Config" --msgbox "PHP engine disabled" --ok-button "OK" 10 70
+     whiptail --title "PHP Configuration" --msgbox "PHP engine disabled" --ok-button "OK" 10 70
    fi
+}
+phpexposeswitch() {
+     phpVersion
+   if (whiptail --title "PHP Configuration" --yesno "Do you want to expose your php version?\nDefault is disabled (Off)" --yes-button "Expose" --no-button "Hide" 10 70) then
+     $SED -i "s/expose_php = .*/expose_php = On/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "PHP version is exposed" --ok-button "OK" 10 70
+   else
+     $SED -i "s/expose_php = .*/expose_php = Off/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "PHP version is hidden" --ok-button "OK" 10 70
+   fi
+}
+phpmemorysize() {
+     phpVersion
+     MEMORYLIMIT=$(whiptail --inputbox "\nSpecify memory limit value IE: 256M. Default 128M" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/memory_limit = .*/memory_limit = $MEMORYLIMIT/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Memory limit modified to $MEMORYLIMIT" --ok-button "OK" 10 70
+}
+phperrorswitch() {
+     phpVersion
+   if (whiptail --title "PHP Configuration" --yesno "Do you want to display errors?\nDefault is enabled (On)" --yes-button "Display" --no-button "Hide" 10 70) then
+     $SED -i "s/display_errors = .*/display_errors = On/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Display errors is enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/display_errors = .*/display_errors = Off/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Display errors is disabled" --ok-button "OK" 10 70
+   fi
+}
+phpmaxpostsize() {
+     phpVersion
+     MAXPOST=$(whiptail --inputbox "\nMaximum size of POST data IE: 4M. Default 8M" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/post_max_size = .*/post_max_size = $MAXPOST/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Maximum size of POST modified to $MAXPOST" --ok-button "OK" 10 70
+}
+phpuploadsswitch() {
+     phpVersion
+   if (whiptail --title "PHP Configuration" --yesno "Do you want to allow HTTP file uploads?\nDefault is enabled (On)" --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/file_uploads = .*/file_uploads = On/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "HTTP file uploads is enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/file_uploads = .*/file_uploads = Off/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "HTTP file uploads is disabled" --ok-button "OK" 10 70
+   fi
+}
+phpmaxfilesize() {
+     phpVersion
+     MAXFILE=$(whiptail --inputbox "\nMaximum upload  file size IE: 4M. Default 2M" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/upload_max_filesize = .*/upload_max_filesize = $MAXFILE/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Maximum file size modified to $MAXFILE" --ok-button "OK" 10 70
+}
+phpopcacheswitch() {
+     phpVersion
+   if (whiptail --title "PHP Configuration" --yesno "Do you want to enable Zend OPCache?\nDefault is disabled" --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/opcache.enable=.*/opcache.enable=1/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Zend OPCache is enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/opcache.enable=.*/opcache.enable=0/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Zend OPCache is disabled" --ok-button "OK" 10 70
+   fi
+}
+phptimezone() {
+     phpVersion
+     TIMEZONE=$(whiptail --inputbox "\nSet default timezone IE: America/New_York\nhttp://php.net/date.timezone" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/date.timezone = .*/date.timezone = $TIMEZONE/g" $PHP_INI
+     phpfpmRestart
+     whiptail --title "PHP Configuration" --msgbox "Default timezone modified to $TIMEZONE" --ok-button "OK" 10 70
 }
