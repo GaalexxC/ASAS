@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/22/2017 02:35 EDT                                       #
+#        &Updated:   12/22/2017 22:42 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -64,10 +64,7 @@ asd
     echo "* patent use. This program comes with ABSOLUTELY NO WARRANTY      *"
     echo "* and we assume NO LIABILITY. Use at your own risk.               *"
     echo "*******************************************************************"
-
-    whiptailInstallCheck
-
+    echo ""
     read -p "Press [Enter] to begin system check..."
 
-    validateRoot
-    systemDetect
+    validateCheck

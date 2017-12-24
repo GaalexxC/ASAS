@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/22/2017 02:34 EDT                                       #
+#        &Updated:   12/23/2017 22:41 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -104,7 +104,7 @@ case $MAINNU in
 
  done
 }
-validateRoot() {
+checkRoot() {
    if [ "$(id -u)" != "0" ]; then
      whiptail --title "System Check" --msgbox "\nYou need to be root to run this script.\n\nPress [Enter] to exit\nBye Bye" --ok-button "Exit" 10 70
     exit 1
@@ -275,27 +275,6 @@ systemUpgrades() {
 }
 #*****************************
 #
-# Check Install
-#
-#*****************************
-whiptailInstallCheck() {
-   if ! type whiptail > /dev/null 2>&1; then
-     echo -e "\n\nDependency Check...${RED}Whiptail not installed${NOCOL}"
-     sleep 1.5
-     echo -e "\nInstalling Whiptail - required by this script"
-     apt install whiptail -y
-     echo -e "\n${GREEN}Whiptail successfully installed${NOCOL}\n\n"
-     sleep 2
-   else
-     whipver=$(whiptail -v 2>&1)
-     echo -e "\n\nDependency Check..."
-    sleep 1
-     echo -e "\n${GREEN}Great! $whipver is installed${NOCOL}\n\n"
-     sleep 1.5
-   fi
-}
-#*****************************
-#
 # Security Functions
 #
 #*****************************
@@ -358,4 +337,22 @@ updateSources() {
         ;;
     esac
 done | whiptail --title "Package Check"  --gauge "\nRefreshing package cache" 10 70 0
+}
+#*****************************
+#
+# Validation Check
+#
+#*****************************
+validateCheck() {
+   if ! type whiptail > /dev/null 2>&1; then
+     echo -e "\n\nDependency Check...${RED}Whiptail not installed${NOCOL}"
+     sleep 1.5
+     echo -e "\nInstalling Whiptail - required by this script"
+     apt install whiptail -y
+     echo -e "\n${GREEN}Whiptail successfully installed${NOCOL}\n\n"
+     sleep 2
+   else
+     checkRoot
+     systemDetect
+   fi
 }
