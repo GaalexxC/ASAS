@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 13:31 EDT                                       #
+#        &Updated:   12/24/2017 02:11 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -30,9 +30,9 @@ while [ 1 ]
 do
 NGINXSETTINGS=$(
 whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings below\nEdit nginx.conf manually for extended options" 24 78 14 \
-        "1)" "Test (Default:None)"   \
-        "2)" "Test (Default:None)" \
-        "3)" "Test (Default:None)"  \
+        "1)" "Nginx Worker Processes (Default:4)"   \
+        "2)" "Nginx Worker Connections (Default:2500)" \
+        "3)" "Nginx Wworker rlimit_nofile (Default:20000)"  \
         "4)" "Test (Default:None)" \
         "5)" "Test (Default:None)" \
         "6)" "Test (Default:None)" \
@@ -46,15 +46,15 @@ whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings 
 
 case $NGINXSETTINGS in
         "1)")
-          #nginx
+          nginxworkerproc
         ;;
 
         "2)")
-          #nginx
+          nginxworkerconn
         ;;
 
         "3)")
-          #nginx
+          nginxworkerrlimit
         ;;
 
         "4)")

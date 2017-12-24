@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 12:31 EDT                                       #
+#        &Updated:   12/24/2017 02:13 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -487,4 +487,26 @@ nginxCleanup() {
      sleep .75
   } | whiptail --title "Nginx Cleanup" --gauge "\nStarting Nginx cleanup" 10 70 0
 }
-
+#*****************************
+#
+# Nginx Configure Functions
+#
+#*****************************
+nginxworkerproc() {
+     WORKERPROC=$(whiptail --inputbox "\nNginx Worker Processes Default: 4" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/worker_processes .*;/worker_processes $WORKERPROC;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Worker Processes modified to $WORKERPROC" --ok-button "OK" 10 70
+}
+nginxworkerconn() {
+     WORKERCONN=$(whiptail --inputbox "\nNginx Worker Connections Default: 2500" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/worker_connections .*;/worker_connections $WORKERCONN;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Worker Connections modified to $WORKERCONN" --ok-button "OK" 10 70
+}
+nginxworkerrlimit() {
+     WORKERRLIMIT=$(whiptail --inputbox "\nNginx Worker rlimit_nofile Default: 20000" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/worker_rlimit_nofile .*;/worker_rlimit_nofile $WORKERRLIMIT;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Worker rlimit_nofile modified to $WORKERRLIMIT" --ok-button "OK" 10 70
+}
