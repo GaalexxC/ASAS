@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/22/2017 03:42 EDT                                       #
+#        &Updated:   12/23/2017 21:24 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -33,7 +33,7 @@ whiptail --title "PHP Configuration" --menu "\nConfigure most common settings be
         "1)" "Enable/Disable PHP Engine (Default:On)"   \
         "2)" "Expose PHP Server (Default:Off)" \
         "3)" "Max Memory Allocation (Default:128M)"  \
-        "4)" "Display Errors (Default:On)" \
+        "4)" "Display Errors (Default:Off)" \
         "5)" "Max POST Size (Default:8M)" \
         "6)" "Enable/Disable File Uploads (Default:On)" \
         "7)" "Max File Size (Default:2M)" \
