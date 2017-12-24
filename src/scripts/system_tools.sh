@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 13:45 EDT                                       #
+#        &Updated:   12/24/2017 01:53 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -32,10 +32,10 @@ do
 SELECTSYSTEM=$(
 whiptail --title "System Tools" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
         "1)" "ASAS Backups" ON \
-        "2)" "Test" OFF \
-        "3)" "Test" OFF \
-        "4)" "Test" OFF \
-        "5)" "Test" OFF \
+        "2)" "Remove Old Kernels" OFF \
+        "3)" "Delete Old Logs" OFF \
+        "4)" "Network Check" OFF \
+        "5)" "Reload Mail Server" OFF \
         "6)" "Return to Main Menu" OFF \
         "7)" "Exit"  OFF 3>&1 1>&2 2>&3
 )
