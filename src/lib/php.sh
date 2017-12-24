@@ -248,7 +248,7 @@ phpopcacheswitch() {
 phptimezone() {
      phpVersion
      TIMEZONE=$(whiptail --inputbox "\nSet default timezone IE: America/New_York\nhttp://php.net/date.timezone" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
-     $SED -i "s#;date.timezone = .*#date.timezone = $TIMEZONE#g" $PHP_INI
+     $SED -i "s@;date.timezone = .*@date.timezone = $TIMEZONE@g" $PHP_INI
      phpfpmRestart
      whiptail --title "PHP Configuration" --msgbox "Default timezone modified to $TIMEZONE" --ok-button "OK" 10 70
 }
