@@ -29,6 +29,14 @@
 # PHP System Functions
 #
 #****************************
+phpErrorLog() {
+     echo "Error date: $DATE_TIME\n\n$vsftpdfail" >> $CURDIR/$LOGS/php-error-$CURDAY.log
+}
+
+phpDebugLog() {
+     echo "$DATE_TIME: $FUNC" >> $CURDIR/$LOGS/php-$CURDAY.log
+}
+
 phpCheckInstall() {
    if ! type php > /dev/null 2>&1; then
      whiptail --title "PHP Check-Install" --msgbox "PHP not installed" --ok-button "OK" 10 70
@@ -152,11 +160,15 @@ phpfpmRestart() {
    if [ $exitstatus = 0 ]; then
      echo -e "XXX\n50\n\nStopping PHP-FPM Service... Done.\nXXX"
      sleep 1
+     FUNC="Successfully restarted PHP-FPM"
+     phpDebugLog
      echo -e "XXX\n100\n\nSuccessfully restarted PHP-FPM... Done.\nXXX"
      sleep 1
    else
      phpfail=$(systemctl status $PHP_VER.service 2>&1)
-     echo "Error date: $DATE_TIME\n\n$phpfail" >> $CURDIR/$LOGS/php-error-$CURDAY.log
+     phpErrorLog
+     FUNC="PHP-FPM failed check $CURDIR/$LOGS"
+     phpDebugLog
      echo -e "XXX\n99\n\nPHP-FPM failed, check $CURDIR/$LOGS/php-error-$CURDAY.log...\nXXX"
      sleep 5
      exit 1
@@ -200,6 +212,9 @@ phpmemorysize() {
      phpfpmRestart
      whiptail --title "PHP Configuration" --msgbox "Memory limit modified to $MEMORYLIMIT" --ok-button "OK" 10 70
 }
+
+
+
 phperrorswitch() {
      phpVersion
    if (whiptail --title "PHP Configuration" --yesno "Do you want to display errors?\nDefault is enabled (Off)" --yes-button "Display" --no-button "Hide" 10 70) then

@@ -29,6 +29,14 @@
 # Nginx System Functions
 #
 #*****************************
+nginxErrorLog() {
+     echo "Error date: $DATE_TIME\n\n$ngxfail" >> $CURDIR/$NGINX_LOG/error-$CURDAY.log
+}
+
+nginxDebugLog() {
+     echo "$DATE_TIME: $FUNC" >> $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
+}
+
 nginxCheckInstall() {
    if ! type nginx > /dev/null 2>&1; then
      whiptail --title "Nginx Check-Install" --msgbox "Nginx not installed" --ok-button "OK" 10 70
@@ -431,16 +439,19 @@ nginxConfigure() {
      echo -e "XXX\n98\n\nRestarting Nginx service... Done.\nXXX"
      sleep 1.50
      $NGINX_INIT restart 2> /dev/null
-   if [ $? -eq 0 ]; then
-     ngxstart=$(systemctl status nginx.service 2>&1)
-     echo -e "Build date: $DATE_TIME\n\n$ngxstart" > $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
+     exitstatus=$?
+   if [ $exitstatus = 0 ]; then
+     FUNC="Successfully compiled nginx from source"
+     nginxDebugLog
      echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
      sleep 1
    else
      ngxfail=$(systemctl status nginx.service 2>&1)
-     echo "Build date: $DATE_TIME\n\n$ngxfail" > $CURDIR/$NGINX_LOG/error-$CURDAY.log
+     nginxErrorLog
+     FUNC="Nginx failed check $NGINX_LOG"
+     nginxDebugLog
      echo -e "XXX\n99\n\nNginx failed, check $CURDIR/$NGINX_LOG...\nXXX"
-     sleep 3
+     sleep 5
     exit 1
    fi
      sleep 1
@@ -451,11 +462,15 @@ nginxRestart() {
      $NGINX_INIT restart 2> /dev/null
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
+     FUNC="Successfully restarted Nginx"
+     nginxDebugLog
      echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
      sleep 1
     else
      ngxfail=$(systemctl status nginx.service 2>&1)
-     echo "Error date: $DATE_TIME\n\n$ngxfail" >> $CURDIR/$NGINX_LOG/error-$CURDAY.log
+     nginxErrorLog
+     FUNC="Nginx failed check $NGINX_LOG"
+     nginxDebugLog
      echo -e "XXX\n99\n\nNginx failed check $CURDIR/$NGINX_LOG/error-$CURDAY.log...\nXXX"
      sleep 5
      exit 1
