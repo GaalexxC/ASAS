@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 02:13 EDT                                       #
+#        &Updated:   12/24/2017 17:07 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -453,10 +453,12 @@ nginxRestart() {
    if [ $exitstatus = 0 ]; then
      echo -e "XXX\n100\n\nSuccessfully restarted Nginx... Done.\nXXX"
      sleep 1
-   else
-     echo -e "XXX\n100\n\nNginx failed, check $NGINXLOGDIR/error.log\nScript exiting in 3 seconds...\nXXX"
-     sleep 3
-    exit 1
+    else
+     ngxfail=$(systemctl status nginx.service 2>&1)
+     echo "Error date: $DATE_TIME\n\n$ngxfail" > $CURDIR/$NGINX_LOG/error-$CURDAY.log
+     echo -e "XXX\n99\n\nNginx failed check $CURDIR/$NGINX_LOG/error-$CURDAY.log...\nXXX"
+     sleep 5
+     exit 1
    fi
      sleep 1
   } | whiptail --title "Restart Nginx" --gauge "\nRestarting the Nginx service" 10 70 0
@@ -509,4 +511,56 @@ nginxworkerrlimit() {
      $SED -i "s/worker_rlimit_nofile .*;/worker_rlimit_nofile $WORKERRLIMIT;/g" $NGINXCONFIG
      nginxRestart
      whiptail --title "Nginx Configuration" --msgbox "Worker rlimit_nofile modified to $WORKERRLIMIT" --ok-button "OK" 10 70
+}
+nginxkeepalive() {
+     KEEPALIVE=$(whiptail --inputbox "\nNginx keepalive_timeout Default: 60" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/keepalive_timeout .*;/keepalive_timeout $KEEPALIVE;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx keepalive_timeout modified to $KEEPALIVE" --ok-button "OK" 10 70
+}
+nginxfastcgiread() {
+     FASTCGIREAD=$(whiptail --inputbox "\nNginx fastcgi_read_timeout Default: 300" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/fastcgi_read_timeout .*;/fastcgi_read_timeout $FASTCGIREAD;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx fastcgi_read_timeout modified to $FASTCGIREAD" --ok-button "OK" 10 70
+}
+nginxclientheader() {
+     CLIENTHEADER=$(whiptail --inputbox "\nNginx client_header_timeout Default: 15m" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/client_header_timeout .*;/client_header_timeout $CLIENTHEADER;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx client_header_timeout modified to $CLIENTHEADER" --ok-button "OK" 10 70
+}
+nginxclientbody() {
+     CLIENTBODY=$(whiptail --inputbox "\nNginx client_body_timeout Default: 15m" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/client_body_timeout .*;/client_body_timeout $CLIENTBODY;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx client_body_timeout modified to $CLIENTBODY" --ok-button "OK" 10 70
+}
+nginxclientmaxbody() {
+     CLIENTMAXBODY=$(whiptail --inputbox "\nNginx client_max_body_size Default: 20M" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/client_max_body_size .*;/client_max_body_size $CLIENTMAXBODY;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx client_max_body_size modified to $CLIENTMAXBODY" --ok-button "OK" 10 70
+}
+nginxsendfileswitch() {
+   if (whiptail --title "Nginx Configuration" --yesno "Do you want to enable sendfile?\nDefault is disabled" --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/sendfile .*;/sendfile on;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx sendfile is enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/sendfile .*;/sendfile off;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx sendfile is disabled" --ok-button "OK" 10 70
+   fi
+}
+nginxgzipswitch() {
+   if (whiptail --title "Nginx Configuration" --yesno "Do you want to enable gzip?\nDefault is enabled" --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/gzip .*;/gzip on;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx gzip is enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/gzip .*;/gzip off;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx gzip is disabled" --ok-button "OK" 10 70
+   fi
 }

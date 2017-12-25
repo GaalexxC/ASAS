@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 02:11 EDT                                       #
+#        &Updated:   12/24/2017 16:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -30,18 +30,19 @@ while [ 1 ]
 do
 NGINXSETTINGS=$(
 whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings below\nEdit nginx.conf manually for extended options" 24 78 14 \
-        "1)" "Nginx Worker Processes (Default:4)"   \
-        "2)" "Nginx Worker Connections (Default:2500)" \
-        "3)" "Nginx Wworker rlimit_nofile (Default:20000)"  \
-        "4)" "Test (Default:None)" \
-        "5)" "Test (Default:None)" \
-        "6)" "Test (Default:None)" \
-        "7)" "Test (Default:None)" \
-        "8)" "Test (Default:None)" \
-        "9)" "Test (Default:None)" \
-       "10)" "Return to Nginx Menu" \
-       "11)" "Return to Main Menu" \
-       "12)" "Exit"  3>&2 2>&1 1>&3
+        "1)" "Nginx worker_processes (Default:4)"   \
+        "2)" "Nginx worker_connections (Default:2500)" \
+        "3)" "Nginx worker_rlimit_nofile (Default:20000)"  \
+        "4)" "Nginx keepalive_timeout (Default:60)" \
+        "5)" "Nginx fastcgi_read_timeout (Default:300)" \
+        "6)" "Nginx client_header_timeout (Default:15m)" \
+        "7)" "Nginx client_body_timeout (Default:15m)" \
+        "8)" "Nginx client_max_body_size (Default:20M)" \
+        "9)" "Enable/Disable sendfile (Default:Off)" \
+        "10)" "Enable/Disable gzip (Default:On)" \
+        "11)" "Return to Nginx Menu" \
+        "12)" "Return to Main Menu" \
+        "13)" "Exit"  3>&2 2>&1 1>&3
 )
 
 case $NGINXSETTINGS in
@@ -58,38 +59,42 @@ case $NGINXSETTINGS in
         ;;
 
         "4)")
-          #nginx
+          nginxkeepalive
         ;;
 
         "5)")
-          #nginx
+          nginxfastcgiread
         ;;
 
         "6)")
-          #nginx
+          nginxclientheader
         ;;
 
         "7)")
-          #nginx
+          nginxclientbody
         ;;
 
         "8)")
-          #nginx
+          nginxclientmaxbody
         ;;
 
         "9)")
-          #nginx
+          nginxsendfileswitch
         ;;
 
         "10)")
-          return
+          nginxgzipswitch
         ;;
 
         "11)")
-          asasMainMenu
+          return
         ;;
 
         "12)")
+          asasMainMenu
+        ;;
+
+        "13)")
           exit 1
         ;;
    esac
