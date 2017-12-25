@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 22:13 EDT                                       #
+#        &Updated:   12/25/2017 02:21 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -29,7 +29,7 @@ clear
 while [ 1 ]
 do
 FTPSETTINGS=$(
-whiptail --title "vsFTPd Configuration" --menu "\nConfigure most common settings below\nEdit vsftpd.conf manually for extended options" 24 78 10 \
+whiptail --title "vsFTPd Configuration" --menu "\nConfigure most common settings below\nEdit vsftpd.conf manually for extended options" 20 78 10 \
         "1)" "Server Listening Port (Default:23452)"   \
         "2)" "IPv4 Listen Address (Default:None)" \
         "3)" "Enable IPv6 Listen (Default:Disabled)"  \

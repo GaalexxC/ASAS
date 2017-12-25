@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/22/2017 02:39 EDT                                       #
+#        &Updated:   12/25/2017 02:21 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -29,7 +29,7 @@ clear
 while [ 1 ]
 do
 MYSQLSETTINGS=$(
-whiptail --title "MySQL Configuration" --menu "\nConfigure most common settings below\nEdit my.cnf manually for extended options" 24 78 14 \
+whiptail --title "MySQL Configuration" --menu "\nConfigure most common settings below\nEdit my.cnf manually for extended options" 20 78 10 \
         "1)" "Test (Default:None)"   \
         "2)" "Test (Default:None)" \
         "3)" "Test (Default:None)"  \

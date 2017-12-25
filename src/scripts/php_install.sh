@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/08/2017 19:13 EDT                                       #
+#        &Updated:   12/25/2017 02:22 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -39,7 +39,7 @@ while [ 4 ]
 do
 
 SELECTPHP=$(
-whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
+whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 20 78 10 \
         "1)" "Install PHP 7.2" OFF \
         "2)" "Install PHP 7.1 (Recommended)" ON \
         "3)" "Install PHP 7.0" OFF \

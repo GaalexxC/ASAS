@@ -29,7 +29,7 @@ clear
 while [ 1 ]
 do
 NGINXSETTINGS=$(
-whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings below\nEdit nginx.conf manually for extended options" 24 78 10 \
+whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings below\nEdit nginx.conf manually for extended options" 20 78 10 \
         "1)" "Nginx worker_processes (Default:4)"   \
         "2)" "Nginx worker_connections (Default:2500)" \
         "3)" "Nginx worker_rlimit_nofile (Default:20000)"  \
