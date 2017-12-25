@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 13:33 EDT                                       #
+#        &Updated:   12/24/2017 22:13 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -29,7 +29,7 @@ clear
 while [ 1 ]
 do
 FTPSETTINGS=$(
-whiptail --title "vsFTPd Configuration" --menu "\nConfigure most common settings below\nEdit vsftpd.conf manually for extended options" 24 78 14 \
+whiptail --title "vsFTPd Configuration" --menu "\nConfigure most common settings below\nEdit vsftpd.conf manually for extended options" 24 78 10 \
         "1)" "Server Listening Port (Default:23452)"   \
         "2)" "IPv4 Listen Address (Default:None)" \
         "3)" "Enable IPv6 Listen (Default:Disabled)"  \
@@ -39,9 +39,14 @@ whiptail --title "vsFTPd Configuration" --menu "\nConfigure most common settings
         "7)" "Enable SSL (Default:Disabled)" \
         "8)" "Set SSL Cert path" \
         "9)" "Set SSL Key path" \
-       "10)" "Return to vsFTPd Menu" \
-       "11)" "Return to Main Menu" \
-       "12)" "Exit"  3>&2 2>&1 1>&3
+        "10)" "Max Clients (Default:50)" \
+        "11)" "Max Per IP (Default:25)" \
+        "12)" "Max Login Fails (Default:5)" \
+        "13)" "Write Enabled (Default:YES)" \
+        "14)" "Allow Writeable Chroot (Default:YES)" \
+        "15)" "Return to vsFTPd Menu" \
+        "16)" "Return to Main Menu" \
+        "17)" "Exit"  3>&2 2>&1 1>&3
 )
 
 case $FTPSETTINGS in
@@ -82,14 +87,34 @@ case $FTPSETTINGS in
         ;;
 
         "10)")
-          return
+          vsftpdmaxclients
         ;;
 
         "11)")
-          asasMainMenu
+          vsftpmaxperip
         ;;
 
         "12)")
+          vsftpdmaxloginfails
+        ;;
+
+        "13)")
+          vsftpdwriteenable
+        ;;
+
+        "14)")
+          vsftpdwriteablechroot
+        ;;
+
+        "15)")
+          return
+        ;;
+
+        "16)")
+          asasMainMenu
+        ;;
+
+        "17)")
           exit 1
         ;;
    esac

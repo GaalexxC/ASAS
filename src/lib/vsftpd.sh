@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 12:17 EDT                                       #
+#        &Updated:   12/24/2017 22:11 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -81,17 +81,17 @@ vsftpdRestart() {
 #
 #*****************************
 vport() {
-   if (whiptail --title "Port Config" --yesno "You Entered: $FTPPORT" --yes-button "Update" --no-button "Change" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "You Entered: $FTPPORT" --yes-button "Update" --no-button "Change" 10 70) then
      #local CONFIG=/etc/vsftpd.conf
      $SED -i "s/listen_port=.*/listen_port=$FTPPORT/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "Port Config" --msgbox "Port $FTPPORT successfully updated" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "Port $FTPPORT successfully updated" --ok-button "OK" 10 70
    else
      vsftpdport
    fi
 }
 vsftpdport() {
-     FTPPORT=$(whiptail --inputbox "\nEnter Port - Something high, Default:23452" 10 70 --title "Port Config" 3>&1 1>&2 2>&3)
+     FTPPORT=$(whiptail --inputbox "\nEnter Port - Something high, Default:23452" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
      vport
@@ -105,16 +105,16 @@ vsftpdport() {
 #
 #*****************************
 vip6add() {
-   if (whiptail --title "IPv6 Address Config" --yesno "You Entered: $FTPIP6ADD" --yes-button "Update" --no-button "Change" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "You Entered: $FTPIP6ADD" --yes-button "Update" --no-button "Change" 10 70) then
      $SED -i "s/listen_address6=.*/listen_address6=$FTPIP6ADD/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "IPv6 Address Config" --msgbox "IP Address $FTPIP6ADD successfully updated" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "IP Address $FTPIP6ADD successfully updated" --ok-button "OK" 10 70
    else
      vsftpdip6add
    fi
 }
 vsftpdip6add() {
-     FTPIP6ADD=$(whiptail --inputbox "\nEnter IPv6 Address (optional) leave Blank for none\nHas no effect if IPv6 disabled" 10 70 --title "IPv6 Address Config" 3>&1 1>&2 2>&3)
+     FTPIP6ADD=$(whiptail --inputbox "\nEnter IPv6 Address (optional) leave Blank for none\nHas no effect if IPv6 disabled" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
      vip6add
@@ -132,7 +132,7 @@ vip4add() {
    fi
 }
 vsftpdip4add() {
-     FTPIP4ADD=$(whiptail --inputbox "\nEnter IPv4 Address (optional) leave Blank for none\nHas no effect if IPv6 enabled" 10 70 --title "IPv4 Address Config" 3>&1 1>&2 2>&3)
+     FTPIP4ADD=$(whiptail --inputbox "\nEnter IPv4 Address (optional) leave Blank for none\nHas no effect if IPv6 enabled" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
      vip4add
@@ -141,16 +141,16 @@ vsftpdip4add() {
    fi
 }
 vsftpdip6enable() {
-   if (whiptail --title "IPv6 Listen Config" --yesno "Do you want to enable/disable IPv6 listening?\nvsFTPd will listen on both IPv4 and IPv6 if enabled\nand only IPv4 (default) if disabled" --yes-button "Enable" --no-button "Disable" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "Do you want to enable/disable IPv6 listening?\nvsFTPd will listen on both IPv4 and IPv6 if enabled\nand only IPv4 (default) if disabled" --yes-button "Enable" --no-button "Disable" 10 70) then
      $SED -i "s/listen=.*/listen=NO/g" $VSFTPDCONFIG
      $SED -i "s/listen_ipv6=.*/listen_ipv6=YES/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "IPv6 Listen Config" --msgbox "IPv6 listening has been enabled" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "IPv6 listening has been enabled" --ok-button "OK" 10 70
    else
      $SED -i "s/listen=.*/listen=YES/g" $VSFTPDCONFIG
      $SED -i "s/listen_ipv6=.*/listen_ipv6=NO/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "IPv6 Listen Config" --msgbox "IPv6 listening has been disabled" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "IPv6 listening has been disabled" --ok-button "OK" 10 70
    fi
 }
 #*****************************
@@ -159,25 +159,25 @@ vsftpdip6enable() {
 #
 #*****************************
 vsftpdhidedot() {
-   if (whiptail --title "Hide dot(.) Config" --yesno "Do you want to show/hide dot(.) files from users?\nDefault is to hide these files" --yes-button "Show" --no-button "Hide" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "Do you want to show/hide dot(.) files from users?\nDefault is to hide these files" --yes-button "Show" --no-button "Hide" 10 70) then
      $SED -i "s/hide_file=.*/#hide_file={.*}/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "Hide dot(.) Config" --msgbox "dot(.) files are now visible" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "dot(.) files are now visible" --ok-button "OK" 10 70
    else
      $SED -i "s/#hide_file=.*/hide_file={.*}/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "Hide dot(.) Config" --msgbox "dot(.) files are now hidden" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "dot(.) files are now hidden" --ok-button "OK" 10 70
    fi
 }
 vsftpdanonymous() {
-   if (whiptail --title "Anonymous FTP Config" --yesno "Do you want to enable/disable anonymous FTP logins?\nDefault is disabled (Highly Recommended)" --yes-button "Enable" --no-button "Disable" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "Do you want to enable/disable anonymous FTP logins?\nDefault is disabled (Highly Recommended)" --yes-button "Enable" --no-button "Disable" 10 70) then
      $SED -i "s/anonymous_enable=.*/anonymous_enable=YES/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "Anonymous FTP Config" --msgbox "Anonymous FTP logins enabled (Not Recommended!)" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "Anonymous FTP logins enabled (Not Recommended!)" --ok-button "OK" 10 70
    else
      $SED -i "s/anonymous_enable=.*/anonymous_enable=NO/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "Anonymous FTP Config" --msgbox "Anonymous FTP logins disabled" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "Anonymous FTP logins disabled" --ok-button "OK" 10 70
    fi
 }
 vsftpdbackupconf() {
@@ -199,27 +199,27 @@ vsftpdbackupconf() {
 #
 #*****************************
 vsftpdsslenable() {
-   if (whiptail --title "SSL Config" --yesno "Do you want to enable/disable SSL?\nDefault is disabled"  --yes-button "Enable" --no-button "Disable" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "Do you want to enable/disable SSL?\nDefault is disabled"  --yes-button "Enable" --no-button "Disable" 10 70) then
      $SED -i "s/ssl_enable=.*/ssl_enable=YES/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "SSL Config" --msgbox "SSL is now enabled\nPlease add cert/key paths in configuration menu" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "SSL is now enabled\nPlease add cert/key paths in configuration menu" --ok-button "OK" 10 70
    else
      $SED -i "s/ssl_enable=.*/ssl_enable=NO/g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "SSL Config" --msgbox "SSL is now disabled" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "SSL is now disabled" --ok-button "OK" 10 70
    fi
 }
 vsslcert() {
-   if (whiptail --title "SSL Cert Config" --yesno "You Entered:\n$SSLCERT" --yes-button "Update" --no-button "Change" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "You Entered:\n$SSLCERT" --yes-button "Update" --no-button "Change" 10 70) then
      $SED -i "s@rsa_cert_file=.*@rsa_cert_file=$SSLCERT@g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "SSL Cert Config" --msgbox "Path $SSLCERT updated" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "Path $SSLCERT updated" --ok-button "OK" 10 70
    else
      vsftpdsslcert
    fi
 }
 vsftpdsslcert() {
-     SSLCERT=$(whiptail --inputbox "\nEnter full path to SSL cert\nIE: /etc/ssl/certs/vsftpd.pem" 10 70 --title "SSL Cert Config" 3>&1 1>&2 2>&3)
+     SSLCERT=$(whiptail --inputbox "\nEnter full path to SSL cert\nIE: /etc/ssl/certs/vsftpd.pem" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
      vsslcert
@@ -228,19 +228,101 @@ vsftpdsslcert() {
    fi
 }
 vsslkey() {
-   if (whiptail --title "SSL Key Config" --yesno "You Entered:\n$SSLKEY" --yes-button "Update" --no-button "Change" 10 70) then
+   if (whiptail --title "vsFTPd Configuration" --yesno "You Entered:\n$SSLKEY" --yes-button "Update" --no-button "Change" 10 70) then
      $SED -i "s@rsa_private_key_file=.*@rsa_private_key_file=$SSLKEY@g" $VSFTPDCONFIG
      vsftpdRestart
-     whiptail --title "SSL Key Config" --msgbox "Path $SSLKEY updated" --ok-button "OK" 10 70
+     whiptail --title "vsFTPd Configuration" --msgbox "Path $SSLKEY updated" --ok-button "OK" 10 70
    else
      vsftpdsslkey
    fi
 }
 vsftpdsslkey() {
-     SSLKEY=$(whiptail --inputbox "\nEnter full path to SSL key\nIE: /etc/ssl/private/vsftpd.key" 10 70 --title "SSL Key Config" 3>&1 1>&2 2>&3)
+     SSLKEY=$(whiptail --inputbox "\nEnter full path to SSL key\nIE: /etc/ssl/private/vsftpd.key" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
      exitstatus=$?
    if [ $exitstatus = 0 ]; then
      vsslkey
+   else
+     cancelOperation
+   fi
+}
+#*****************************
+#
+# vsFTPd USER Functions
+#
+#*****************************
+vsftpdwriteenable() {
+   if (whiptail --title "vsFTPd Configuration" --yesno "Do you want to enable/disable Write?\nDefault is enabled"  --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/write_enable=.*/write_enable=YES/g" $VSFTPDCONFIG
+     vsftpdRestart
+     whiptail --title "vsFTPd Configuration" --msgbox "Write is now enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/write_enable=.*/write_enable=NO/g" $VSFTPDCONFIG
+     vsftpdRestart
+     whiptail --title "vsFTPd Configuration" --msgbox "Write is now disabled" --ok-button "OK" 10 70
+   fi
+}
+vsftpdwriteablechroot() {
+   if (whiptail --title "vsFTPd Configuration" --yesno "Do you want to enable/disable Writeable chroot?\nDefault is enabled"  --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/allow_writeable_chroot=.*/allow_writeable_chroot=YES/g" $VSFTPDCONFIG
+     vsftpdRestart
+     whiptail --title "vsFTPd Configuration" --msgbox "Write chroot is now enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/allow_writeable_chroot=.*/allow_writeable_chroot=NO/g" $VSFTPDCONFIG
+     vsftpdRestart
+     whiptail --title "vsFTPd Configuration" --msgbox "Write chroot is now disabled" --ok-button "OK" 10 70
+   fi
+}
+
+vmaxclients() {
+   if (whiptail --title "vsFTPd Configuration" --yesno "You Entered: $CLIENTMAX" --yes-button "Update" --no-button "Change" 10 70) then
+     $SED -i "s/max_clients=.*/max_clients=$CLIENTMAX/g" $VSFTPDCONFIG
+     vsftpdRestart
+     whiptail --title "vsFTPd Configuration" --msgbox "Max clients modified to $CLIENTMAX" --ok-button "OK" 10 70
+   else
+     vsftpdmaxclients
+   fi
+}
+vsftpdmaxclients() {
+     CLIENTMAX=$(whiptail --inputbox "\nvsFTPd Max Clients Default:50" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
+     exitstatus=$?
+   if [ $exitstatus = 0 ]; then
+     vmaxclients
+   else
+     cancelOperation
+   fi
+}
+vmaxperip() {
+   if (whiptail --title "vsFTPd Configuration" --yesno "You Entered: $MAXPERIP" --yes-button "Update" --no-button "Change" 10 70) then
+     $SED -i "s/max_per_ip=.*/max_per_ip=$MAXPERIP/g" $VSFTPDCONFIG
+     vsftpdRestart
+     whiptail --title "vsFTPd Configuration" --msgbox "Max clients modified to $MAXPERIP" --ok-button "OK" 10 70
+   else
+     vsftpmaxperip
+   fi
+}
+vsftpmaxperip() {
+     MAXPERIP=$(whiptail --inputbox "\nvsFTPd Max per IP Default:25" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
+     exitstatus=$?
+   if [ $exitstatus = 0 ]; then
+     vmaxperip
+   else
+     cancelOperation
+   fi
+}
+vmaxlogins() {
+   if (whiptail --title "vsFTPd Configuration" --yesno "You Entered: $MAXLOGINS" --yes-button "Update" --no-button "Change" 10 70) then
+     $SED -i "s/max_login_fails=.*/max_login_fails=$MAXLOGINS/g" $VSFTPDCONFIG
+     vsftpdRestart
+     whiptail --title "vsFTPd Configuration" --msgbox "Max clients modified to $MAXLOGINS" --ok-button "OK" 10 70
+   else
+     vsftpdmaxloginfails
+   fi
+}
+vsftpdmaxloginfails() {
+     MAXLOGINS=$(whiptail --inputbox "\nvsFTPd Max failed logins Default:5" 10 70 --title "vsFTPd Configuration" 3>&1 1>&2 2>&3)
+     exitstatus=$?
+   if [ $exitstatus = 0 ]; then
+     vmaxlogins
    else
      cancelOperation
    fi
