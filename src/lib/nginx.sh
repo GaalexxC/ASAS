@@ -581,3 +581,15 @@ nginxtokensswitch() {
      whiptail --title "Nginx Configuration" --msgbox "Nginx server_tokens is disabled" --ok-button "OK" 10 70
    fi
 }
+nginxlimitratetime() {
+     LIMITRATETIME=$(whiptail --inputbox "\nNginx limit_rate_after Default: 4m" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/limit_rate_after .*;/limit_rate_after $LIMITRATETIME;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx limit_rate_after modified to $LIMITRATETIME" --ok-button "OK" 10 70
+}
+nginxlimitratespeed() {
+     LIMITRATESPEED=$(whiptail --inputbox "\nNginx limit_rate Default: 100k" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/limit_rate .*;/limit_rate $LIMITRATESPEED;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx limit_rate modified to $LIMITRATESPEED" --ok-button "OK" 10 70
+}

@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 19:18 EDT                                       #
+#        &Updated:   12/24/2017 21:43 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -42,9 +42,11 @@ whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings 
         "10)" "Nginx send_timeout (Default:15m)" \
         "11)" "Enable/Disable gzip (Default:On)" \
         "12)" "Enable/Disable Server Tokens (Default:Off)" \
-        "13)" "Return to Nginx Menu" \
-        "14)" "Return to Main Menu" \
-        "15)" "Exit"  3>&2 2>&1 1>&3
+        "13)" "Nginx limit_rate_after (Default:4m)" \
+        "14)" "Nginx limit_rate (Default:100k)" \
+        "15)" "Return to Nginx Menu" \
+        "16)" "Return to Main Menu" \
+        "17)" "Exit"  3>&2 2>&1 1>&3
 )
 
 case $NGINXSETTINGS in
@@ -97,14 +99,22 @@ case $NGINXSETTINGS in
         ;;
 
         "13)")
-          return
+          nginxlimitratetime
         ;;
 
         "14)")
-          asasMainMenu
+          nginxlimitratespeed
         ;;
 
         "15)")
+          return
+        ;;
+
+        "16)")
+          asasMainMenu
+        ;;
+
+        "17)")
           exit 1
         ;;
    esac
