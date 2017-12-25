@@ -26,6 +26,15 @@
 #################################################################################
 clear
 
+      if [ ! -f $CURDIR/$LOGS/php-error-$CURDAY.log ]
+       then
+       touch $CURDIR/$LOGS/php-error-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$LOGS/php-$CURDAY.log ]
+       then
+       touch $CURDIR/$LOGS/php-$CURDAY.log
+      fi
+
 while [ 4 ]
 do
 

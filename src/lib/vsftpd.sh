@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 22:11 EDT                                       #
+#        &Updated:   12/25/2017 00:06 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -68,8 +68,10 @@ vsftpdRestart() {
      echo -e "XXX\n100\n\nSuccessfully restarted vsFTPd... Done.\nXXX"
      sleep 1
    else
-     echo -e "XXX\n0\n\nvsFTPd failed, check /var/log/vsftpd.log\nScript exiting in 3 seconds...\nXXX"
-     sleep 3
+     vsftpdfail=$(systemctl status vsftpd.service 2>&1)
+     echo "Error date: $DATE_TIME\n\n$vsftpdfail" > $CURDIR/$LOGS/vsftpd-error-$CURDAY.log
+     echo -e "XXX\n99\n\nvsFTPd failed, check $CURDIR/$LOGS/vsftpd-error-$CURDAY.log...\nXXX"
+     sleep 5
      exit 1
    fi
      sleep .80

@@ -42,15 +42,18 @@ phpCheckInstall() {
 phpVersion() {
    if [ -f $PHP72_FPM_INI/$PHPCONFIG ]
       then
+     PHP_VER=$PHP72_FPM_VER
      PHP_INIT=$PHP72_FPM_INIT
      PHP_INI=$PHP72_FPM_INI/$PHPCONFIG
      PHP_FPMCONF_DIR=$PHP72_FPM_DIR
    elif [ -f $PHP71_FPM_INI/$PHPCONFIG ]
       then
+     PHP_VER=$PHP71_FPM_VER
      PHP_INIT=$PHP71_FPM_INIT
      PHP_INI=$PHP71_FPM_INI/$PHPCONFIG
      PHP_FPMCONF_DIR=$PHP71_FPM_DIR
    else
+     PHP_VER=$PHP70_FPM_VER
      PHP_INIT=$PHP70_FPM_INIT
      PHP_INI=$PHP70_FPM_INI/$PHPCONFIG
      PHP_FPMCONF_DIR=$PHP70_FPM_DIR
@@ -152,9 +155,11 @@ phpfpmRestart() {
      echo -e "XXX\n100\n\nSuccessfully restarted PHP-FPM... Done.\nXXX"
      sleep 1
    else
-     echo -e "XXX\n0\n\nPHP-FPM failed, check /var/log/php-fpm.log\nScript exiting in 3 seconds...\nXXX"
-     sleep 3
-    exit 1
+     phpfail=$(systemctl status $PHP_VER.service 2>&1)
+     echo "Error date: $DATE_TIME\n\n$phpfail" > $CURDIR/$LOGS/php-error-$CURDAY.log
+     echo -e "XXX\n99\n\nPHP-FPM failed, check $CURDIR/$LOGS/php-error-$CURDAY.log...\nXXX"
+     sleep 5
+     exit 1
    fi
      sleep .80
   } | whiptail --title "Restart PHP-FPM" --gauge "\nRestarting the PHP-FPM service" 10 70 0

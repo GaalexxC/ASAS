@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 22:12 EDT                                       #
+#        &Updated:   12/25/2017 00:05 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -25,6 +25,15 @@
 #                                                                               #
 #################################################################################
 clear
+
+      if [ ! -f $CURDIR/$LOGS/vsftpd-error-$CURDAY.log ]
+       then
+       touch $CURDIR/$LOGS/vsftpd-error-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$LOGS/vsftpd-$CURDAY.log ]
+       then
+       touch $CURDIR/$LOGS/vsftpd-$CURDAY.log
+      fi
 
 while [ 5 ]
 do
