@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2017 02:22 EDT                                       #
+#        &Updated:   12/25/2017 07:36 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -63,6 +63,7 @@ case $SELECTPHP in
          printf "apt --yes install $PHP72_PACKAGES"
        }
        systemInstaller
+       phpcgifixpath
        completeOperation
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
@@ -78,6 +79,7 @@ case $SELECTPHP in
          printf "apt --yes install $PHP71_PACKAGES"
        }
        systemInstaller
+       phpcgifixpath
        completeOperation
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
@@ -93,6 +95,7 @@ case $SELECTPHP in
          printf "apt --yes install $PHP70_PACKAGES"
        }
        systemInstaller
+       phpcgifixpath
        completeOperation
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
