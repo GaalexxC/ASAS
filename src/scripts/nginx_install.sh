@@ -43,17 +43,20 @@ while [ 3 ]
 do
 
 SELECTNGINX=$(
-whiptail --title "Nginx Installer" --radiolist "\nUse up/down arrows and space to select\n" 18 78 10 \
+whiptail --title "Nginx Installer" --radiolist "\nUse up/down arrows and space to select\n" 20 78 10 \
         "1)" "Nginx Latest Mainline (Recommended)" ON \
         "2)" "Nginx Latest Stable" OFF \
         "3)" "Build Nginx source with Openssl (Advanced)" OFF \
         "4)" "Configure Nginx Settings (Advanced)" OFF \
-        "5)" "Remove Nginx (Preserves Configurations)" OFF \
-        "6)" "Purge Nginx (Wipe Clean)" OFF \
-        "7)" "Clean Source Build (Archives Configurations)" OFF \
-        "8)" "Generate 2048bit Diffie-Hellman (Required for SSL/TLS)" OFF \
-        "9)" "Return to Main Menu" OFF \
-        "10)" "Exit" OFF 3>&1 1>&2 2>&3
+        "5)" "View Debug Log" OFF \
+        "6)" "View Error Log" OFF \
+        "7)" "View Nginx Server Log" OFF \
+        "8)" "Remove Nginx (Preserves Configurations)" OFF \
+        "9)" "Purge Nginx (Wipe Clean)" OFF \
+        "10)" "Clean Source Build (Archives Configurations)" OFF \
+        "11)" "Generate 2048bit Diffie-Hellman (Required for SSL/TLS)" OFF \
+        "12)" "Return to Main Menu" OFF \
+        "13)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTNGINX in
@@ -188,6 +191,18 @@ case $SELECTNGINX in
         ;;
 
         "5)")
+         whiptail --textbox $CURDIR/$NGINX_LOG/nginx-$CURDAY.log 24 78 10
+       ;;
+
+        "6)")
+         whiptail --textbox $CURDIR/$NGINX_LOG/error-$CURDAY.log 24 78 10
+       ;;
+
+        "7)")
+         whiptail --textbox /var/log/nginx/error.log 24 78 10
+       ;;
+
+        "8)")
    if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-* ]; then
     if (whiptail --title "Remove Nginx" --yesno "Warning! Removes Nginx (Preserves Configurations)\n\nWould you like to remove Nginx" --yes-button "Remove" --no-button "Cancel" 10 70) then
 
@@ -221,7 +236,7 @@ case $SELECTNGINX in
    fi
         ;;
 
-        "6)")
+        "9)")
      if type nginx > /dev/null 2>&1 && [ ! -f $NGINXCONFDIR/.build-* ]; then
       if (whiptail --title "Purge Nginx" --yesno "Warning! Wipes all traces of Nginx from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge Nginx?" --yes-button "Purge" --no-button "Cancel" 10 70) then
        package() {
@@ -254,7 +269,7 @@ case $SELECTNGINX in
     fi
         ;;
 
-        "7)")
+        "10)")
     if ! type nginx > /dev/null 2>&1; then
          whiptail --title "Nginx Uninstall" --msgbox "Nothing to do Nginx not installed" --ok-button "OK" 10 70
      elif type nginx > /dev/null 2>&1 && [ -f $NGINXCONFDIR/.build-* ]; then
@@ -280,7 +295,7 @@ case $SELECTNGINX in
       fi
         ;;
 
-        "8)")
+        "11)")
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
         whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
@@ -297,11 +312,11 @@ case $SELECTNGINX in
       fi
         ;;
 
-        "9)")
+        "12)")
       return
         ;;
 
-        "10)")
+        "13)")
       exit 1
         ;;
     esac
