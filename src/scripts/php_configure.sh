@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/23/2017 21:24 EDT                                       #
+#        &Updated:   12/24/2017 22:01 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -29,7 +29,7 @@ clear
 while [ 1 ]
 do
 PHPSETTINGS=$(
-whiptail --title "PHP Configuration" --menu "\nConfigure most common settings below\nFor PHP security go to System Security menu\nEdit php.ini manually for extended options" 24 78 14 \
+whiptail --title "PHP Configuration" --menu "\nConfigure most common settings below\nFor PHP security go to System Security menu\nEdit php.ini manually for extended options" 24 78 10 \
         "1)" "Enable/Disable PHP Engine (Default:On)"   \
         "2)" "Expose PHP Server (Default:Off)" \
         "3)" "Max Memory Allocation (Default:128M)"  \

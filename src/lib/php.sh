@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/23/2017 19:48 EDT                                       #
+#        &Updated:   12/24/2017 22:03 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -236,11 +236,11 @@ phpmaxfilesize() {
 phpopcacheswitch() {
      phpVersion
    if (whiptail --title "PHP Configuration" --yesno "Do you want to enable Zend OPCache?\nDefault is disabled" --yes-button "Enable" --no-button "Disable" 10 70) then
-     $SED -i "s/;opcache.enable=.*/opcache.enable=1/g" $PHP_INI
+     $SED -i "s/.*opcache.enable=.*/opcache.enable=1/g" $PHP_INI
      phpfpmRestart
      whiptail --title "PHP Configuration" --msgbox "Zend OPCache is enabled" --ok-button "OK" 10 70
    else
-     $SED -i "s/;opcache.enable=.*/opcache.enable=0/g" $PHP_INI
+     $SED -i "s/.*opcache.enable=.*/opcache.enable=0/g" $PHP_INI
      phpfpmRestart
      whiptail --title "PHP Configuration" --msgbox "Zend OPCache is disabled" --ok-button "OK" 10 70
    fi
@@ -248,7 +248,7 @@ phpopcacheswitch() {
 phptimezone() {
      phpVersion
      TIMEZONE=$(whiptail --inputbox "\nSet default timezone IE: America/New_York\nhttp://php.net/date.timezone" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
-     $SED -i "s@;date.timezone = .*@date.timezone = $TIMEZONE@g" $PHP_INI
+     $SED -i "s@.*date.timezone = .*@date.timezone = $TIMEZONE@g" $PHP_INI
      phpfpmRestart
      whiptail --title "PHP Configuration" --msgbox "Default timezone modified to $TIMEZONE" --ok-button "OK" 10 70
 }
