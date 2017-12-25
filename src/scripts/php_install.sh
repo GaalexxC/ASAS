@@ -45,10 +45,13 @@ whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to 
         "3)" "Install PHP 7.0" OFF \
         "4)" "Configure PHP Settings" OFF \
         "5)" "Backup Config (php.ini)" OFF \
-        "6)" "Remove PHP (Config Saved)" OFF \
-        "7)" "Purge PHP (Wipe Clean)" OFF \
-        "8)" "Return to Main Menu" OFF \
-        "9)" "Exit" OFF 3>&1 1>&2 2>&3
+        "6)" "View Debug Log" OFF \
+        "7)" "View Error Log" OFF \
+        "8)" "View PHP-FPM Server Log" OFF \
+        "9)" "Remove PHP (Config Saved)" OFF \
+        "10)" "Purge PHP (Wipe Clean)" OFF \
+        "11)" "Return to Main Menu" OFF \
+        "12)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTPHP in
@@ -115,8 +118,21 @@ case $SELECTPHP in
      fi
         ;;
 
-
         "6)")
+         whiptail --textbox $CURDIR/$LOGS/php-$CURDAY.log 24 78 10
+       ;;
+
+        "7)")
+         whiptail --textbox $CURDIR/$LOGS/php-error-$CURDAY.log 24 78 10
+       ;;
+
+        "8)")
+         phpVersion
+         whiptail --textbox /var/log/$PHP_VER.log 24 78 10
+       ;;
+
+
+        "9)")
 
    if type php > /dev/null 2>&1; then
     if (whiptail --title "Remove PHP" --yesno "Warning! Removes PHP (Preserves Configurations)\n\nWould you like to remove PHP" --yes-button "Remove" --no-button "Cancel" 10 70) then
@@ -146,7 +162,7 @@ case $SELECTPHP in
    fi
         ;;
 
-        "7)")
+        "10)")
 
    if type php > /dev/null 2>&1; then
     if (whiptail --title "Purge PHP" --yesno "Warning! Wipes all traces of PHP from your system!\nAll configurations/logs/repos...etc deleted!\n\nWould you like to purge PHP?" --yes-button "Purge" --no-button "Cancel" 10 70) then
@@ -176,13 +192,13 @@ case $SELECTPHP in
    fi
         ;;
 
-        "8)")
+        "11)")
 
      return
 
         ;;
 
-        "9)")
+        "12)")
 
      exit 1
 
