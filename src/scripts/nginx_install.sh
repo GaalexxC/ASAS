@@ -26,6 +26,19 @@
 #################################################################################
 #clear
 
+      if [ ! -d $CURDIR/$NGINX_LOG/ ]
+       then
+       mkdir -p $CURDIR/$NGINX_LOG/
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/error-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/error-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$NGINX_LOG/nginx-$CURDAY.log ]
+       then
+       touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
+      fi
+
 while [ 3 ]
 do
 
@@ -129,21 +142,9 @@ case $SELECTNGINX in
         "3)")
    if ! type nginx > /dev/null 2>&1 || [ -f $NGINXCONFDIR/.build-* ]; then
     if (whiptail --title "Nginx Compiler" --yesno "Nginx-OpenSSL source build\nYou can compile new, recompile, or upgrade compile\nDo you want to run source build?" --yes-button "Build" --no-button "Cancel" 10 70) then
-      if [ ! -d $CURDIR/$NGINX_LOG/ ]
-       then
-       mkdir -p $CURDIR/$NGINX_LOG/
-      fi
       if [ ! -f $CURDIR/$NGINX_LOG/install-$CURDAY.log ]
        then
        touch $CURDIR/$NGINX_LOG/install-$CURDAY.log
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/error-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/error-$CURDAY.log
-      fi
-      if [ ! -f $CURDIR/$NGINX_LOG/nginx-$CURDAY.log ]
-       then
-       touch $CURDIR/$NGINX_LOG/nginx-$CURDAY.log
       fi
        mkdir $CURDIR/source
        cd $CURDIR/source
