@@ -43,10 +43,13 @@ whiptail --title "vsFTPd Installer" --radiolist "\nUse up/down arrows and space 
         "1)" "Install vsFTPd" ON \
         "2)" "Configure vsFTPd Settings" OFF \
         "3)" "Backup Config (vsftpd.conf)" OFF \
-        "4)" "Remove vsFTPd (Config Saved)" OFF \
-        "5)" "Purge vsFTPd (Wipe Clean)" OFF \
-        "6)" "Return to Main Menu" OFF \
-        "7)" "Exit" OFF 3>&1 1>&2 2>&3
+        "4)" "View Debug Log" OFF \
+        "5)" "View Error Log" OFF \
+        "6)" "View vsFTPd server Log" OFF \
+        "7)" "Remove vsFTPd (Config Saved)" OFF \
+        "8)" "Purge vsFTPd (Wipe Clean)" OFF \
+        "9)" "Return to Main Menu" OFF \
+        "10)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTFTP in
@@ -84,6 +87,18 @@ case $SELECTFTP in
        ;;
 
         "4)")
+         whiptail --textbox $CURDIR/$LOGS/vsftpd-$CURDAY.log 24 78 10
+       ;;
+
+        "5)")
+         whiptail --textbox $CURDIR/$LOGS/vsftpd-error-$CURDAY.log 24 78 10
+       ;;
+
+        "6)")
+         whiptail --textbox /var/log/vsftpd.log 24 78 10
+       ;;
+
+        "7)")
       if type vsftpd > /dev/null 2>&1; then
         package() {
           printf "apt --yes remove vsftpd"
@@ -100,7 +115,7 @@ case $SELECTFTP in
       fi
         ;;
 
-        "5)")
+        "8)")
       if type vsftpd > /dev/null 2>&1; then
         package() {
           printf "apt --yes purge vsftpd"
@@ -117,12 +132,12 @@ case $SELECTFTP in
          whiptail --title "vsFTPd Check" --msgbox "vsFTPd is not installed" --ok-button "OK" 10 70
       fi
         ;;
-        "6)")
+        "9)")
 
        return
         ;;
 
-        "7)")
+        "10)")
 
        exit 1
         ;;
