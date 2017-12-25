@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 22:03 EDT                                       #
+#        &Updated:   12/25/2017 00:37 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -156,7 +156,7 @@ phpfpmRestart() {
      sleep 1
    else
      phpfail=$(systemctl status $PHP_VER.service 2>&1)
-     echo "Error date: $DATE_TIME\n\n$phpfail" > $CURDIR/$LOGS/php-error-$CURDAY.log
+     echo "Error date: $DATE_TIME\n\n$phpfail" >> $CURDIR/$LOGS/php-error-$CURDAY.log
      echo -e "XXX\n99\n\nPHP-FPM failed, check $CURDIR/$LOGS/php-error-$CURDAY.log...\nXXX"
      sleep 5
      exit 1

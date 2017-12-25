@@ -69,7 +69,7 @@ vsftpdRestart() {
      sleep 1
    else
      vsftpdfail=$(systemctl status vsftpd.service 2>&1)
-     echo "Error date: $DATE_TIME\n\n$vsftpdfail" > $CURDIR/$LOGS/vsftpd-error-$CURDAY.log
+     echo "Error date: $DATE_TIME\n\n$vsftpdfail" >> $CURDIR/$LOGS/vsftpd-error-$CURDAY.log
      echo -e "XXX\n99\n\nvsFTPd failed, check $CURDIR/$LOGS/vsftpd-error-$CURDAY.log...\nXXX"
      sleep 5
      exit 1
@@ -87,6 +87,7 @@ vport() {
      #local CONFIG=/etc/vsftpd.conf
      $SED -i "s/listen_port=.*/listen_port=$FTPPORT/g" $VSFTPDCONFIG
      vsftpdRestart
+     echo "$DATE_TIME: Updated port to $FTPPORT" >> $CURDIR/$LOGS/vsftpd-$CURDAY.log
      whiptail --title "vsFTPd Configuration" --msgbox "Port $FTPPORT successfully updated" --ok-button "OK" 10 70
    else
      vsftpdport
