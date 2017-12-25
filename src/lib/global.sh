@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/23/2017 22:41 EDT                                       #
+#        &Updated:   12/24/2017 23:55 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -36,6 +36,11 @@
    if [ ! -d $CURDIR/tmp ]
     then
      mkdir $CURDIR/tmp
+   fi
+
+   if [ ! -d $CURDIR/$LOGS/ ]
+    then
+     mkdir -p $CURDIR/$LOGS/
    fi
 
 asasMainMenu() {
