@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 16:50 EDT                                       #
+#        &Updated:   12/24/2017 19:18 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -29,7 +29,7 @@ clear
 while [ 1 ]
 do
 NGINXSETTINGS=$(
-whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings below\nEdit nginx.conf manually for extended options" 24 78 14 \
+whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings below\nEdit nginx.conf manually for extended options" 24 78 10 \
         "1)" "Nginx worker_processes (Default:4)"   \
         "2)" "Nginx worker_connections (Default:2500)" \
         "3)" "Nginx worker_rlimit_nofile (Default:20000)"  \
@@ -39,10 +39,12 @@ whiptail --title "Nginx Configuration" --menu "\nConfigure most common settings 
         "7)" "Nginx client_body_timeout (Default:15m)" \
         "8)" "Nginx client_max_body_size (Default:20M)" \
         "9)" "Enable/Disable sendfile (Default:Off)" \
-        "10)" "Enable/Disable gzip (Default:On)" \
-        "11)" "Return to Nginx Menu" \
-        "12)" "Return to Main Menu" \
-        "13)" "Exit"  3>&2 2>&1 1>&3
+        "10)" "Nginx send_timeout (Default:15m)" \
+        "11)" "Enable/Disable gzip (Default:On)" \
+        "12)" "Enable/Disable Server Tokens (Default:Off)" \
+        "13)" "Return to Nginx Menu" \
+        "14)" "Return to Main Menu" \
+        "15)" "Exit"  3>&2 2>&1 1>&3
 )
 
 case $NGINXSETTINGS in
@@ -83,18 +85,26 @@ case $NGINXSETTINGS in
         ;;
 
         "10)")
-          nginxgzipswitch
+          nginxsendtimeout
         ;;
 
         "11)")
-          return
+          nginxgzipswitch
         ;;
 
         "12)")
-          asasMainMenu
+          nginxtokensswitch
         ;;
 
         "13)")
+          return
+        ;;
+
+        "14)")
+          asasMainMenu
+        ;;
+
+        "15)")
           exit 1
         ;;
    esac

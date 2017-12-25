@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/24/2017 17:07 EDT                                       #
+#        &Updated:   12/24/2017 19:16 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -553,8 +553,14 @@ nginxsendfileswitch() {
      whiptail --title "Nginx Configuration" --msgbox "Nginx sendfile is disabled" --ok-button "OK" 10 70
    fi
 }
+nginxsendtimeout() {
+     SENDTIMEOUT=$(whiptail --inputbox "\nNginx send_timeout Default: 15m" 10 70 --title "Nginx Configuration" 3>&1 1>&2 2>&3)
+     $SED -i "s/send_timeout .*;/send_timeout $SENDTIMEOUT;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx send_timeout modified to $SENDTIMEOUT" --ok-button "OK" 10 70
+}
 nginxgzipswitch() {
-   if (whiptail --title "Nginx Configuration" --yesno "Do you want to enable gzip?\nDefault is enabled" --yes-button "Enable" --no-button "Disable" 10 70) then
+   if (whiptail --title "Nginx Configuration" --yesno "Do you want to disable gzip?\nDefault is enabled" --yes-button "Enable" --no-button "Disable" 10 70) then
      $SED -i "s/gzip .*;/gzip on;/g" $NGINXCONFIG
      nginxRestart
      whiptail --title "Nginx Configuration" --msgbox "Nginx gzip is enabled" --ok-button "OK" 10 70
@@ -562,5 +568,16 @@ nginxgzipswitch() {
      $SED -i "s/gzip .*;/gzip off;/g" $NGINXCONFIG
      nginxRestart
      whiptail --title "Nginx Configuration" --msgbox "Nginx gzip is disabled" --ok-button "OK" 10 70
+   fi
+}
+nginxtokensswitch() {
+   if (whiptail --title "Nginx Configuration" --yesno "Do you want to enable server_tokens?\nDefault is disabled" --yes-button "Enable" --no-button "Disable" 10 70) then
+     $SED -i "s/server_tokens .*;/server_tokens on;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx server_tokens is enabled" --ok-button "OK" 10 70
+   else
+     $SED -i "s/server_tokens .*;/server_tokens off;/g" $NGINXCONFIG
+     nginxRestart
+     whiptail --title "Nginx Configuration" --msgbox "Nginx server_tokens is disabled" --ok-button "OK" 10 70
    fi
 }
