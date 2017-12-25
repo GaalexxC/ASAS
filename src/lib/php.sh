@@ -330,10 +330,24 @@ phpopcacheswitch() {
      whiptail --title "PHP Configuration" --msgbox "Zend OPCache is disabled" --ok-button "OK" 10 70
    fi
 }
-phptimezone() {
+ptimezone() {
      phpVersion
-     TIMEZONE=$(whiptail --inputbox "\nSet default timezone IE: America/New_York\nhttp://php.net/date.timezone" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
-     $SED -i "s@.*date.timezone = .*@date.timezone = $TIMEZONE@g" $PHP_INI
+   if (whiptail --title "PHP Configuration" --yesno "You Entered: $TIMEZONE" --yes-button "Update" --no-button "Change" 10 70) then
+     $SED -i "s#.*date.timezone = .*#date.timezone = $TIMEZONE#g" $PHP_INI
      phpfpmRestart
+     FUNC="Default timezone modified to $TIMEZONE"
+     phpDebugLog
      whiptail --title "PHP Configuration" --msgbox "Default timezone modified to $TIMEZONE" --ok-button "OK" 10 70
+   else
+     phptimezone
+   fi
+}
+phptimezone() {
+     TIMEZONE=$(whiptail --inputbox "\nSet default timezone IE: America/New_York" 10 70 --title "PHP Configuration" 3>&1 1>&2 2>&3)
+     exitstatus=$?
+   if [ $exitstatus = 0 ]; then
+     ptimezone
+   else
+     cancelOperation
+   fi
 }
