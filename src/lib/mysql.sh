@@ -105,14 +105,18 @@ perconaaddrepo() {
 mysqlPassword() {
      PASS1=$(whiptail --passwordbox "\nPlease specify a mysql root password\nUse a strong UNIX type pass for security" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
      PASS2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
-   if [ $PASS1 == $PASS2 ]
-    then
+     mysqlPassword2
+}
+mysqlPassword2() {
+   until [ $PASS1 == $PASS2 ]
+   do
+     whiptail --title "MySQL Password" --msgbox "Passwords dont match try again" --ok-button "OK" 10 70
+     mysqlPassword
+   done
+}
+mysqlInsertPass() {
      echo "mysql-server-5.7 mysql-server/root_password password $PASS1" | debconf-set-selections
      echo "mysql-server-5.7 mysql-server/root_password_again password $PASS2" | debconf-set-selections
-    else
-     whiptail --title "MySQL Password" --msgbox "Passwords dont match" --ok-button "OK" 10 70
-    return
-   fi
 }
 mysqlCleanup() {
 {

@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/28/2017 01:28 EDT                                       #
+#        &Updated:   12/28/2017 03:08 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -45,10 +45,13 @@ whiptail --title "MySQL Installer" --radiolist "\nUse up/down arrows and space t
         "3)" "Oracle MySQL Server 5.7" OFF \
         "4)" "Configure Mysql Settings" OFF \
         "5)" "Backup Config (my.cnf)" OFF \
-        "6)" "Remove MySQL (Config Saved)" OFF \
-        "7)" "Purge MySQL (Wipe Clean)" OFF \
-        "8)" "Return to Main Menu" OFF \
-        "9)" "Exit" OFF 3>&1 1>&2 2>&3
+        "6)" "View Debug Log" OFF \
+        "7)" "View Error Log" OFF \
+        "8)" "View MySQL Server Log" OFF \
+        "9)" "Remove MySQL (Config Saved)" OFF \
+        "10)" "Purge MySQL (Wipe Clean)" OFF \
+        "11)" "Return to Main Menu" OFF \
+        "12)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTMYSQL in
@@ -62,8 +65,9 @@ case $SELECTMYSQL in
         }
         updateSources
         mysqlPassword
+        mysqlInsertPass
         package() {
-         printf "apt --yes install percona-server-server-5.7"
+         printf "apt -y install percona-server-server-5.7"
         }
         systemInstaller
         mysqlCleanup
@@ -132,8 +136,20 @@ case $SELECTMYSQL in
      fi
         ;;
 
-
         "6)")
+         whiptail --textbox $CURDIR/$LOGS/mysql-$CURDAY.log 24 78 10
+        ;;
+
+        "7)")
+         whiptail --textbox $CURDIR/$LOGS/mysql-error-$CURDAY.log 24 78 10
+        ;;
+
+        "8)")
+         whiptail --textbox /var/log/mysql/error.log 24 78 10
+        ;;
+
+
+        "9)")
 
    if type mysql > /dev/null 2>&1; then
     if (whiptail --title "Remove MySQL" --yesno "Warning! Removes MySQL (Preserves Configurations)\n\nWould you like to remove MySQL" --yes-button "Remove" --no-button "Cancel" 10 70) then
@@ -163,7 +179,7 @@ case $SELECTMYSQL in
    fi
         ;;
 
-        "7)")
+        "10)")
 
    if type mysql > /dev/null 2>&1; then
     if (whiptail --title "Purge MySQL" --yesno "Warning! Wipes all traces of MySQL from your system!\nAll config/databases/logs/repos...etc deleted!\n\nWould you like to purge PHP?" --yes-button "Purge" --no-button "Cancel" 10 70) then
@@ -193,13 +209,13 @@ case $SELECTMYSQL in
    fi
         ;;
 
-        "8)")
+        "11)")
 
      return
 
         ;;
 
-        "9)")
+        "12)")
 
      exit 1
 

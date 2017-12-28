@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/27/2017 22:46 EDT                                       #
+#        &Updated:   12/28/2017 03:23 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -87,17 +87,14 @@ case $MAINNU in
         ;;
 
         "7)")
-                #clientCheckInstall
                 source scripts/user_domain.sh
         ;;
 
         "8)")
-                #securityCheckInstall
                 source scripts/security_tools.sh
         ;;
 
         "9)")
-                #systemCheckInstall
                 source scripts/system_tools.sh
         ;;
 
