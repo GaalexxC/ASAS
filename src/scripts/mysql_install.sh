@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/28/2017 00:53 EDT                                       #
+#        &Updated:   12/28/2017 01:28 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -67,19 +67,17 @@ case $SELECTMYSQL in
         }
         systemInstaller
         mysqlCleanup
-        FUNC="Installed $dbver"
+        FUNC="Installed $MYSQLVER"
         mysqlDebugLog
         completemessage() {
-        dbver=$(mysql -V 2>&1)
-         printf "Installed\n$dbver"
+         printf "Installed\n$MYSQLVER"
         }
         completeOperation
      else
         cancelOperation
      fi
      else
-        dbver=$(mysql -V 2>&1)
-        whiptail --title "MySQL Check-Install" --msgbox "Installed\n$dbver" --ok-button "OK" 10 70
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL already installed\n$MYSQLVER" --ok-button "OK" 10 70
      fi
         ;;
 
