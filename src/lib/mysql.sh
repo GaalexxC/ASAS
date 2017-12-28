@@ -30,7 +30,7 @@
 #
 #****************************
 mysqlErrorLog() {
-     echo "Error date: $DATE_TIME\n\n$phpfail" >> $CURDIR/$LOGS/mysql-error-$CURDAY.log
+     echo "Error date: $DATE_TIME\n\n$mysqlfail" >> $CURDIR/$LOGS/mysql-error-$CURDAY.log
 }
 
 mysqlDebugLog() {
