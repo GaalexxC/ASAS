@@ -105,7 +105,13 @@ perconaaddrepo() {
 mysqlPassword() {
      PASS1=$(whiptail --passwordbox "\nPlease specify a mysql root password\nUse a strong UNIX type pass for security" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
      PASS2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
+   if [ $PASS1 == $PASS2 ]
+    then
+     echo "percona-server-server-5.7 percona-server-server-5.7/root-pass password $PASS1" | debconf-set-selections
+     echo "percona-server-server-5.7 percona-server-server-5.7/re-root-pass password $PASS2" | debconf-set-selections
+    else
      mysqlPassword2
+   fi
 }
 mysqlPassword2() {
    until [ $PASS1 == $PASS2 ]
@@ -114,17 +120,13 @@ mysqlPassword2() {
      mysqlPassword
    done
 }
-mysqlInsertPass() {
-     echo "mysql-server-5.7 mysql-server/root_password password $PASS1" | debconf-set-selections
-     echo "mysql-server-5.7 mysql-server/root_password_again password $PASS2" | debconf-set-selections
-}
 mysqlCleanup() {
 {
      echo -e "XXX\n33\n\nRemoving repo directory... \nXXX"
      rm -rf $CURDIR/repos
      sleep 1
      echo -e "XXX\n66\n\nRemoving debconf set data... \nXXX"
-     echo PURGE | debconf-communicate mysql-server-5.7
+     echo PURGE | debconf-communicate percona-server-server-5.7 2>/dev/null
      sleep 1
      echo -e "XXX\n100\n\nCleanup complete... Done.\nXXX"
      sleep 1.5

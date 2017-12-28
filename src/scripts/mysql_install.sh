@@ -65,12 +65,12 @@ case $SELECTMYSQL in
         }
         updateSources
         mysqlPassword
-        mysqlInsertPass
         package() {
-         printf "apt -y install percona-server-server-5.7"
+         printf "apt --yes install percona-server-server-5.7"
         }
         systemInstaller
         mysqlCleanup
+        MYSQLVER=$(mysql -V 2>&1)
         FUNC="Installed $MYSQLVER"
         mysqlDebugLog
         completemessage() {
