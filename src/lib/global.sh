@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/28/2017 03:23 EDT                                       #
+#        &Updated:   12/28/2017 14:57 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -115,13 +115,13 @@ checkRoot() {
    fi
 }
 completeOperation() {
-     whiptail --title "Operation Complete" --msgbox "Operation Complete\n$(completemessage)\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+     whiptail --title "Operation Complete" --msgbox "Operation Complete\n$(completemessage)" --ok-button "OK" 10 70
 }
 cancelOperation() {
-     whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+     whiptail --title "Operation Cancelled" --msgbox "Operation Cancelled" --ok-button "OK" 10 70
 }
 errorOperation() {
-     whiptail --title "Operation Error" --msgbox "Operation Failed\nCheck $CURDIR/$NGINX_LOG/error-$CURDAY.log\n\nPress [Enter] to return to menu" --ok-button "OK" 10 70
+     whiptail --title "Operation Error" --msgbox "Operation Failed\nCheck $CURDIR/$NGINX_LOG/error-$CURDAY.log" --ok-button "OK" 10 70
     exit 1
 }
 rebootRequired() {
