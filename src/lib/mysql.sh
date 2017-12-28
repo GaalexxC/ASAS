@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/09/2017 12:55 EDT                                       #
+#        &Updated:   12/28/2017 00:40 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -29,6 +29,13 @@
 # MySql System Functions
 #
 #****************************
+mysqlErrorLog() {
+     echo "Error date: $DATE_TIME\n\n$phpfail" >> $CURDIR/$LOGS/mysql-error-$CURDAY.log
+}
+
+mysqlDebugLog() {
+     echo "$DATE_TIME: $FUNC" >> $CURDIR/$LOGS/mysql-$CURDAY.log
+}
 mysqlCheckInstall() {
    if ! type mysql > /dev/null 2>&1; then
      whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 70
@@ -73,6 +80,51 @@ mysqlRestart() {
    fi
      sleep .80
   } | whiptail --title "Restart MySQL" --gauge "\nRestarting the MySQL service" 10 70 0
+}
+perconaaddrepo() {
+{
+
+     echo -e "XXX\n25\n\nCreating repo directory... \nXXX"
+   if [ ! -d  $CURDIR/repos ]; then
+     mkdir $CURDIR/repos
+   fi
+     cd $CURDIR/repos
+     sleep 1
+     echo -e "XXX\n50\n\nFetching Percona Server 5.7 repository packages... \nXXX"
+     wget $PERCONA_MYSQL 2> /dev/null
+     sleep 1
+     echo -e "XXX\n75\n\nInstalling Percona 5.7 repository packages... \nXXX"
+     dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb 2> /dev/null
+     FUNC="Repository Percona Server 5.7 installed"
+     mysqlDebugLog
+     cd $CURDIR
+     echo -e "XXX\n100\n\nRepository Percona Server 5.7 installed... Done.\nXXX"
+     sleep 1.5
+  } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
+}
+mysqlPassword() {
+     PASS1=$(whiptail --passwordbox "\nPlease specify a mysql root password\nUse a strong UNIX type pass for security" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
+     PASS2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
+   if [ $PASS1 == $PASS2 ]
+    then
+     echo "mysql-server-5.7 mysql-server/root_password password $PASS1" | debconf-set-selections
+     echo "mysql-server-5.7 mysql-server/root_password_again password $PASS2" | debconf-set-selections
+    else
+     whiptail --title "MySQL Password" --msgbox "Passwords dont match" --ok-button "OK" 10 70
+    return
+   fi
+}
+mysqlCleanup() {
+{
+     echo -e "XXX\n33\n\nRemoving repo directory... \nXXX"
+     rm -rf $CURDIR/repos
+     sleep 1
+     echo -e "XXX\n66\n\nRemoving debconf set data... \nXXX"
+     echo PURGE | debconf-communicate mysql-server-5.7
+     sleep 1
+     echo -e "XXX\n100\n\nCleanup complete... Done.\nXXX"
+     sleep 1.5
+  } | whiptail --title "MySQL Cleaner" --gauge "\nCleaning MySQL installation" 10 70 0
 }
 #*****************************
 #

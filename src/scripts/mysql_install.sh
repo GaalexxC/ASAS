@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2017 02:20 EDT                                       #
+#        &Updated:   12/28/2017 00:53 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -26,13 +26,22 @@
 #################################################################################
 clear
 
+      if [ ! -f $CURDIR/$LOGS/mysql-error-$CURDAY.log ]
+       then
+       touch $CURDIR/$LOGS/mysql-error-$CURDAY.log
+      fi
+      if [ ! -f $CURDIR/$LOGS/mysql-$CURDAY.log ]
+       then
+       touch $CURDIR/$LOGS/mysql-$CURDAY.log
+      fi
+
 while [ 4 ]
 do
 
 SELECTMYSQL=$(
 whiptail --title "MySQL Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 20 78 10 \
-        "1)" "Percona MySQL Server 5.7 (Recommended)" OFF \
-        "2)" "MariaDB MySQL Server 10.2" ON \
+        "1)" "Percona MySQL Server 5.7 (Recommended)" ON \
+        "2)" "MariaDB MySQL Server 10.2" OFF \
         "3)" "Oracle MySQL Server 5.7" OFF \
         "4)" "Configure Mysql Settings" OFF \
         "5)" "Backup Config (my.cnf)" OFF \
@@ -46,16 +55,31 @@ case $SELECTMYSQL in
         "1)")
 
      if ! type mysql > /dev/null 2>&1; then
-        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 7
-       #phpDependencyCheck
-       #package() {
-       #  printf "apt --yes install $PHP72_PACKAGES"
-       #}
-       #systemInstaller
-       #completeOperation
+       if (whiptail --title "Install MySQL" --yesno "Installing latest Percona MySQL Server v5.7\n\nWould you like to continue?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        perconaaddrepo
+        pkgcache() {
+         printf "apt update"
+        }
+        updateSources
+        mysqlPassword
+        package() {
+         printf "apt --yes install percona-server-server-5.7"
+        }
+        systemInstaller
+        mysqlCleanup
+        FUNC="Installed $dbver"
+        mysqlDebugLog
+        completemessage() {
+        dbver=$(mysql -V 2>&1)
+         printf "Installed\n$dbver"
+        }
+        completeOperation
+     else
+        cancelOperation
+     fi
      else
         dbver=$(mysql -V 2>&1)
-        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 7
+        whiptail --title "MySQL Check-Install" --msgbox "Installed\n$dbver" --ok-button "OK" 10 70
      fi
         ;;
 
