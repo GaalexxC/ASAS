@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   01/25/2018 21:16 EDT                                       #
+#        &Updated:   01/25/2018 21:51 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -183,7 +183,7 @@ createlocalhost() {
      sleep 1.25
        echo -e "XXX\n95\n\nSetup User and Web Complete...\nXXX"
      sleep 1.25
-       echo -e "XXX\n96\n\n$VHOSTNAMEADD created for $USERNAME + PHP support $HOSTNAMEADD on port $HOSTPORTADD... \nXXX"
+       echo -e "XXX\n96\n\n$VHOSTNAMEADD created for $USERNAME\n$HOSTNAMEADD on port $HOSTPORTADD... \nXXX"
      sleep 8
        echo -e "XXX\n97\n\nRestart Services...\nXXX"
      $NGINX_INIT restart 2> /dev/null
@@ -313,7 +313,7 @@ createdomainhost() {
      sleep 1.25
        echo -e "XXX\n95\n\nSetup User and Web Complete...\nXXX"
      sleep 1.25
-       echo -e "XXX\n96\n\n$VHOSTNAMEADD created for $USERNAME + PHP support $HOSTNAMEADD on port $HOSTPORTADD... \nXXX"
+       echo -e "XXX\n96\n\n$VHOSTNAMEADD created for $USERNAME\nwith IP $HOSTIPADD... \nXXX"
      sleep 8
        echo -e "XXX\n97\n\nRestart Services...\nXXX"
      $NGINX_INIT restart 2> /dev/null
