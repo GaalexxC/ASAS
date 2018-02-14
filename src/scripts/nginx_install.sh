@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/22/2017 03:25 EDT                                       #
+#        &Updated:   02/14/2017 02:04 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -63,7 +63,7 @@ case $SELECTNGINX in
         "1)")
    if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Mainline version\n\nWould you like to install Nginx mainline" --yes-button "Install" --no-button "Cancel" 10 70) then
-     if [[ "$DISTRO" = "Ubuntu" && "$CODENAME" != "artful" ]]; then
+     if [ "$DISTRO" = "Ubuntu" ]; then
         echo "deb http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
         echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
        elif [ "$DISTRO" = "Debian" ]; then
@@ -104,7 +104,7 @@ case $SELECTNGINX in
         "2)")
    if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Stable version\n\nWould you like to install Nginx stable" --yes-button "Install" --no-button "Cancel" 10 70) then
-     if [[ "$DISTRO" = "Ubuntu" && "$CODENAME" != "artful" ]]; then
+     if [ "$DISTRO" = "Ubuntu" ]; then
         echo "deb http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
         echo "deb-src http://nginx.org/packages/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
        elif [ "$DISTRO" = "Debian" ]; then
