@@ -5,8 +5,15 @@
     ![Development](https://img.shields.io/badge/Development-PreRelease-blue.svg)
 
 ```diff
-- THIS IS AN INCOMPLETE DEVELOPMENT VERSION AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
+- THIS IS AN INCOMPLETE VERSION UNDER DEVELOPMENT AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
 ```
+
+**Support our Open Source Projects and get access to pre-release betas builds**
+
+[![donate](https://www.devcu.com/images/donate.png)](https://www.devcu.com/forums/topic/739-help-support-our-work/)
+
+
+  
 More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-State)
 
 # Auto Server Admin Script [ASAS] 2.10
