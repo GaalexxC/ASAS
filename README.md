@@ -1,4 +1,4 @@
-![devCUHead](https://www.devcu.com/assets/images/githead.png?V=1.1)
+![devCUHead](https://www.devcu.com/assets/images/githead.png?V=1.2)
 
 [![License](https://img.shields.io/badge/License-GNUv3-blue.svg)](https://github.com/GaalexxC/ASAS/blob/master/LICENSE)
 [![Version](https://img.shields.io/badge/Version-2.10-blue.svg) ](https://github.com/GaalexxC/ASAS/wiki)
