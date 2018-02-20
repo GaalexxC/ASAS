@@ -1,8 +1,9 @@
 ![devCUHead](https://www.devcu.com/assets/images/githead.png?V=1.1)
 
-![License](https://img.shields.io/badge/License-GNUv3-blue.svg)  ![Version](https://img.shields.io/badge/Version-2.10-blue.svg)
-    ![Status](https://img.shields.io/badge/Status-Incomplete-red.svg)
-    ![Development](https://img.shields.io/badge/Development-PreRelease-blue.svg)
+[![License](https://img.shields.io/badge/License-GNUv3-blue.svg)](https://github.com/GaalexxC/ASAS/blob/master/LICENSE)
+[![Version](https://img.shields.io/badge/Version-2.10-blue.svg) ](https://github.com/GaalexxC/ASAS/wiki)
+[![Status](https://img.shields.io/badge/Status-Incomplete-red.svg)](https://github.com/GaalexxC/ASAS/wiki/Current-State)
+[![Development](https://img.shields.io/badge/Development-PreRelease-blue.svg)](https://github.com/GaalexxC/ASAS/wiki/About)
 
 ```diff
 - THIS IS AN INCOMPLETE VERSION UNDER DEVELOPMENT AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
