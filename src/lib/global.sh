@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/28/2017 14:57 EDT                                       #
+#        &Updated:   05/04/2018 05:18 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -155,7 +155,7 @@ systemDetect()
         KERNEL=`uname -r`
         ARCH=`uname -m`
         declare -a osdist=( Debian Ubuntu )
-        declare -a osrev=( 8 9 9 16.04 17.04 17.10 )
+        declare -a osrev=( 8 9 9 16.04 17.04 17.10 18.04 )
 
         if [ "${OS}" = "linux" ] ; then
                 if [ -f /etc/debian_version ]; then
