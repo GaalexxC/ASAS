@@ -63,7 +63,7 @@ case $SELECTNGINX in
         "1)")
    if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Mainline version\n\nWould you like to install Nginx mainline" --yes-button "Install" --no-button "Cancel" 10 70) then
-     if [ "$DISTRO" = "Ubuntu" ]; then
+     if [[ "$DISTRO" = "Ubuntu" && "$CODENAME" != "bionic" ]]; then
         echo "deb http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
         echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
        elif [ "$DISTRO" = "Debian" ]; then
