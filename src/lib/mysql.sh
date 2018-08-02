@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/28/2017 00:40 EDT                                       #
+#        &Updated:   08/02/2018 00:36 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -94,7 +94,7 @@ perconaaddrepo() {
      wget $PERCONA_MYSQL 2> /dev/null
      sleep 1
      echo -e "XXX\n75\n\nInstalling Percona 5.7 repository packages... \nXXX"
-     dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb 2> /dev/null
+     dpkg -i percona-release_0.1-6.$(lsb_release -sc)_all.deb 2> /dev/null
      FUNC="Repository Percona Server 5.7 installed"
      mysqlDebugLog
      cd $CURDIR
