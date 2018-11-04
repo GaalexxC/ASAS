@@ -1,9 +1,9 @@
 #!/bin/bash
 #################################################################################
 #                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
-#        @author: GCornell for devCU Software Open Source Projects              #
-#        @contact: gacornell@devcu.com                                          #
-#        $OS: Debian Core (Tested on Ubuntu 16x -> 17x / Debian 8.x -> 9.x)     #
+#        @author: Gary Cornell for devCU Software Open Source Projects              #
+#        @contact: gary@devcu.com                                          #
+#        $OS: Debian Core (Tested on Ubuntu 16x -> 18x / Debian 8.x -> 9.x)     #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
