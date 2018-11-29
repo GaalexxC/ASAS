@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/28/2018 19:26 EDT                                       #
+#        &Updated:   11/28/2018 22:51 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -55,8 +55,9 @@ whiptail --title "Nginx Installer" --radiolist "\nUse up/down arrows and space t
         "9)" "Purge Nginx (Wipe Clean)" OFF \
         "10)" "Clean Source Build (Archives Configurations)" OFF \
         "11)" "Generate 2048bit Diffie-Hellman (Required for SSL/TLS)" OFF \
-        "12)" "Return to Main Menu" OFF \
-        "13)" "Exit" OFF 3>&1 1>&2 2>&3
+        "12)" "Generate 4096bit Diffie-Hellman (Required for SSL/TLS)" OFF \
+        "13)" "Return to Main Menu" OFF \
+        "14)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTNGINX in
@@ -301,7 +302,7 @@ case $SELECTNGINX in
         whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
       else
       secureCommand() {
-         output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
+         output='openssl dhparam 2048 > /etc/ssl/certs/dhparam.pem'
          printf "$output"
        }
       secureApp() {
@@ -313,10 +314,27 @@ case $SELECTNGINX in
         ;;
 
         "12)")
-      return
+      if [ -f /etc/ssl/certs/dhparam.pem ]
+      then
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert already exists!\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
+      else
+      secureCommand() {
+         output='openssl dhparam 4096 > /etc/ssl/certs/dhparam.pem'
+         printf "$output"
+       }
+      secureApp() {
+         printf "openssl"
+       }
+        secureCheckModify
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
+      fi
         ;;
 
         "13)")
+      return
+        ;;
+
+        "14)")
       exit 1
         ;;
     esac
