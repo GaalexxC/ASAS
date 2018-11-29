@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   01/25/2018 21:51 EDT                                       #
+#        &Updated:   11/28/2018 19:26 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -46,10 +46,10 @@ listvhostshosts() {
      whiptail --textbox $CURDIR/tmp/listvhostshosts_display 12 80
 }
 listfpmconfs() {
-   if [ -z "/etc/php/*/fpm/pool.d/*.conf" ]; then
+   if [ -z "/etc/php/7.0/fpm/pool.d/*.conf" ]; then
      fpmconfs="There are no FPM conf files to display"
    else
-     fpmconfs="$(find /etc/php/*/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
+     fpmconfs="$(find /etc/php/7.0/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
    fi
      echo "FPM conf files currently in use:\n$fpmconfs" > $CURDIR/tmp/listfpmconfs_display
      whiptail --textbox $CURDIR/tmp/listfpmconfs_display 12 80
