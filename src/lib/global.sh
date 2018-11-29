@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/28/2018 19:26 EDT                                       #
+#        &Updated:   11/29/2018 17:10 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -310,7 +310,7 @@ secureCheckModify() {
             z=$(echo "$output")
             printf "XXX\n$i\n\nGenerating dhparam.pem file... ${z}\nXXX\n$i\n"
         done
-  } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, 2048 bit long safe prime, generator 2\nThis is going to take a long time" 10 70 0
+  } | whiptail --title "Security Check-Modify"  --gauge "\nGenerating DH parameters, $(paramBit) bit long safe prime, generator 2\nThis is going to take a long time" 10 70 0
 }
 #*****************************
 #
