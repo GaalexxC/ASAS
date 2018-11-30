@@ -36,6 +36,21 @@ More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-Sta
 - Bash script that automates basic Linux sysadmin tasks...
 See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
+## Pre Release Limited Function Beta Available For Testing
+
+[More Info:](https://github.com/GaalexxC/ASAS/releases/tag/2.10)
+Install as root
+
+```bash
+# cd /
+# wget https://github.com/GaalexxC/ASAS/releases/download/2.10/nginxdebian1129_ESMASTER.tar.gz
+# tar xvpfz nginxdebian1129_ESMASTER.tar.gz
+# rm /nginxdebian1129_ESMASTER.tar.gz
+# cd /opt
+# ./auto_server.sh
+```
+
+
 ## License
 
 GNU General Public License v3.0
