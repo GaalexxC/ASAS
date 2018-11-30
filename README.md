@@ -38,7 +38,7 @@ See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
 ## Pre Release Limited Function Beta Available For Testing
 
-[More Info:](https://github.com/GaalexxC/ASAS/releases/tag/2.10)
+[Release Info](https://github.com/GaalexxC/ASAS/releases/tag/2.10)
 
 Install as root
 
