@@ -290,6 +290,7 @@ EntropyCheck() {
        printf "apt --yes install haveged"
       }
      systemInstaller
+     update-rc.d haveged defaults
      whiptail --title "Entropy Check" --msgbox "haveged has been installed successfully" --ok-button "OK" 10 70
       else
      cancelOperation
