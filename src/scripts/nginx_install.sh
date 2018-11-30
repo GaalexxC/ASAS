@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/29/2018 17:10 EDT                                       #
+#        &Updated:   11/29/2018 20:18 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -300,6 +300,7 @@ case $SELECTNGINX in
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
     if (whiptail --title "Security Check-Modify" --yesno "Diffie-Hellman cert already exists!\nDo you want to generate a new certificate?" --yes-button "Yes" --no-button "Cancel" 10 70) then
+      EntropyCheck
       secureCommand() {
          output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
          printf "$output"
@@ -318,6 +319,7 @@ case $SELECTNGINX in
       else
       if [ ! -f /etc/ssl/certs/dhparam.pem ]
       then
+      EntropyCheck
       secureCommand() {
          output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
          printf "$output"
@@ -338,6 +340,7 @@ case $SELECTNGINX in
       if [ -f /etc/ssl/certs/dhparam.pem ]
       then
     if (whiptail --title "Security Check-Modify" --yesno "Diffie-Hellman cert already exists!\nDo you want to generate a new certificate?" --yes-button "Yes" --no-button "Cancel" 10 70) then
+      EntropyCheck
       secureCommand() {
          output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096'
          printf "$output"
@@ -356,6 +359,7 @@ case $SELECTNGINX in
       else
       if [ ! -f /etc/ssl/certs/dhparam.pem ]
       then
+      EntropyCheck
       secureCommand() {
          output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096'
          printf "$output"

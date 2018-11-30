@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/29/2018 17:10 EDT                                       #
+#        &Updated:   11/29/2018 20:16 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -280,6 +280,23 @@ systemUpgrades() {
 # Security Functions
 #
 #*****************************
+EntropyCheck() {
+  if type haveged > /dev/null 2>&1; 
+   then
+     whiptail --title "Entropy Check" --msgbox "Great haveged is installed for efficient Entropy" --ok-button "OK" 10 70
+   else
+    if (whiptail --title "Entropy Check" --yesno "haveged is not installed for efficient entropy\nwould you like to install (Recommended)?\nInfo: http://www.issihosts.com/haveged/" --yes-button "Yes" --no-button "No" 10 70) then
+     package() {
+       printf "apt --yes install haveged"
+      }
+     systemInstaller
+     whiptail --title "Entropy Check" --msgbox "haveged has been installed successfully" --ok-button "OK" 10 70
+      else
+     cancelOperation
+   fi
+  fi
+}
+
 secureCheckModify() {
 {
         i="0"
