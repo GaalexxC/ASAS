@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/29/2018 20:18 EDT                                       #
+#        &Updated:   12/12/2018 02:33 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -157,11 +157,11 @@ case $SELECTNGINX in
        }
        systemInstaller
        wgetURL() {
-          printf "wget https://www.openssl.org/source/$OPENSSL_SOURCE"
+          printf "wget $OPENSSL_LINK$OPENSSL_SOURCE"
         }
        wgetFiles
        wgetURL() {
-          printf "wget http://nginx.org/download/$NGINX_SOURCE"
+          printf "wget $NGINX_LINK$NGINX_SOURCE"
         }
        wgetFiles
        extractArchive
