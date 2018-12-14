@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/28/2018 19:26 EDT                                       #
+#        &Updated:   12/14/2018 01:12 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -32,14 +32,16 @@ do
 SELECTBIND9=$(
 whiptail --title "Bind9 Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
         "1)" "Install Bind9 DNS server" OFF \
-        "2)" "test" ON \
-        "3)" "Test" OFF \
-        "4)" "Configure Bind9 Settings" OFF \
-        "5)" "Backup Config ()" OFF \
-        "6)" "Remove Bind9 (Config Saved)" OFF \
-        "7)" "Purge Bind9 (Wipe Clean)" OFF \
-        "8)" "Return to Main Menu" OFF \
-        "9)" "Exit" OFF 3>&1 1>&2 2>&3
+        "2)" "Configure Named Conf" OFF \
+        "2)" "Configure Named Local" ON \
+        "4)" "Configure Named Options" OFF \
+        "5)" "Configure Domain" OFF \
+        "6)" "Configure DNSSEC" OFF \
+        "7)" "Backup Config ()" OFF \
+        "8)" "Remove Bind9 (Config Saved)" OFF \
+        "9)" "Purge Bind9 (Wipe Clean)" OFF \
+        "10)" "Return to Main Menu" OFF \
+        "11)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTBIND9 in
@@ -58,8 +60,7 @@ case $SELECTBIND9 in
      if ! type named > /dev/null 2>&1; then
        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
      else
-        bindver=$(named -V 2>&1)
-        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
+       source $CURDIR/scripts/bind9_configure.sh
      fi
         ;;
 
@@ -68,8 +69,7 @@ case $SELECTBIND9 in
      if ! type named > /dev/null 2>&1; then
        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
      else
-        bindver=$(named -V 2>&1)
-        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
+       source $CURDIR/scripts/bind9_configure.sh
      fi
         ;;
 
@@ -87,13 +87,29 @@ case $SELECTBIND9 in
      if ! type named > /dev/null 2>&1; then
        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
      else
-       #namedBackupConf
-       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+       source $CURDIR/scripts/bind9_configure.sh
      fi
         ;;
 
-
         "6)")
+
+     if ! type named > /dev/null 2>&1; then
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
+       source $CURDIR/scripts/bind9_configure.sh
+     fi
+        ;;
+
+        "7)")
+
+     if ! type named > /dev/null 2>&1; then
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
+       source $CURDIR/scripts/bind9_configure.sh
+     fi
+        ;;
+
+        "8)")
 
    if type named > /dev/null 2>&1; then
     if (whiptail --title "Remove Bind9" --yesno "Warning! Removes Bind9 (Preserves Configurations)\n\nWould you like to remove Bind9" --yes-button "Remove" --no-button "Cancel" 10 70) then
@@ -123,7 +139,7 @@ case $SELECTBIND9 in
    fi
         ;;
 
-        "7)")
+        "9)")
 
    if type named > /dev/null 2>&1; then
     if (whiptail --title "Purge Bind9" --yesno "Warning! Wipes all traces of Bind9 from your system!\nAll config/.db/logs...etc deleted!\n\nWould you like to purge PHP?" --yes-button "Purge" --no-button "Cancel" 10 70) then
@@ -153,13 +169,13 @@ case $SELECTBIND9 in
    fi
         ;;
 
-        "8)")
+        "10)")
 
      return
 
         ;;
 
-        "9)")
+        "11)")
 
      exit 1
 
