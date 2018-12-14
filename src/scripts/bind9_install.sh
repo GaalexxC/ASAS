@@ -31,9 +31,9 @@ do
 
 SELECTBIND9=$(
 whiptail --title "Bind9 Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
-        "1)" "Install Bind9 DNS server" OFF \
+        "1)" "Install Bind9 DNS server" ON \
         "2)" "Configure Named Conf" OFF \
-        "2)" "Configure Named Local" ON \
+        "2)" "Configure Named Local" OFF \
         "4)" "Configure Named Options" OFF \
         "5)" "Configure Domain" OFF \
         "6)" "Configure DNSSEC" OFF \
@@ -48,10 +48,20 @@ case $SELECTBIND9 in
         "1)")
 
      if ! type named > /dev/null 2>&1; then
-       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
-     else
+    if (whiptail --title "Install Bind9 DNS" --yesno "This will install the latest Bind9 DNS Server\n\nWould you like to install Bind9 DNS Server" --yes-button "Install" --no-button "Cancel" 10 70) then
+        package() {
+         printf "apt --yes install bind9 bind9utils bind9-doc"
+       }
+        systemInstaller
+        sleep .50
         bindver=$(named -V 2>&1)
-        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
+        whiptail --title "Bind9 Check-Install" --msgbox "Successfully Installed!\n\n$bindver" --ok-button "OK" 10 70
+       else
+        cancelOperation
+    fi
+       else
+        bindver=$(named -V 2>&1)
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 is already Installed!\n\n$bindver" --ok-button "OK" 10 70
      fi
         ;;
 
