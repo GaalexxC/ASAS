@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/13/2018 01:40 EDT                                       #
+#        &Updated:   11/29/2018 20:18 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -65,11 +65,11 @@ case $SELECTNGINX in
    if ! type nginx > /dev/null 2>&1; then
     if (whiptail --title "Install Nginx" --yesno "This will install the latest Nginx Mainline version\n\nWould you like to install Nginx mainline" --yes-button "Install" --no-button "Cancel" 10 70) then
      if [ "$DISTRO" = "Ubuntu" ]; then
-        echo "deb $UBUNTU_LINK $CODENAME nginx" >> $APT_SOURCES
-        echo "deb-src $UBUNTU_LINK $CODENAME nginx" >> $APT_SOURCES
+        echo "deb http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
+        echo "deb-src http://nginx.org/packages/mainline/ubuntu/ $CODENAME nginx" >> $APT_SOURCES
        elif [ "$DISTRO" = "Debian" ]; then
-        echo "deb $DEBIAN_LINK $CODENAME nginx" >> $APT_SOURCES
-        echo "deb-src $DEBIAN_LINK $CODENAME nginx" >> $APT_SOURCES
+        echo "deb http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
+        echo "deb-src http://nginx.org/packages/mainline/debian/ $CODENAME nginx" >> $APT_SOURCES
       if ! type curl > /dev/null 2>&1; then
         package() {
          printf "apt --yes install curl"
@@ -157,11 +157,11 @@ case $SELECTNGINX in
        }
        systemInstaller
        wgetURL() {
-          printf "wget $OPENSSL_LINK$OPENSSL_SOURCE"
+          printf "wget https://www.openssl.org/source/$OPENSSL_SOURCE"
         }
        wgetFiles
        wgetURL() {
-          printf "wget $NGINX_LINK$NGINX_SOURCE"
+          printf "wget http://nginx.org/download/$NGINX_SOURCE"
         }
        wgetFiles
        extractArchive
