@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/13/2018 23:22 EDT                                       #
+#        &Updated:   03/25/2019 03:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -36,14 +36,12 @@ whiptail --title "Mail Installer" --radiolist "\nUse up/down arrows and space to
         "3)" "Spamassassin" OFF \
         "4)" "Clamav" OFF \
         "5)" "Amavis-new" OFF \
-        "6)" "Postgrey" OFF \
-        "7)" "DCC" OFF \
-        "8)" "Pyzor / Razor" OFF \
-        "9)" "Opendkim" OFF \
-        "10)" "Mail Administration" OFF \
-        "11)" "Mail Configuration" OFF \
-        "12)" "Return to Main Menu" OFF \
-        "13)" "Exit"  OFF 3>&1 1>&2 2>&3
+        "6)" "Postgrey / DCC" OFF \
+        "7)" "Pyzor / Razor" OFF \
+        "8)" "Opendkim" OFF \
+        "9)" "Mail Administration" OFF \
+        "10)" "Return to Main Menu" OFF \
+        "11)" "Exit"  OFF 3>&1 1>&2 2>&3
 )
 
 
@@ -104,20 +102,7 @@ case $SELECTMAIL in
         return
         ;;
 
-
         "11)")
-
-        return
-        ;;
-
-
-        "12)")
-
-        return
-        ;;
-
-
-        "13)")
 
         exit 1
         ;;
