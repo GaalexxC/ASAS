@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/14/2018 01:12 EDT                                       #
+#        &Updated:   03/25/2019 03:50 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -31,37 +31,25 @@ do
 
 SELECTBIND9=$(
 whiptail --title "Bind9 Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 18 78 10 \
-        "1)" "Install Bind9 DNS server" ON \
-        "2)" "Configure Named Conf" OFF \
-        "2)" "Configure Named Local" OFF \
-        "4)" "Configure Named Options" OFF \
-        "5)" "Configure Domain" OFF \
-        "6)" "Configure DNSSEC" OFF \
-        "7)" "Backup Config ()" OFF \
-        "8)" "Remove Bind9 (Config Saved)" OFF \
-        "9)" "Purge Bind9 (Wipe Clean)" OFF \
-        "10)" "Return to Main Menu" OFF \
-        "11)" "Exit" OFF 3>&1 1>&2 2>&3
+        "1)" "Install Bind9 DNS server" OFF \
+        "2)" "test" ON \
+        "3)" "Test" OFF \
+        "4)" "Configure Bind9 Settings" OFF \
+        "5)" "Backup Config ()" OFF \
+        "6)" "Remove Bind9 (Config Saved)" OFF \
+        "7)" "Purge Bind9 (Wipe Clean)" OFF \
+        "8)" "Return to Main Menu" OFF \
+        "9)" "Exit" OFF 3>&1 1>&2 2>&3
 )
 
 case $SELECTBIND9 in
         "1)")
 
      if ! type named > /dev/null 2>&1; then
-    if (whiptail --title "Install Bind9 DNS" --yesno "This will install the latest Bind9 DNS Server\n\nWould you like to install Bind9 DNS Server" --yes-button "Install" --no-button "Cancel" 10 70) then
-        package() {
-         printf "apt --yes install bind9 bind9utils bind9-doc"
-       }
-        systemInstaller
-        sleep .50
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
+     else
         bindver=$(named -V 2>&1)
-        whiptail --title "Bind9 Check-Install" --msgbox "Successfully Installed!\n\n$bindver" --ok-button "OK" 10 70
-       else
-        cancelOperation
-    fi
-       else
-        bindver=$(named -V 2>&1)
-        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 is already Installed!\n\n$bindver" --ok-button "OK" 10 70
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
      fi
         ;;
 
@@ -70,7 +58,8 @@ case $SELECTBIND9 in
      if ! type named > /dev/null 2>&1; then
        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
      else
-       source $CURDIR/scripts/bind9_configure.sh
+        bindver=$(named -V 2>&1)
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
      fi
         ;;
 
@@ -79,7 +68,8 @@ case $SELECTBIND9 in
      if ! type named > /dev/null 2>&1; then
        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
      else
-       source $CURDIR/scripts/bind9_configure.sh
+        bindver=$(named -V 2>&1)
+        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 Installed!\n\n$bindver" --ok-button "OK" 10 7
      fi
         ;;
 
@@ -97,29 +87,13 @@ case $SELECTBIND9 in
      if ! type named > /dev/null 2>&1; then
        whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
      else
-       source $CURDIR/scripts/bind9_configure.sh
+       #namedBackupConf
+       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
      fi
         ;;
+
 
         "6)")
-
-     if ! type named > /dev/null 2>&1; then
-       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
-     else
-       source $CURDIR/scripts/bind9_configure.sh
-     fi
-        ;;
-
-        "7)")
-
-     if ! type named > /dev/null 2>&1; then
-       whiptail --title "Bind9 Check-Install" --msgbox "Bind9 not installed" --ok-button "OK" 10 70
-     else
-       source $CURDIR/scripts/bind9_configure.sh
-     fi
-        ;;
-
-        "8)")
 
    if type named > /dev/null 2>&1; then
     if (whiptail --title "Remove Bind9" --yesno "Warning! Removes Bind9 (Preserves Configurations)\n\nWould you like to remove Bind9" --yes-button "Remove" --no-button "Cancel" 10 70) then
@@ -149,7 +123,7 @@ case $SELECTBIND9 in
    fi
         ;;
 
-        "9)")
+        "7)")
 
    if type named > /dev/null 2>&1; then
     if (whiptail --title "Purge Bind9" --yesno "Warning! Wipes all traces of Bind9 from your system!\nAll config/.db/logs...etc deleted!\n\nWould you like to purge PHP?" --yes-button "Purge" --no-button "Cancel" 10 70) then
@@ -179,13 +153,13 @@ case $SELECTBIND9 in
    fi
         ;;
 
-        "10)")
+        "8)")
 
      return
 
         ;;
 
-        "11)")
+        "9)")
 
      exit 1
 
