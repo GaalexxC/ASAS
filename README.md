@@ -1,4 +1,4 @@
-![devCUHead](https://www.devcu.com/assets/images/githead.png?V=1.2)
+![devCUHead](https://www.devcu.net/mediasrc/githubhead_2.gif?V=1.4)
 
 [![License](https://img.shields.io/badge/License-GNUv3-blue.svg)](https://github.com/GaalexxC/ASAS/blob/master/LICENSE)
 [![Version](https://img.shields.io/badge/Version-2.10-blue.svg) ](https://github.com/GaalexxC/ASAS/wiki)
@@ -9,9 +9,11 @@
 - THIS IS AN INCOMPLETE VERSION UNDER DEVELOPMENT AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
 ```
 
-**Please support our Open Source Projects**
+## ** Become a Patron of devCU **
+	
+**Please support our Open Source Projects and keep this software free**
 
-[![donate](https://www.devcu.com/images/donate.png)](https://www.devcu.com/forums/topic/739-help-support-our-work/)
+[![donate](https://www.devcu.net/mediasrc/become_a_patron_button.png)](https://www.patreon.com/devcu/)
 
 
 
