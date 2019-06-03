@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/29/2018 20:18 EDT                                       #
+#        &Updated:   06/01/2019 20:18 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -297,13 +297,12 @@ case $SELECTNGINX in
         ;;
 
         "11)")
-      if [ -f /etc/ssl/certs/dhparam.pem ]
+      if [ -f /etc/ssl/certs/dhparam2048.pem ]
       then
-    if (whiptail --title "Security Check-Modify" --yesno "Diffie-Hellman cert already exists!\nDo you want to generate a new certificate?" --yes-button "Yes" --no-button "Cancel" 10 70) then
+    if (whiptail --title "Security Check-Modify" --yesno "Diffie-Hellman 2048bit cert already exists!\nDo you want to generate a new certificate?" --yes-button "Yes" --no-button "Cancel" 10 70) then
       EntropyCheck
       secureCommand() {
-         output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
-         printf "$output"
+         printf "openssl dhparam -out /etc/ssl/certs/dhparam2048.pem 2048"
        }
       secureApp() {
          printf "openssl"
@@ -312,17 +311,16 @@ case $SELECTNGINX in
          printf "2048"
        }
         secureCheckModify
-        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam2048.pem\nUse PATH for applications that require it" --ok-button "OK" 10 70
       else
         cancelOperation
       fi
       else
-      if [ ! -f /etc/ssl/certs/dhparam.pem ]
+      if [ ! -f /etc/ssl/certs/dhparam2048.pem ]
       then
       EntropyCheck
       secureCommand() {
-         output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048'
-         printf "$output"
+         printf "openssl dhparam -out /etc/ssl/certs/dhparam2048.pem 2048"
        }
       secureApp() {
          printf "openssl"
@@ -331,19 +329,18 @@ case $SELECTNGINX in
          printf "2048"
        }
         secureCheckModify
-        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam2048.pem\nUse PATH for applications that require it" --ok-button "OK" 10 70
       fi
      fi
         ;;
 
         "12)")
-      if [ -f /etc/ssl/certs/dhparam.pem ]
+      if [ -f /etc/ssl/certs/dhparam4096.pem ]
       then
-    if (whiptail --title "Security Check-Modify" --yesno "Diffie-Hellman cert already exists!\nDo you want to generate a new certificate?" --yes-button "Yes" --no-button "Cancel" 10 70) then
+    if (whiptail --title "Security Check-Modify" --yesno "Diffie-Hellman 4096bit cert already exists!\nDo you want to generate a new certificate?" --yes-button "Yes" --no-button "Cancel" 10 70) then
       EntropyCheck
       secureCommand() {
-         output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096'
-         printf "$output"
+         printf "openssl dhparam -out /etc/ssl/certs/dhparam4096.pem 4096"
        }
       secureApp() {
          printf "openssl"
@@ -352,17 +349,16 @@ case $SELECTNGINX in
          printf "4096"
        }
         secureCheckModify
-        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam4096.pem\nPATH is configured in nginx remote vhost templates" --ok-button "OK" 10 70
       else
         cancelOperation
       fi
       else
-      if [ ! -f /etc/ssl/certs/dhparam.pem ]
+      if [ ! -f /etc/ssl/certs/dhparam4096.pem ]
       then
       EntropyCheck
       secureCommand() {
-         output='openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096'
-         printf "$output"
+         printf "openssl dhparam -out /etc/ssl/certs/dhparam4096.pem 4096"
        }
       secureApp() {
          printf "openssl"
@@ -371,7 +367,7 @@ case $SELECTNGINX in
          printf "4096"
        }
         secureCheckModify
-        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam.pem\nPATH is configured in nginx vhost templates" --ok-button "OK" 10 70
+        whiptail --title "Security Check-Modify" --msgbox "Diffie-Hellman cert @ /etc/ssl/certs/dhparam4096.pem\nPATH is configured in nginx remote vhost templates" --ok-button "OK" 10 70
       fi
      fi
         ;;
