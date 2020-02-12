@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/20/2019 15:06 EDT                                       #
+#        &Updated:   10/05/2019 22:26 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -58,6 +58,7 @@ case $SELECTPHP in
         "1)")
 
      if ! type php > /dev/null 2>&1; then
+     if [[ "$DISTRO" = "Ubuntu" && "$CODENAME" = "bionic" ]]; then
        phpDependencyCheck
        package() {
          printf "apt --yes install $PHP73_PACKAGES"
@@ -65,6 +66,14 @@ case $SELECTPHP in
        systemInstaller
        phpcgifixpath
        completeOperation
+       elif [[ "$DISTRO" = "Ubuntu" && "$CODENAME" = !"bionic" ]]; then
+       package() {
+         printf "apt --yes install $PHP72_PACKAGES"
+       }
+       systemInstaller
+       phpcgifixpath
+       completeOperation
+     fi
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
        whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
