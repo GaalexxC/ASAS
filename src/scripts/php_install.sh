@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/05/2019 22:26 EDT                                       #
+#        &Updated:   02/20/2020                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -40,9 +40,9 @@ do
 
 SELECTPHP=$(
 whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 20 78 10 \
-        "1)" "Install PHP 7.3 (Recommended)" ON \
-        "2)" "Install PHP 7.2" OFF \
-        "3)" "Install PHP 7.1" OFF \
+        "1)" "Install PHP 7.4 (Recommended)" ON \
+        "2)" "Install PHP 7.3" OFF \
+        "3)" "Install PHP 7.2" OFF \
         "4)" "Configure PHP Settings" OFF \
         "5)" "Backup Config (php.ini)" OFF \
         "6)" "View Debug Log" OFF \
@@ -58,22 +58,13 @@ case $SELECTPHP in
         "1)")
 
      if ! type php > /dev/null 2>&1; then
-     if [[ "$DISTRO" = "Ubuntu" && "$CODENAME" = "bionic" ]]; then
        phpDependencyCheck
        package() {
-         printf "apt --yes install $PHP73_PACKAGES"
+         printf "apt --yes install $PHP74_PACKAGES"
        }
        systemInstaller
        phpcgifixpath
        completeOperation
-       elif [[ "$DISTRO" = "Ubuntu" && "$CODENAME" = !"bionic" ]]; then
-       package() {
-         printf "apt --yes install $PHP72_PACKAGES"
-       }
-       systemInstaller
-       phpcgifixpath
-       completeOperation
-     fi
      else
        phpver=$(php -r \@phpinfo\(\)\; | grep 'PHP Version' -m 1)
        whiptail --title "PHP Check-Install" --msgbox "PHP Installed!\n\n$phpver" --ok-button "OK" 10 70
@@ -85,7 +76,7 @@ case $SELECTPHP in
      if ! type php > /dev/null 2>&1; then
        phpDependencyCheck
        package() {
-         printf "apt --yes install $PHP72_PACKAGES"
+         printf "apt --yes install $PHP73_PACKAGES"
        }
        systemInstaller
        phpcgifixpath
@@ -101,7 +92,7 @@ case $SELECTPHP in
      if ! type php > /dev/null 2>&1; then
        phpDependencyCheck
        package() {
-         printf "apt --yes install $PHP71_PACKAGES"
+         printf "apt --yes install $PHP72_PACKAGES"
        }
        systemInstaller
        phpcgifixpath
