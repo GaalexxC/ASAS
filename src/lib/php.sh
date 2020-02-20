@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   10/05/2019 22:26 EDT                                       #
+#        &Updated:   02/20/2020                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -47,23 +47,23 @@ phpCheckInstall() {
    fi
 }
 phpVersion() {
-   if [ -f $PHP73_FPM_INI/$PHPCONFIG ]
+   if [ -f $PHP74_FPM_INI/$PHPCONFIG ]
+      then
+     PHP_VER=$PHP74_FPM_VER
+     PHP_INIT=$PHP74_FPM_INIT
+     PHP_INI=$PHP74_FPM_INI/$PHPCONFIG
+     PHP_FPMCONF_DIR=$PHP74_FPM_DIR
+   elif [ -f $PHP74_FPM_INI/$PHPCONFIG ]
       then
      PHP_VER=$PHP73_FPM_VER
      PHP_INIT=$PHP73_FPM_INIT
      PHP_INI=$PHP73_FPM_INI/$PHPCONFIG
      PHP_FPMCONF_DIR=$PHP73_FPM_DIR
-   elif [ -f $PHP72_FPM_INI/$PHPCONFIG ]
-      then
+   else
      PHP_VER=$PHP72_FPM_VER
      PHP_INIT=$PHP72_FPM_INIT
      PHP_INI=$PHP72_FPM_INI/$PHPCONFIG
      PHP_FPMCONF_DIR=$PHP72_FPM_DIR
-   else
-     PHP_VER=$PHP71_FPM_VER
-     PHP_INIT=$PHP71_FPM_INIT
-     PHP_INI=$PHP71_FPM_INI/$PHPCONFIG
-     PHP_FPMCONF_DIR=$PHP71_FPM_DIR
    fi
 }
 phpaddrepo() {
@@ -110,23 +110,23 @@ phpBackupConf() {
    if [ ! -d  $CURDIR/backups ]; then
     mkdir $CURDIR/backups
    fi
-   if [ -f $PHP73_FPM_INI/$PHPCONFIG ]
+   if [ -f $PHP74_FPM_INI/$PHPCONFIG ]
+      then
+     tar cvpfz /php74ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
+     mv /php74ini_backup_$CURDAY.tar.gz $CURDIR/backups
+     sleep 1
+     echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
+     sleep 1.5
+   elif [ -f $PHP73_FPM_INI/$PHPCONFIG ]
       then
      tar cvpfz /php73ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
      mv /php73ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
      echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
      sleep 1.5
-   elif [ -f $PHP72_FPM_INI/$PHPCONFIG ]
-      then
+   else
      tar cvpfz /php72ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
      mv /php72ini_backup_$CURDAY.tar.gz $CURDIR/backups
-     sleep 1
-     echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
-     sleep 1.5
-   else
-     tar cvpfz /php71ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
-     mv /php71ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
      echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
      sleep 1.5
