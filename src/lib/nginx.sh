@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   07/15/2019 07:16 EDT                                       #
+#        &Updated:   02/14/2020 18:01 EDT                                       #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -435,6 +435,17 @@ nginxConfigure() {
      mkdir -p $NGINXCACHEDIR/uwsgi_temp
      chown -R $WEB_SERVER_USER:$WEB_SERVER_GROUP $NGINXCACHEDIR
      echo -e "XXX\n93\n\nNginx cache directories created...\nXXX"
+     sleep .75
+   fi
+     sleep .75
+   if [ -d $NGINXLOGDIR/cores ]
+    then
+     echo -e "XXX\n95\n\nGreat! Cores directory exist...\nXXX"
+     sleep .75
+   else
+     mkdir -p $NGINXLOGDIR/cores
+     chown -R root:root $NGINXLOGDIR/cores
+     echo -e "XXX\n95\n\nNginx cores directory created...\nXXX"
      sleep .75
    fi
      echo -e "XXX\n98\n\nRestarting Nginx service... Done.\nXXX"
