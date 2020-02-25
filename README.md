@@ -87,4 +87,4 @@ For not fully embracing apt and removing update-notifier
 
 ## Copyrights
 
-Created by GCornell for devCU Software ©2018
+Created by GCornell for devCU Software ©2020
