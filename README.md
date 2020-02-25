@@ -1,4 +1,4 @@
-![devCUHead](https://www.devcu.net/mediasrc/github-banner.png?V=1.0)
+![devCUHead](https://www.devcu.com/mediasrc/github-banner.png?V=1.0)
 
 [![License](https://img.shields.io/badge/License-GNUv3-blue.svg)](https://github.com/GaalexxC/ASAS/blob/master/LICENSE) 
 [![Version](https://img.shields.io/badge/Version-2.1.0-ff69b4.svg)](https://www.devcu.com/devcu-tracker/)
@@ -19,7 +19,7 @@
 
 - Patrons and Donators have access to Beta and Release version up to 2 weeks before the public
 
-[![donate](https://www.devcu.net/mediasrc/patronize_devcu.png)](https://www.patreon.com/devcu/) [![donate](https://www.devcu.net/mediasrc/support_devcu.png?v=1)](https://www.devcu.com/clients/donations/)
+[![donate](https://www.devcu.com/mediasrc/patronize_devcu.png)](https://www.patreon.com/devcu/) [![donate](https://www.devcu.com/mediasrc/support_devcu.png?v=1)](https://www.devcu.com/clients/donations/)
 
 
 
