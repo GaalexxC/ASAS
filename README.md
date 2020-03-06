@@ -9,10 +9,6 @@
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/GaalexxC/ASAS/development.svg)](https://www.devcu.com/devcu-tracker/)
 
 
-```diff
-- THIS IS AN INCOMPLETE VERSION UNDER DEVELOPMENT AND SHOULD NOT BE USED IN ANY ENVIRONMENT!!!
-```
-
 ## ** Become a Patron/Supporter of devCU **
 	
 **Please support our Open Source Projects and keep this software free**
