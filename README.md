@@ -6,7 +6,7 @@
 [![Status](https://img.shields.io/badge/Status-PreRelease-active.svg)](https://www.devcu.com/devcu-tracker/)
 [![Development](https://img.shields.io/badge/Development-Active-success.svg)](https://www.devcu.com/devcu-tracker/)
 [![Platform](https://img.shields.io/badge/Platform-Linux-blue.svg)](https://www.devcu.com/devcu-tracker/)
-[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/GaalexxC/ASAS/development.svg)](https://www.devcu.com/devcu-tracker/)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/GaalexxC/ASAS/master.svg)](https://www.devcu.com/devcu-tracker/)
 
 
 ## ** Become a Patron/Supporter of devCU **
