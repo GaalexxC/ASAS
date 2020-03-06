@@ -22,7 +22,6 @@
 [![donate](https://www.devcu.com/mediasrc/patronize_devcu.png)](https://www.patreon.com/devcu/) [![donate](https://www.devcu.com/mediasrc/support_devcu.png?v=1)](https://www.devcu.com/clients/donations/)
 
 
-
 More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-State)
 
 # Auto Server Admin Script [ASAS] 2.10
@@ -44,17 +43,22 @@ More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-Sta
 - Bash script that automates basic Linux sysadmin tasks...
 See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
-## Pre Release Limited Function Beta Available For Testing
+## Pre Release Limited Function Available For Testing
 
-[Release Info](https://github.com/GaalexxC/ASAS/releases/tag/2.10)
+<img src="https://www.devcu.com/mediasrc/asascompile.PNG?V=1.4" width="100%"></img>
 
-Install as root
+Install & Run as root (Updated release 03/05/20)
+
+- PHP 7.2, 7.3, and 7.4 (Default)
+- Percona MySQL 8.18+
+- Nginx 1.17.9
+- Supported Ubuntu 18+ and Debian 9+
 
 ```bash
 # cd /
-# wget https://github.com/GaalexxC/ASAS/releases/download/2.10/nginxdebian1129_ESMASTER.tar.gz
-# tar xvpfz nginxdebian1129_ESMASTER.tar.gz
-# rm /nginxdebian1129_ESMASTER.tar.gz
+# wget https://www.devcu.com/mediasrc/ASAS03052020_MASTER.tar.gz
+# tar xvpfz ASAS03052020_MASTER.tar.gz
+# rm /ASAS03052020_MASTER.tar.gz
 # cd /opt
 # ./auto_server.sh
 ```
