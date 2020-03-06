@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-GNUv3-blue.svg)](https://github.com/GaalexxC/ASAS/blob/master/LICENSE) 
 [![Version](https://img.shields.io/badge/Version-2.1.0-ff69b4.svg)](https://www.devcu.com/devcu-tracker/)
 [![Build](https://img.shields.io/badge/Build-Beta-yellow.svg)](https://www.devcu.com/devcu-tracker/)
-[![Status](https://img.shields.io/badge/Status-Incomplete-inactive.svg)](https://www.devcu.com/devcu-tracker/)
+[![Status](https://img.shields.io/badge/Status-IndeV-inactive.svg)](https://www.devcu.com/devcu-tracker/)
 [![Development](https://img.shields.io/badge/Development-PreRelease-success.svg)](https://www.devcu.com/devcu-tracker/)
 [![Platform](https://img.shields.io/badge/Platform-Linux-blue.svg)](https://www.devcu.com/devcu-tracker/)
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/GaalexxC/ASAS/development.svg)](https://www.devcu.com/devcu-tracker/)
