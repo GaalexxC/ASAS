@@ -41,20 +41,20 @@ See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
 ## Pre Release Limited Function Available For Testing
 
-<img src="https://www.devcu.com/mediasrc/asascompile.PNG?V=1.4" width="100%"></img>
+<img src="https://www.devcu.com/mediasrc/asascompile.PNG?V=1.5" width="100%"></img>
 
-Install & Run as root (Updated release 03/05/20)
+Install & Run as root (Updated release 04/16/20)
 
 - PHP 7.2, 7.3, and 7.4 (Default)
-- Percona MySQL 8.18+
-- Nginx 1.17.9
+- Percona MySQL 8.19+
+- Nginx 1.17.10
 - Supported Ubuntu 18+ and Debian 9+
 
 ```bash
 # cd /
-# wget https://www.devcu.com/mediasrc/ASAS03052020_MASTER.tar.gz
-# tar xvpfz ASAS03052020_MASTER.tar.gz
-# rm /ASAS03052020_MASTER.tar.gz
+# wget https://www.devcu.com/mediasrc/ASAS04162020_MASTER.tar.gz
+# tar xvpfz ASAS04162020_MASTER.tar.gz
+# rm /ASAS04162020_MASTER.tar.gz
 # cd /opt
 # ./auto_server.sh
 ```
