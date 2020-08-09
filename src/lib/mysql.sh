@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   03/25/2019 03:26 EDT                                       #
+#        &Updated:   08/09/2020                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -90,15 +90,15 @@ perconaaddrepo() {
    fi
      cd $CURDIR/repos
      sleep 1
-     echo -e "XXX\n50\n\nFetching Percona Server 5.7 repository packages... \nXXX"
+     echo -e "XXX\n50\n\nFetching Percona Server 8.x repository packages... \nXXX"
      wget $PERCONA_MYSQL 2> /dev/null
      sleep 1
-     echo -e "XXX\n75\n\nInstalling Percona 5.7 repository packages... \nXXX"
+     echo -e "XXX\n75\n\nInstalling Percona 8.x repository packages... \nXXX"
      dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb 2> /dev/null
-     FUNC="Repository Percona Server 5.7 installed"
+     FUNC="Repository Percona Server 8.x installed"
      mysqlDebugLog
      cd $CURDIR
-     echo -e "XXX\n100\n\nRepository Percona Server 5.7 installed... Done.\nXXX"
+     echo -e "XXX\n100\n\nRepository Percona Server 8.x installed... Done.\nXXX"
      sleep 1.5
   } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
 }
