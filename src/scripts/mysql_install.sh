@@ -8,7 +8,7 @@
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   11/28/2018 19:26 EDT                                       #
+#        &Updated:   08/09/2020                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -40,8 +40,8 @@ do
 
 SELECTMYSQL=$(
 whiptail --title "MySQL Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 20 78 10 \
-        "1)" "Percona MySQL Server 5.7 (Recommended)" ON \
-        "2)" "MariaDB MySQL Server 10.2" OFF \
+        "1)" "Percona MySQL Server 8.x (Recommended)" ON \
+        "2)" "MariaDB MySQL Server 10.x" OFF \
         "3)" "Oracle MySQL Server 5.7" OFF \
         "4)" "Configure Mysql Settings" OFF \
         "5)" "Backup Config (my.cnf)" OFF \
@@ -58,15 +58,18 @@ case $SELECTMYSQL in
         "1)")
 
      if ! type mysql > /dev/null 2>&1; then
-       if (whiptail --title "Install MySQL" --yesno "Installing latest Percona MySQL Server v5.7\n\nWould you like to continue?" --yes-button "Install" --no-button "Cancel" 10 70) then
+       if (whiptail --title "Install MySQL" --yesno "Installing latest Percona MySQL Server v8.x\n\nWould you like to continue?" --yes-button "Install" --no-button "Cancel" 10 70) then
+        package() {
+         printf "apt --yes install gnupg2"
+        }
         perconaaddrepo
         pkgcache() {
-         printf "apt update"
+         printf "percona-release setup ps80"
         }
         updateSources
         mysqlPassword
         package() {
-         printf "apt --yes install percona-server-server-5.7"
+         printf "apt --yes install percona-server-server"
         }
         systemInstaller
         mysqlCleanup
