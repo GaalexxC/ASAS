@@ -54,9 +54,9 @@ Install & Run as root (Updated release 08/09/20)
 
 ```bash
 # cd /
-# wget https://www.devcu.com/mediasrc/ASAS04162020_MASTER.tar.gz
-# tar xvpfz ASAS04162020_MASTER.tar.gz
-# rm /ASAS04162020_MASTER.tar.gz
+# wget https://www.devcu.com/mediasrc/ASAS08092020_MASTER.tar.gz
+# tar xvpfz ASAS08092020_MASTER.tar.gz
+# rm /ASAS08092020_MASTER.tar.gz
 # cd /opt
 # ./auto_server.sh
 ```
