@@ -13,9 +13,9 @@
 	
 **Please support our Open Source Projects and keep this software free**
 
-- Patrons and Donators have access to Beta and Release version up to 2 weeks before the public
+- Donators have access to Beta and Release version up to 2 weeks before the public
 
-[![donate](https://www.devcu.com/mediasrc/patronize_devcu.png)](https://www.patreon.com/devcu/) [![donate](https://www.devcu.com/mediasrc/support_devcu.png?v=1)](https://www.devcu.com/clients/donations/)
+[![donate](https://www.devcu.com/mediasrc/support_devcu.png?v=1)](https://www.devcu.com/clients/donations/)
 
 
 More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-State)
@@ -43,11 +43,11 @@ See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
 <img src="https://www.devcu.com/mediasrc/asascompile.PNG?V=1.5" width="100%"></img>
 
-Install & Run as root (Updated release 04/16/20)
+Install & Run as root (Updated release 08/09/20)
 
 - PHP 7.2, 7.3, and 7.4 (Default)
-- Percona MySQL 8.19+
-- Nginx 1.17.10
+- Percona MySQL 8.20+
+- Nginx 1.19.1
 - Supported Ubuntu 18+ and Debian 9+
 
 ```bash
