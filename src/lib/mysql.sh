@@ -126,6 +126,16 @@ mariadbaddrepo() {
      sleep 1.5
   } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
 }
+mysqladdrepo() {
+{
+     echo -e "XXX\n75\n\nInstalling Oracle MySQL Server 8.x repository packages... \nXXX"
+     dpkg -i $CURDIR/bin/mysql-apt-config_0.8.15-1_all.deb 2> /dev/null
+     FUNC="Repository Oracle MySQL Server 8.x installed"
+     mysqlDebugLog
+     echo -e "XXX\n100\n\nRepository Oracle MySQL Server 8.x installed... Done.\nXXX"
+     sleep 1.5
+  } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
+}
 mysqlPassword() {
      PASS1=$(whiptail --passwordbox "\nPlease specify a mysql root password\nUse a strong UNIX type pass for security" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
      PASS2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
