@@ -102,6 +102,30 @@ perconaaddrepo() {
      sleep 1.5
   } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
 }
+mariadbaddrepo() {
+{
+
+     echo -e "XXX\n25\n\nCreating repo directory... \nXXX"
+   if [ ! -d  $CURDIR/repos ]; then
+     mkdir $CURDIR/repos
+   fi
+     cd $CURDIR/repos
+     sleep 1
+     echo -e "XXX\n50\n\nChecking MariaDB MySQL Server v10.x dependencies... \nXXX"
+     apt install software-properties-common 2> /dev/null
+     sleep 1
+     echo -e "XXX\n50\n\nFetching MariaDB MySQL Server v10.x repository packages... \nXXX"
+     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' 2> /dev/null
+     sleep 1
+     echo -e "XXX\n75\n\nInstalling MariaDB MySQL Server v10.x repository packages... \nXXX"
+     add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.5/$DISTRO $CODENAME main' 2> /dev/null
+     FUNC="Repository MariaDB MySQL Server v10.x installed"
+     mysqlDebugLog
+     cd $CURDIR
+     echo -e "XXX\n100\n\nRepository MariaDB MySQL Server v10.x installed... Done.\nXXX"
+     sleep 1.5
+  } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
+}
 mysqlPassword() {
      PASS1=$(whiptail --passwordbox "\nPlease specify a mysql root password\nUse a strong UNIX type pass for security" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
      PASS2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "MySQL Password" 3>&1 1>&2 2>&3)
