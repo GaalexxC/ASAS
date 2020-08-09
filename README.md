@@ -46,7 +46,9 @@ See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 Install & Run as root (Updated release 08/09/20)
 
 - PHP 7.2, 7.3, and 7.4 (Default)
-- Percona MySQL 8.20+
+- Percona MySQL 8.x
+- MariaDB MySQL 10.x
+- Oracle MySQL 8.x
 - Nginx 1.19.1
 - Supported Ubuntu 18+ and Debian 9+
 
