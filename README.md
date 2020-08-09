@@ -49,7 +49,7 @@ Install & Run as root (Updated release 08/09/20)
 - Percona MySQL 8.x
 - MariaDB MySQL 10.x
 - Oracle MySQL 8.x
-- Nginx 1.19.1
+- Nginx 1.19.x
 - Supported Ubuntu 18+ and Debian 9+
 
 ```bash
