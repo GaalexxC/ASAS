@@ -41,7 +41,7 @@ See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
 ## Pre Release Limited Function Available For Testing
 
-<img src="https://www.devcu.com/mediasrc/asascompile.PNG?V=1.5" width="100%"></img>
+<img src="https://www.devcu.com/mediasrc/asascompile.PNG?V=1.6" width="100%"></img>
 
 Install & Run as root (Updated release 08/09/20)
 
