@@ -155,7 +155,7 @@ systemDetect()
         KERNEL=`uname -r`
         ARCH=`uname -m`
         declare -a osdist=( Debian Ubuntu )
-        declare -a osrev=( 9 10 18.04 19.10 20.04 )
+        declare -a osrev=( 9 18.04 19.10 20.04 )
 
         if [ "${OS}" = "linux" ] ; then
                 if [ -f /etc/debian_version ]; then
