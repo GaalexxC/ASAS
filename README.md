@@ -63,6 +63,9 @@ Install & Run as root (Updated release 12/25/20)
 # ./auto_server.sh
 ```
 
+## User Editable - Set versions, php programs, users, directories, etc.
+- user_vars.conf
+- server_vars.conf
 
 ## License
 
