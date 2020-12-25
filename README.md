@@ -64,8 +64,8 @@ Install & Run as root (Updated release 12/25/20)
 ```
 
 ## User Editable - Set versions, php programs, users, directories, etc.
-- user_vars.conf
-- server_vars.conf
+- config/user_vars.conf
+- config/server_vars.conf
 
 ## License
 
