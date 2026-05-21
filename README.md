@@ -39,9 +39,9 @@ More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-Sta
 - Bash script that automates basic Linux sysadmin tasks...
 See the [Wiki for more info and usage](https://github.com/GaalexxC/ASAS/wiki)
 
-## Pre Release Limited Function Available For Testing
+## Release w/ Limited Functionality Available For Testing
 
-<img src="https://www.devcu.net/mediasrc/nginx.jpg?V=1.8" width="100%"></img>
+<img src="https://www.devcu.net/mediasrc/nginx.jpg?V=1.9" width="100%"></img>
 
 Install & Run as root (Updated release 05/20/2026)
 
@@ -49,8 +49,8 @@ Install & Run as root (Updated release 05/20/2026)
 - Percona MySQL 8.4.8+
 - MariaDB MySQL 10+
 - Oracle MySQL 8.4.8+
-- Nginx 1.31.0
-- OpenSSL 4.0.0
+- Nginx 1.31.0x
+- OpenSSL 4.0.0x
 - QUICs Support Added
 - Supported Ubuntu 22+ and Debian 11+
 
@@ -58,13 +58,13 @@ Install & Run as root (Updated release 05/20/2026)
 ```bash
 # cd /
 # wget https://www.devcu.net/mediasrc/ASAS_MASTER.tar.gz
-# tar xvpfz ASAS_MASTER.tar.gz
+# tar -xvpfz ASAS_MASTER.tar.gz
 # rm /ASAS_MASTER.tar.gz
 # cd /opt
 # ./auto_server.sh
 ```
 
-## User Editable - Set versions, php apps, user/group, directory paths, etc.
+## User Editable - Set versions, php modules, user/group, directory paths, etc.
 - config/user_vars.conf
 - config/server_vars.conf
 
