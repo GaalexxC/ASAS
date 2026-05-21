@@ -3,12 +3,12 @@
 #                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 18x -> 20x / Debian 9.x -> 10.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 16x -> 18x / Debian 8.x -> 9.x)     #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2020 11:56 EDT                                       #
+#        &Updated:   04/25/2025                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -173,7 +173,7 @@ case $SELECTNGINX in
        nginxServices
        nginxConfigure
        nginxCleanup
-       whiptail --title "Nginx Source Compiled" --textbox /dev/stdin 12 70 <<<"$(sed -n '1,5p' < $NGINXCONFDIR/.build-*)"
+       whiptail --title "Nginx Source Compiled" --msgbox "$(sed -n '1,5p' < $NGINXCONFDIR/.build-$CURDAY)" 12 70
       else
        cancelOperation
     fi

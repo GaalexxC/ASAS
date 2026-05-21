@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.15 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 18x -> 20x / Debian 9.x -> 10.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 22.x / Debian 11.x)                 #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2020 11:56 EDT                                       #
+#        &Updated:   05/20/2026                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -46,10 +46,11 @@ listvhostshosts() {
      whiptail --textbox $CURDIR/tmp/listvhostshosts_display 12 80
 }
 listfpmconfs() {
-   if [ -z "/etc/php/7.0/fpm/pool.d/*.conf" ]; then
+   phpvershrt=$(php -v | head -n 1 | cut -d " " -f 2 | cut -f1-2 -d".")
+   if [ -z "/etc/php/$phpvershrt/fpm/pool.d/*.conf" ]; then
      fpmconfs="There are no FPM conf files to display"
    else
-     fpmconfs="$(find /etc/php/7.0/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
+     fpmconfs="$(find /etc/php/$phpvershrt/fpm/pool.d/*.conf  -exec  basename {} .vhost  \;)"
    fi
      echo "FPM conf files currently in use:\n$fpmconfs" > $CURDIR/tmp/listfpmconfs_display
      whiptail --textbox $CURDIR/tmp/listfpmconfs_display 12 80
@@ -85,7 +86,7 @@ addusernamelocal() {
      PASSWORD2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "Web Creator" 3>&1 1>&2 2>&3)
    if [ $PASSWORD == $PASSWORD2 ]
     then
-     ENCPASSWORD="$(openssl passwd -crypt -quiet $PASSWORD)"
+     ENCPASSWORD="$(openssl passwd -6 -quiet $PASSWORD)"
      useradd -d /$HOME_PARTITION/$USERNAME -p $ENCPASSWORD -s /bin/bash $USERNAME 2> /dev/null
      whiptail --title "Web Creator" --msgbox "User $USERNAME successfully created" --ok-button "OK" 10 70
      createlocalsettings
@@ -217,7 +218,7 @@ addusernamedomain() {
      PASSWORD2=$(whiptail --passwordbox "\nPlease specify password again" 10 70 --title "Web Creator" 3>&1 1>&2 2>&3)
    if [ $PASSWORD == $PASSWORD2 ]
     then
-     ENCPASSWORD="$(openssl passwd -crypt -quiet $PASSWORD)"
+     ENCPASSWORD="$(openssl passwd -6 -quiet $PASSWORD)"
      useradd -d /$HOME_PARTITION/$USERNAME -p $ENCPASSWORD -s /bin/bash $USERNAME 2> /dev/null
      whiptail --title "Web Creator" --msgbox "User $USERNAME successfully created" --ok-button "OK" 10 70
      createdomainsettings
@@ -230,7 +231,7 @@ addusernamedomain() {
    fi
 }
 createdomainsettings() {
-   if [ ! -f /etc/nginx/sites-available/*.vhost ]; then
+   if [[ ! -f /etc/nginx/sites-available/*.vhost ]]; then
      vhostshosts="There are no vhost files to display"
    else
      vhostshosts="$(find /etc/nginx/sites-available/*.vhost  -exec  basename {} .vhost  \;)"

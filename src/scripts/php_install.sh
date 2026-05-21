@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.15 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 18x -> 20x / Debian 9.x -> 10.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 22.x / Debian 11.x)                 #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2020 11:56 EDT                                       #
+#        &Updated:   05/20/2026                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -40,9 +40,9 @@ do
 
 SELECTPHP=$(
 whiptail --title "PHP Installer" --radiolist "\nUse up/down arrows and space to select\nUpon selection operation will begin without prompts" 20 78 10 \
-        "1)" "Install PHP 7.4 (Recommended)" ON \
-        "2)" "Install PHP 7.3" OFF \
-        "3)" "Install PHP 7.2" OFF \
+        "1)" "Install PHP 8.4 (Recommended)" ON \
+        "2)" "Install PHP 8.3" OFF \
+        "3)" "Install PHP 8.2" OFF \
         "4)" "Configure PHP Settings" OFF \
         "5)" "Backup Config (php.ini)" OFF \
         "6)" "View Debug Log" OFF \
@@ -60,7 +60,7 @@ case $SELECTPHP in
      if ! type php > /dev/null 2>&1; then
        phpDependencyCheck
        package() {
-         printf "apt --yes install $PHP74_PACKAGES"
+         printf "apt --yes install $PHP84_PACKAGES"
        }
        systemInstaller
        phpcgifixpath
@@ -76,7 +76,7 @@ case $SELECTPHP in
      if ! type php > /dev/null 2>&1; then
        phpDependencyCheck
        package() {
-         printf "apt --yes install $PHP73_PACKAGES"
+         printf "apt --yes install $PHP83_PACKAGES"
        }
        systemInstaller
        phpcgifixpath
@@ -92,7 +92,7 @@ case $SELECTPHP in
      if ! type php > /dev/null 2>&1; then
        phpDependencyCheck
        package() {
-         printf "apt --yes install $PHP72_PACKAGES"
+         printf "apt --yes install $PHP82_PACKAGES"
        }
        systemInstaller
        phpcgifixpath

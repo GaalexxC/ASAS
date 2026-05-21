@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.15 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 18x -> 20x / Debian 9.x -> 10.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 22.x / Debian 11.x)                 #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2020 11:56 EDT                                       #
+#        &Updated:   05/20/2026                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -47,23 +47,23 @@ phpCheckInstall() {
    fi
 }
 phpVersion() {
-   if [ -f $PHP74_FPM_INI/$PHPCONFIG ]
+   if [ -f $PHP84_FPM_INI/$PHPCONFIG ]
       then
-     PHP_VER=$PHP74_FPM_VER
-     PHP_INIT=$PHP74_FPM_INIT
-     PHP_INI=$PHP74_FPM_INI/$PHPCONFIG
-     PHP_FPMCONF_DIR=$PHP74_FPM_DIR
-   elif [ -f $PHP74_FPM_INI/$PHPCONFIG ]
+     PHP_VER=$PHP84_FPM_VER
+     PHP_INIT=$PHP84_FPM_INIT
+     PHP_INI=$PHP84_FPM_INI/$PHPCONFIG
+     PHP_FPMCONF_DIR=$PHP84_FPM_DIR
+   elif [ -f $PHP83_FPM_INI/$PHPCONFIG ]
       then
-     PHP_VER=$PHP73_FPM_VER
-     PHP_INIT=$PHP73_FPM_INIT
-     PHP_INI=$PHP73_FPM_INI/$PHPCONFIG
-     PHP_FPMCONF_DIR=$PHP73_FPM_DIR
+     PHP_VER=$PHP83_FPM_VER
+     PHP_INIT=$PHP83_FPM_INIT
+     PHP_INI=$PHP83_FPM_INI/$PHPCONFIG
+     PHP_FPMCONF_DIR=$PHP83_FPM_DIR
    else
-     PHP_VER=$PHP72_FPM_VER
-     PHP_INIT=$PHP72_FPM_INIT
-     PHP_INI=$PHP72_FPM_INI/$PHPCONFIG
-     PHP_FPMCONF_DIR=$PHP72_FPM_DIR
+     PHP_VER=$PHP82_FPM_VER
+     PHP_INIT=$PHP82_FPM_INIT
+     PHP_INI=$PHP82_FPM_INI/$PHPCONFIG
+     PHP_FPMCONF_DIR=$PHP82_FPM_DIR
    fi
 }
 phpaddrepo() {
@@ -110,23 +110,23 @@ phpBackupConf() {
    if [ ! -d  $CURDIR/backups ]; then
     mkdir $CURDIR/backups
    fi
-   if [ -f $PHP74_FPM_INI/$PHPCONFIG ]
+   if [ -f $PH84_FPM_INI/$PHPCONFIG ]
       then
-     tar cvpfz /php74ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
-     mv /php74ini_backup_$CURDAY.tar.gz $CURDIR/backups
+     tar cvpfz /php84ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
+     mv /php83ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
      echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
      sleep 1.5
-   elif [ -f $PHP73_FPM_INI/$PHPCONFIG ]
+   elif [ -f $PHP83_FPM_INI/$PHPCONFIG ]
       then
-     tar cvpfz /php73ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
-     mv /php73ini_backup_$CURDAY.tar.gz $CURDIR/backups
+     tar cvpfz /php83ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
+     mv /php82ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
      echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
      sleep 1.5
    else
-     tar cvpfz /php72ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
-     mv /php72ini_backup_$CURDAY.tar.gz $CURDIR/backups
+     tar cvpfz /php82ini_backup_$CURDAY.tar.gz $PHP_INI 2> /dev/null
+     mv /php82ini_backup_$CURDAY.tar.gz $CURDIR/backups
      sleep 1
      echo -e "XXX\n100\n\nBackup to $CURDIR/backups... Done.\nXXX"
      sleep 1.5
@@ -351,3 +351,4 @@ phptimezone() {
      cancelOperation
    fi
 }
+

@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.15 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 18x -> 20x / Debian 9.x -> 10.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 22x / Debian 11.x)                  #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2020 11:56 EDT                                       #
+#        &Updated:   05/20/2026                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -43,14 +43,14 @@ cat <<"EOT"
  \  | \  . \ ;  |   Open Source Projects   || ; / .  / |  /
   '\_\ \\ \ \ \ |                          ||/ / / // /_/'
         \\ \ \ \| Auto Server Admin Script |/ / / //
-         `'-\_\_\         ASAS 2.10        /_/_/-'`
+         `'-\_\_\         ASAS 2.15        /_/_/-'`
                 '--------------------------'
 EOT
 }
 
 asd
 
-    echo -e "\nWelcome to Auto Server Admin Script [ASAS] 2.10\n"
+    echo -e "\nWelcome to Auto Server Admin Script [ASAS] 2.15\n"
 
     echo -e "Installer Version: ${BLUE}$INSTALLER_VERSION${NOCOL}"
     echo -e "Installer Revision: ${BLUE}$INSTALLER_REVISION${NOCOL}"

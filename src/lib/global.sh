@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.15 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 18x -> 20x / Debian 9.x -> 10.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 22.x / Debian 11.x)                 #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2020 11:56 EDT                                       #
+#        &Updated:   05/20/2026                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -48,9 +48,9 @@ clear
    while [ 1 ]
     do
 MAINNU=$(
-whiptail --title "ASAS 2.10" --menu "\nSelect operation from the menu" 20 78 10 \
+whiptail --title "ASAS 2.11" --menu "\nSelect operation from the menu" 20 78 10 \
         "1)" "Nginx Installer (Stable/Mainline/Compiled)"   \
-        "2)" "PHP Installer (PHP 7.x)"  \
+        "2)" "PHP Installer (PHP 8.2x)"  \
         "3)" "MySQL Installer (Percona-MariaDB-Oracle)" \
         "4)" "Bind9 DNS Installer (Configure-Secure)" \
         "5)" "vsFTPd Installer (Configure-Secure)" \
@@ -87,15 +87,15 @@ case $MAINNU in
         ;;
 
         "7)")
-                source scripts/user_domain.sh
+                source $CURDIR/scripts/user_domain.sh
         ;;
 
         "8)")
-                source scripts/security_tools.sh
+                source $CURDIR/scripts/security_tools.sh
         ;;
 
         "9)")
-                source scripts/system_tools.sh
+                source $CURDIR/scripts/system_tools.sh
         ;;
 
         "10)")
@@ -155,7 +155,7 @@ systemDetect()
         KERNEL=`uname -r`
         ARCH=`uname -m`
         declare -a osdist=( Debian Ubuntu )
-        declare -a osrev=( 9 10 18.04 19.10 20.04 )
+        declare -a osrev=( 11 12 12.5 13 13.5 22.04 23.10 24.04 24.10 26.04 )
 
         if [ "${OS}" = "linux" ] ; then
                 if [ -f /etc/debian_version ]; then

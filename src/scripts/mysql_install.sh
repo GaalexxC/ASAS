@@ -91,54 +91,32 @@ case $SELECTMYSQL in
         "2)")
 
      if ! type mysql > /dev/null 2>&1; then
-       if (whiptail --title "Install MySQL" --yesno "Installing latest MariaDB MySQL Server v10.x\n\nWould you like to continue?" --yes-button "Install" --no-button "Cancel" 10 70) then
-        mariadbaddrepo
-        updateSources
-        mysqlPassword
-        package() {
-         printf "apt --yes install mariadb-server"
-        }
-        systemInstaller
-        mysqlCleanup
-        MYSQLVER=$(mysql -V 2>&1)
-        FUNC="Installed $MYSQLVER"
-        mysqlDebugLog
-        completemessage() {
-         printf "Installed\n$MYSQLVER"
-        }
-        completeOperation
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 7
+       #phpDependencyCheck
+       #package() {
+       #  printf "apt --yes install $PHP71_PACKAGES"
+       #}
+       #systemInstaller
+       #completeOperation
      else
-        cancelOperation
-     fi
-     else
-        whiptail --title "MySQL Check-Install" --msgbox "MySQL already installed\n$MYSQLVER" --ok-button "OK" 10 70
+        dbver=$(mysql -V 2>&1)
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 7
      fi
         ;;
 
         "3)")
 
      if ! type mysql > /dev/null 2>&1; then
-       if (whiptail --title "Install MySQL" --yesno "Installing latest Oracle MySQL Server v8.x\n\nWould you like to continue?" --yes-button "Install" --no-button "Cancel" 10 70) then
-        mysqladdrepo
-        updateSources
-        mysqlPassword
-        package() {
-         printf "apt --yes install mysql-server"
-        }
-        systemInstaller
-        mysqlCleanup
-        MYSQLVER=$(mysql -V 2>&1)
-        FUNC="Installed $MYSQLVER"
-        mysqlDebugLog
-        completemessage() {
-         printf "Installed\n$MYSQLVER"
-        }
-        completeOperation
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL not installed" --ok-button "OK" 10 7
+       #phpDependencyCheck
+       #package() {
+       #  printf "apt --yes install $PHP70_PACKAGES"
+       #}
+       #systemInstaller
+       #completeOperation
      else
-        cancelOperation
-     fi
-     else
-        whiptail --title "MySQL Check-Install" --msgbox "MySQL already installed\n$MYSQLVER" --ok-button "OK" 10 70
+        dbver=$(mysql -V 2>&1)
+        whiptail --title "MySQL Check-Install" --msgbox "MySQL Installed!\n\n$dbver" --ok-button "OK" 10 7
      fi
         ;;
 

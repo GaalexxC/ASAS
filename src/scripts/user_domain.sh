@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.11 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 18x -> 20x / Debian 9.x -> 10.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 20.x -> 22.x / Debian 10.x -> 12.x) #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/25/2020 11:56 EDT                                       #
+#        &Updated:   02/07/2024                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -48,7 +48,7 @@ case $SELECTUSERDOMAIN in
         "1)")
           if ! type nginx > /dev/null 2>&1; then
            if (whiptail --title "Nginx Check-Install" --yesno "Nginx not installed and is required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-             source scripts/nginx_install.sh
+             source $CURDIR/scripts/nginx_install.sh
            else
             return
            fi
@@ -59,7 +59,7 @@ case $SELECTUSERDOMAIN in
 
           if ! type php > /dev/null 2>&1; then
            if (whiptail --title "PHP Check-Install" --yesno "PHP not installed and required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-             source scripts/php_install.sh
+             source $CURDIR/scripts/php_install.sh
            else
             return
            fi
@@ -73,7 +73,7 @@ case $SELECTUSERDOMAIN in
         "2)")
           if ! type nginx > /dev/null 2>&1; then
            if (whiptail --title "Nginx Check-Install" --yesno "Nginx not installed and is required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-             source scripts/nginx_install.sh
+             source $CURDIR/scripts/nginx_install.sh
            else
             return
            fi
@@ -84,7 +84,7 @@ case $SELECTUSERDOMAIN in
 
           if ! type php > /dev/null 2>&1; then
            if (whiptail --title "PHP Check-Install" --yesno "PHP not installed and required\n\nDo you want to install?" --yes-button "Install" --no-button "Cancel" 10 70) then
-             source scripts/php_install.sh
+             source $CURDIR/scripts/php_install.sh
            else
             return
            fi

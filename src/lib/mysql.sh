@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.15 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 16x -> 18x / Debian 8.x -> 9.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 22.x / Debian 11.x)                 #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   08/09/2020                                                 #
+#        &Updated:   05/20/2026                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -99,40 +99,6 @@ perconaaddrepo() {
      mysqlDebugLog
      cd $CURDIR
      echo -e "XXX\n100\n\nRepository Percona Server 8.x installed... Done.\nXXX"
-     sleep 1.5
-  } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
-}
-mariadbaddrepo() {
-{
-
-     echo -e "XXX\n25\n\nCreating repo directory... \nXXX"
-   if [ ! -d  $CURDIR/repos ]; then
-     mkdir $CURDIR/repos
-   fi
-     cd $CURDIR/repos
-     sleep 1
-     echo -e "XXX\n50\n\nChecking MariaDB MySQL Server v10.x dependencies... \nXXX"
-     apt install software-properties-common 2> /dev/null
-     sleep 1
-     echo -e "XXX\n50\n\nFetching MariaDB MySQL Server v10.x repository packages... \nXXX"
-     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' 2> /dev/null
-     sleep 1
-     echo -e "XXX\n75\n\nInstalling MariaDB MySQL Server v10.x repository packages... \nXXX"
-     add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.5/$DISTRO $CODENAME main' 2> /dev/null
-     FUNC="Repository MariaDB MySQL Server v10.x installed"
-     mysqlDebugLog
-     cd $CURDIR
-     echo -e "XXX\n100\n\nRepository MariaDB MySQL Server v10.x installed... Done.\nXXX"
-     sleep 1.5
-  } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
-}
-mysqladdrepo() {
-{
-     echo -e "XXX\n75\n\nInstalling Oracle MySQL Server 8.x repository packages... \nXXX"
-     dpkg -i $CURDIR/bin/mysql-apt-config_0.8.15-1_all.deb 2> /dev/null
-     FUNC="Repository Oracle MySQL Server 8.x installed"
-     mysqlDebugLog
-     echo -e "XXX\n100\n\nRepository Oracle MySQL Server 8.x installed... Done.\nXXX"
      sleep 1.5
   } | whiptail --title "MySQL Add Repo" --gauge "\nChecking for MySQL repository" 10 70 0
 }

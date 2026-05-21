@@ -1,14 +1,14 @@
 #!/bin/bash
 #################################################################################
-#                   *** ASAS 2.10 [Auto Server Admin Script] ***                #
+#                   *** ASAS 2.15 [Auto Server Admin Script] ***                #
 #        @author: Gary Cornell for devCU Software Open Source Projects          #
 #        @contact: gary@devcu.com                                               #
-#        $OS: Debian Core (Tested on Ubuntu 16x -> 18x / Debian 8.x -> 9.x)     #
+#        $OS: Debian Core (Tested on Ubuntu 22.x / Debian 11.x)                 #
 #        $MAIN: https://www.devcu.com                                           #
 #        $SOURCE: https://github.com/GaalexxC/ASAS                              #
 #        $REPO: https://www.devcu.net                                           #
 #        +Created:   06/15/2016 Ported from nginxubuntu-php7                    #
-#        &Updated:   12/01/2021 02:26 EDT                                       #
+#        &Updated:   05/20/2026                                                 #
 #                                                                               #
 #    This program is free software: you can redistribute it and/or modify       #
 #    it under the terms of the GNU General Public License as published by       #
@@ -213,16 +213,20 @@ nginxSourceConfigure() {
              --with-http_perl_module=dynamic \
              --with-debug \
              --with-threads \
+             --with-compat \
              --with-stream \
+             --with-stream_realip_module \
              --with-stream_ssl_module \
+             --with-stream_ssl_preread_module \
              --with-stream_geoip_module=dynamic \
              --with-http_slice_module \
              --with-mail \
              --with-mail_ssl_module \
              --with-file-aio \
              --with-http_v2_module \
+             --with-http_v3_module \
              --with-openssl=$CURDIR/source/$(basename $OPENSSL_SOURCE .tar.gz) \
-             --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2' \
+             --with-cc-opt='-g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=3' \
              --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' &>> $CURDIR/$NGINX_LOG/install-$CURDAY.log || errorOperation
    for ((i = 0 ; i <= 100 ; i+=1)); do
      sleep .03
