@@ -76,7 +76,7 @@ GNU General Public License v3.0
 
 Pre-Release Development [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-State)
 
-Issue Tracker - Home [Issue Tracker - Home](https://www.devcu.com/forums/devcu-tracker/asas/)
+Issue Tracker - Home [Issue Tracker - Home](https://www.devcu.com/)
 
 ## Thanks!
 
