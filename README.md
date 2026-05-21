@@ -52,7 +52,7 @@ Install & Run as root (Updated release 05/20/2026)
 - Nginx 1.31.0x
 - OpenSSL 4.0.0x
 - QUICs Support Added
-- Supported Ubuntu 22+ and Debian 11+
+- Supported Ubuntu 22x > 26x and Debian 11x > 13x
 
 
 ```bash
