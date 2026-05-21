@@ -32,7 +32,7 @@ More info: [Current dev state](https://github.com/GaalexxC/ASAS/wiki/Current-Sta
  \  | \  . \ ;  |   Open Source Projects   || ; / .  / |  /
   '\_\ \\ \ \ \ |                          ||/ / / // /_/'
         \\ \ \ \| Auto Server Admin Script |/ / / //
-         `'-\_\_\         ASAS 2.10        /_/_/-'`
+         `'-\_\_\         ASAS 2.15        /_/_/-'`
                 '--------------------------'
 </pre>
 
@@ -80,8 +80,6 @@ Issue Tracker - Home [Issue Tracker - Home](https://www.devcu.com/forums/devcu-t
 ## Thanks!
 
 - Microsoft
-
-Ironically, to a Windows OS for allowing me to test all these great releases in a pure Linux environment. Windows 10 Hyper-V, 5 containers, all rsync synchronized for rapid updates and development. if you are still using archaic apps like Cygwin based applications (XAMPP, WinLAMP, AMPPS) then you havent got a clue.
 - Café Bustelo
 
 For obvious reasons...:coffee:
